@@ -1,8 +1,12 @@
 package io.costax.examplesapi.di.entity;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Client {
+public class Client implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Long id;
     private String name;
     private String email;
