@@ -1,4 +1,4 @@
-package io.costax.examplesapi.callbacks;
+package io.costax.examplesapi.beans.callbacks;
 
 import org.springframework.stereotype.Component;
 

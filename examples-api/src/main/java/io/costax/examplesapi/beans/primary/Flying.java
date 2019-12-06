@@ -1,4 +1,4 @@
-package io.costax.examplesapi.primary;
+package io.costax.examplesapi.beans.primary;
 
 public interface Flying {
 

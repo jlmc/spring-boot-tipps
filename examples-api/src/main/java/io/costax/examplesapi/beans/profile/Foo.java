@@ -1,4 +1,4 @@
-package io.costax.examplesapi.profile;
+package io.costax.examplesapi.beans.profile;
 
 public interface Foo {
 

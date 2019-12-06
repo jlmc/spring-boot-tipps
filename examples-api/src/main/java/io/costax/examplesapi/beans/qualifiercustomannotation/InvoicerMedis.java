@@ -1,4 +1,4 @@
-package io.costax.examplesapi.qualifiercustomannotation;
+package io.costax.examplesapi.beans.qualifiercustomannotation;
 
 import org.springframework.stereotype.Component;
 

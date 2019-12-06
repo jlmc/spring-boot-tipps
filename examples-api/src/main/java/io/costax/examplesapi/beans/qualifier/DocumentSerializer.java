@@ -1,4 +1,4 @@
-package io.costax.examplesapi.qualifier;
+package io.costax.examplesapi.beans.qualifier;
 
 public interface DocumentSerializer {
 

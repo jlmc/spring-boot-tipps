@@ -1,4 +1,4 @@
-package io.costax.examplesapi.qualifier;
+package io.costax.examplesapi.beans.qualifier;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

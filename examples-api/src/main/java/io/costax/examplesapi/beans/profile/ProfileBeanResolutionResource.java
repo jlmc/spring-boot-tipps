@@ -1,4 +1,4 @@
-package io.costax.examplesapi.profile;
+package io.costax.examplesapi.beans.profile;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
