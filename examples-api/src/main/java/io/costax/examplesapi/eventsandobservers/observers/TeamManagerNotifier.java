@@ -9,7 +9,8 @@ public class TeamManagerNotifier {
 
     @EventListener(condition = "#event.getPayerName() != null && !#event.getPayerName().isBlank()")
     public void onPayerScoreGoalEvent(PayerScoreGoalEvent event) {
-        System.out.println("===> Notify the Team Manager .... " + event.getPayerName());
+        final String th = Thread.currentThread().getName();
+        System.out.println(th + " ===> Notify the Team Manager .... " + event.getPayerName());
     }
 
 }

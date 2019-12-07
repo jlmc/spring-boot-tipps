@@ -12,6 +12,10 @@ public class GameService {
     public void scoreGoal(String payerName) {
         // ...
 
+        final String th = Thread.currentThread().getName();
+
+        System.out.println(th + " ===> GameService : " + th);
+
         final PayerScoreGoalEvent payerScoreGoalEvent = new PayerScoreGoalEvent(payerName);
 
         applicationEventPublisher.publishEvent(payerScoreGoalEvent);

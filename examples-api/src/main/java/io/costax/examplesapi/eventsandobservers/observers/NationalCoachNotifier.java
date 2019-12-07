@@ -9,7 +9,8 @@ public class NationalCoachNotifier {
 
     @EventListener(condition = "#payerScoreGoalEvent.payerName != null && #payerScoreGoalEvent.payerName.equals('Messi')")
     public void onPayerScoreGoalEvent(PayerScoreGoalEvent payerScoreGoalEvent) {
-        System.out.println("===> Notify the National Coach .... " + payerScoreGoalEvent.getPayerName());
+        final String th = Thread.currentThread().getName();
+        System.out.println(th + " ===> Notify the National Coach .... " + payerScoreGoalEvent.getPayerName());
     }
 
 }
