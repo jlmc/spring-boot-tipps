@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 public class NotifiersConfigurationProperties {
 
     /**
-     * smtp host server fot notifications
+     * smtp host server for notifications
      */
     private String smtpHost;
     private int smtpPort = 25;
@@ -40,6 +40,8 @@ public class NotifiersConfigurationProperties {
     private String smsHost;
     private String smsUsername;
     private String smsPassword;
+
+    private Others others;
 
 
     public String getSmtpHost() {
@@ -80,5 +82,13 @@ public class NotifiersConfigurationProperties {
 
     public void setSmsPassword(final String smsPassword) {
         this.smsPassword = smsPassword;
+    }
+
+    public void setOthers(final Others others) {
+        this.others = others;
+    }
+
+    public Others getOthers() {
+        return others;
     }
 }

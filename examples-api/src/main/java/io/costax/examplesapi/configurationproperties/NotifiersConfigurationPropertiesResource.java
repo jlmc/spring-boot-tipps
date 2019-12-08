@@ -1,6 +1,7 @@
 package io.costax.examplesapi.configurationproperties;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,13 @@ public class NotifiersConfigurationPropertiesResource {
     @GetMapping
     @ResponseBody
     public String hello() {
-        return "hello - " + configurationProperties.getSmtpHost() + ":" + configurationProperties.getSmtpPort();
+        return "hello - " +
+                "" + configurationProperties.getSmtpHost() + ":" + configurationProperties.getSmtpPort();
+    }
+
+    @GetMapping(value = "/others", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Others getOthers() {
+        return configurationProperties.getOthers();
     }
 }
