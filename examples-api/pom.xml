@@ -13,7 +13,7 @@
     <artifactId>examples-api</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>examples-api</name>
-    <description>API examples</description>
+    <description>2-Spring and Dependency Injection</description>
 
     <properties>
         <java.version>13</java.version>
