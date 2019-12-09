@@ -1,10 +1,10 @@
-package io.costax.introductiontojpaandhibernate;
+package io.costax.zfood;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IntroductionToJpaAndHibernateApplicationTests {
+class ZFoodApplicationTests {
 
 	@Test
 	void contextLoads() {
