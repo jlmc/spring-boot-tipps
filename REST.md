@@ -66,11 +66,35 @@ A diferença entre os dois termos é contextual e acaba por ser muito simples, m
 
 * NOTA: Se um dia alguém disser que possui uma API RESTfull, convém fazer mos uma ressalva e verificar se realmente essa API respeita todas as CONSTRAINS.
 
+## REST APIs purista ou pragmática
 
+No mercado podemos identificar dois tipos de desenvolvimento de APIs, as APIs puristas e as pragmáticas.
 
+- Puristas 
+    - Defendem que as CONSTRAINS definidas na especificação REST devem ser seguidas fielmente, sem exceções.
 
+- Pragmáticas
+    - Defendem uma abordagem mais prática, essas API são desenvolvidas seguindo também as CONSTRAINS, mas estão abertas exceções.  Se em um dado momento for verificado que uma determinada CONSTRAINS irá complicar todo o desenvolvimento e não agrega valor à aplicação, então a equipa opta por não respeitar essa CONSTRAIN por forma a que o desenvolvimento e uso da API seja mais simples.
 
+### Exemplo de API 
 
+- [Github](https://developer.github.com/v3/)
 
+## APLICAÇÕES-HTTP-CLIENT
 
+### [GnuTLS](https://gnutls.org/)
 
+[GnuTLS](https://gnutls.org/) é uma app client https. Pode ser instalada através dos comandos:
+
+Mac:
+
+```
+$ brew install gnutls
+```
+
+``` unix
+$ sudo apt install gnutls-bin
+```
+
+### [insomnia](https://insomnia.rest/)
+### [postman](https://www.getpostman.com/)
