@@ -6,7 +6,7 @@
 
 - é uma especificação que define a forma de comunicar entre componentes de software na web independente da linguagem de programação. Em outras palavras, é uma estilo arquitectura para desenvolvimento de web-services.
 
-- Aparece no ano 2000, tease de PH (docturamento) fo cientista [Roy Fielding](https://roy.gbiv.com/). O Objectivo era a formalização de um conjunto de melhores práticas e regras para desenvolvimento de web API. 
+- Aparece no ano 2000, tese de PH (docturamento) fo cientista [Roy Fielding](https://roy.gbiv.com/). O Objectivo era a formalização de um conjunto de melhores práticas e regras para desenvolvimento de web API. 
     - https://roy.gbiv.com/
     - https://en.wikipedia.org/wiki/Roy_Fielding
 
@@ -52,5 +52,25 @@
 * Código sob demanda
     * Vista como opcional e pouco utilizada.
     * O servidor pode responder um codigo (portable, por exemplo javascript) que pode ser executado no cliente. Um exemplo será o servidor enviar como resposta um script javascript o qual o cliente usará para desenhar um gráfico.
+
+
+## Diferença entre REST e RESTful
+
+Uma nota de ressalva antes de mais, **RESTful** escreve-se apenas com um `l` no final. Existe muita gente a escrever com 2, mas a forma correta é apenas com 1.
+
+A diferença entre os dois termos é contextual e acaba por ser muito simples, mesmo assim muitas pessoas fazem confusão.
+
+* **REST** é um estilo arquitetural que possui as CONSTRAINS que se falou no ponto anterior. Pode, portanto, ser visto como a especificação.
+
+* Diz-se que uma **API é RESTful** quando respeita todas as CONTRAINS definidas pela especificação REST. Na Teoria uma RESTful API segue todas as CONTRAINS religiosamente, mas na prática poucas são as API que conseguem respeitar todas as regras de forma correta. Por isso o termo RESTful-API tem diferentes interpretações no mercado.
+
+* NOTA: Se um dia alguém disser que possui uma API RESTfull, convém fazer mos uma ressalva e verificar se realmente essa API respeita todas as CONSTRAINS.
+
+
+
+
+
+
+
 
 
