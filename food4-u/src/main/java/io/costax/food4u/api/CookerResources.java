@@ -1,5 +1,6 @@
 package io.costax.food4u.api;
 
+import io.costax.food4u.api.model.CookersXmlWrapper;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import org.springframework.http.MediaType;
@@ -28,9 +29,14 @@ public class CookerResources {
         this.repository = repository;
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Cooker> list() {
         return repository.findAll();
+    }
+
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public CookersXmlWrapper listXml() {
+        return new CookersXmlWrapper(repository.findAll());
     }
 
     //@ResponseStatus(HttpStatus.OK)
@@ -38,6 +44,6 @@ public class CookerResources {
     public ResponseEntity<?> getById(@PathVariable("id") Long cookerId) {
         return repository.findById(cookerId)
                 .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 }
