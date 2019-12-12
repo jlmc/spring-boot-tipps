@@ -9,5 +9,6 @@
 
     <modules>
         <module>examples-api</module>
+        <module>food4-u</module>
     </modules>
 </project>
