@@ -54,6 +54,13 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- transformations of payloads it necessary for xml, not for json-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

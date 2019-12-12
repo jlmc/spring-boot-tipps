@@ -19,8 +19,8 @@ import java.util.List;
 @RequestMapping(
         value = "/cookers",
         produces = {
-                MediaType.APPLICATION_JSON_VALUE
-                //MediaType.APPLICATION_XML_VALUE
+                MediaType.APPLICATION_JSON_VALUE,
+                MediaType.APPLICATION_XML_VALUE
         })
 public class CookerResources {
 
