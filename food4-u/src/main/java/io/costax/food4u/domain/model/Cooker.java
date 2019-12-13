@@ -26,4 +26,16 @@ public class Cooker {
     @JsonIgnore
     @Version
     private int version;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getVersion() {
+        return version;
+    }
 }
