@@ -1,6 +1,8 @@
 package io.costax.food4u.domain.model;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,6 +12,8 @@ import java.math.BigDecimal;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+
 public class Restaurant {
 
     @EqualsAndHashCode.Include
@@ -27,6 +31,7 @@ public class Restaurant {
     @JoinColumn(name = "cooker_id", nullable = false)
     private Cooker cooker;
 
+    @JsonIgnore
     @Version
     private int version;
 
