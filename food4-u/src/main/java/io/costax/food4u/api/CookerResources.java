@@ -1,9 +1,12 @@
 package io.costax.food4u.api;
 
 import io.costax.food4u.api.model.CookersXmlWrapper;
+import io.costax.food4u.domain.ResourceInUseException;
+import io.costax.food4u.domain.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
-import org.springframework.beans.BeanUtils;
+import io.costax.food4u.domain.services.CookerRegistrationService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,9 +31,12 @@ import java.util.List;
 public class CookerResources {
 
     private final CookerRepository repository;
+    private final CookerRegistrationService cookerRegistrationService;
 
-    public CookerResources(final CookerRepository repository) {
+    public CookerResources(final CookerRepository repository,
+                           final CookerRegistrationService cookerRegistrationService) {
         this.repository = repository;
+        this.cookerRegistrationService = cookerRegistrationService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,18 +49,18 @@ public class CookerResources {
         return new CookersXmlWrapper(repository.findAll());
     }
 
-    //@ResponseStatus(HttpStatus.OK)
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") Long cookerId) {
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{Id}")
+    public Cooker getById(@PathVariable("Id") Long cookerId) {
         return repository.findById(cookerId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                //.map(ResponseEntity::ok)
+                .orElseThrow(() -> ResourceNotFoundException.of(Cooker.class, cookerId));
     }
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity add(@RequestBody Cooker cooker, UriComponentsBuilder b) {
-        final Cooker saved = repository.save(cooker);
+    public ResponseEntity<Cooker> add(@RequestBody Cooker cooker, UriComponentsBuilder b) {
+        Cooker saved = cookerRegistrationService.add(cooker);
 
         //UriComponents uriComponents = b.path("/cookers/{id}").buildAndExpand(saved.getId());
         //final URI uri = uriComponents.toUri();
@@ -70,16 +76,30 @@ public class CookerResources {
     @PutMapping("/{Id}")
     public ResponseEntity<Cooker> atualizar(@PathVariable("Id") Long cookerId,
                                             @RequestBody Cooker cooker) {
-        Cooker cookerCurrent = repository.findById(cookerId).orElse(null);
-
-        if (cookerCurrent != null) {
-            //cozinhaAtual.setNome(cozinha.getNome());
-            BeanUtils.copyProperties(cooker, cookerCurrent, "id");
-
-            cookerCurrent = repository.save(cookerCurrent);
-            return ResponseEntity.ok(cookerCurrent);
-        }
-
-        return ResponseEntity.notFound().build();
+        //Cooker cookerCurrent = cookerRegistrationService.update(cookerId, cooker);
+        Cooker cookerCurrent = this.cookerRegistrationService.update(cookerId, cooker);
+        return ResponseEntity.ok(cookerCurrent);
     }
+
+
+    @DeleteMapping("/{Id}")
+    public ResponseEntity<Cooker> remover(@PathVariable("Id") Long cookerId) {
+        this.cookerRegistrationService.remove(cookerId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ResponseEntity<?> resourceNotFoundHandler(ResourceNotFoundException e) {
+        return ResponseEntity.notFound().header("X-reason", e.getMessage()).build();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ResourceInUseException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    ResponseEntity<?> resourceInUseHandler(ResourceInUseException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).header("X-reason", e.getMessage()).build();
+    }
+
 }

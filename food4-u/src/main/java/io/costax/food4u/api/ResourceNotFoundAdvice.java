@@ -1,6 +1,8 @@
 package io.costax.food4u.api;
 
+import io.costax.food4u.domain.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,7 +14,7 @@ public class ResourceNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String resourceNotFoundHandler(ResourceNotFoundException ex) {
-        return "Resource " + ex.getResourceClass().getSimpleName() + " Not found";
+    ResponseEntity<?> resourceNotFoundHandler(ResourceNotFoundException e) {
+        return ResponseEntity.notFound().header("X-Reason", e.getMessage()).build();
     }
 }

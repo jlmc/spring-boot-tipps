@@ -30,7 +30,11 @@ public class Restaurant {
     @Version
     private int version;
 
+    public Long getId() {
+        return id;
+    }
 
-
-
+    public String getName() {
+        return name;
+    }
 }
