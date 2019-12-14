@@ -67,4 +67,11 @@ public class RestaurantResources {
                     .body(e.getMessage());
         }
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/{restaurantId}")
+    public Restaurant update(@PathVariable("restaurantId") Long restaurantId,
+                                       @RequestBody Restaurant restaurant) {
+        return restaurantRegistrationService.update(restaurantId, restaurant);
+    }
 }
