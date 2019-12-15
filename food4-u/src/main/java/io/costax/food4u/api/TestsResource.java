@@ -2,6 +2,7 @@ package io.costax.food4u.api;
 
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
+import io.costax.food4u.domain.repository.RestaurantSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +44,12 @@ public class TestsResource {
     @GetMapping("/restaurants/custom-search")
     public List<Restaurant> customSearch(@RequestParam(value = "cooker-name", defaultValue = "aaa") String cookerName) {
         return restaurantRepository.searchCustom("123", "456");
+    }
+
+    @GetMapping("/restaurants/without-tax")
+    public List<Restaurant> findWithoutTax() {
+        return restaurantRepository
+                .findAll(RestaurantSpecifications.withFeeTakeAwayTax()
+                        .and(RestaurantSpecifications.withSimilarName("b")));
     }
 }
