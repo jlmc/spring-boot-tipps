@@ -39,5 +39,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
      * The name of the Named Query must start with the of the Entity '.' and the exact name of this method
      * So, the for this example we have the NamedQuery: 'Restaurant.findByCookerName'
      */
+    //@Query("select r from Restaurant r inner join fetch r.cooker where lower(r.cooker.name) like %:name%")
     List<Restaurant> findByCookerName(@Param("name") String name);
 }

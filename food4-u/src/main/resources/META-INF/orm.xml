@@ -2,13 +2,14 @@
 <entity-mappings
         xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd"
         version="2.2">
 
     <named-query name="Restaurant.findByCookerName">
         <query>
             select r
             from Restaurant r inner join fetch r.cooker c
-            where lower( c.name ) like :name
+            where lower( c.name ) like lower(concat('%', :name ,'%'))
             order by r.id desc
         </query>
     </named-query>
