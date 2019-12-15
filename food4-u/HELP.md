@@ -47,3 +47,18 @@ curl -X GET -v \
     -H "Content-Type:application/xml" \
     http://localhost:8080/cookers 
 ```
+
+
+## MYSQL commands:
+
+
+- To create a backup to a filesystem:
+```shell script
+mysqldump --host localhost --user root --password --databases my-database > dump.sql
+
+```
+
+- To Apply the database backup dump:
+```shell script
+mysql --host localhost --user root --password < dump.sql
+```
