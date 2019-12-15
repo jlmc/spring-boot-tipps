@@ -13,4 +13,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     @Override
     @Query("from Restaurant r left join fetch r.cooker order by r.id desc")
     List<Restaurant> findAll();
+
+    List<Restaurant> findByName(String name);
 }

@@ -76,3 +76,9 @@ curl -X PATCH \
     "takeAwayTax": 0.50
 }'
 ```
+
+### GET tests/restaurants/by-name?name=123
+```shell script
+curl -X GET \
+  'http://localhost:8080/tests/restaurants/by-name?name=123'
+```
