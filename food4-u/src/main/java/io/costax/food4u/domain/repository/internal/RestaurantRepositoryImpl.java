@@ -2,6 +2,10 @@ package io.costax.food4u.domain.repository.internal;
 
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantQueries;
+import io.costax.food4u.domain.repository.RestaurantRepository;
+import io.costax.food4u.domain.repository.RestaurantSpecifications;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -19,6 +23,10 @@ public class RestaurantRepositoryImpl implements RestaurantQueries {
     @PersistenceContext
     EntityManager em;
 
+    @Lazy
+    @Autowired
+    RestaurantRepository restaurantRepository;
+
     @Override
     public List<Restaurant> searchCustom(final String name, final String cooker) {
         final CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -29,4 +37,14 @@ public class RestaurantRepositoryImpl implements RestaurantQueries {
 
         return em.createQuery(query.where(new Predicate[0])).getResultList();
     }
+
+    @Override
+    public List<Restaurant> findWithoutTaxAndWithSimilarName(final String name) {
+        return this.restaurantRepository
+                .findAll(
+                        RestaurantSpecifications.withFeeTakeAwayTax()
+                                .and(RestaurantSpecifications.withSimilarName(name)));
+    }
+
+
 }

@@ -48,8 +48,11 @@ public class TestsResource {
 
     @GetMapping("/restaurants/without-tax")
     public List<Restaurant> findWithoutTax() {
+        /*
         return restaurantRepository
                 .findAll(RestaurantSpecifications.withFeeTakeAwayTax()
                         .and(RestaurantSpecifications.withSimilarName("b")));
+        */
+        return restaurantRepository.findWithoutTaxAndWithSimilarName("b");
     }
 }

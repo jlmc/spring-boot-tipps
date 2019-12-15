@@ -19,4 +19,6 @@ import java.util.List;
 public interface RestaurantQueries {
 
     List<Restaurant> searchCustom(String name, String cooker);
+
+    List<Restaurant> findWithoutTaxAndWithSimilarName(String nome);
 }
