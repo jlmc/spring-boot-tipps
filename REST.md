@@ -98,3 +98,63 @@ $ sudo apt install gnutls-bin
 
 ### [insomnia](https://insomnia.rest/)
 ### [postman](https://www.getpostman.com/)
+
+
+## Modelo de Maturidade de Richardson (RMM)
+
+![img](docs/gloria-do-rest.png)
+
+[richardson Maturity Model analise de martin fowler](https://martinfowler.com/articles/richardsonMaturityModel.html)
+
+#### Nivel 0:
+
+* Nivel mais rudimentar
+* HTTP como um mecanismo de encapsulamento para o seu próprio mecanismo de interação remota, geralmente baseado na invocação de procedimento remoto.
+* Não Usa os Verbos HTTP de forma correcta, podem ser usados exencialmente o verbos GET e POST
+* Não usa o HTTP estados
+* Funciona tendo o mesmo principio do Method invocation process
+* Geralmente a api declara apenas uma URL, e a operação que se pretende fazer é identificada com um identificador unico ao longo do Http body.
+* Na maior parte do caso são encontrados payloads no formato XML, mas isso não significa nada, pois mesmo que se use JSON ou outro qualquer formato o nivel não irá mudar.
+* Não podemos chamar uma API neste nivel de REST.
+
+#### Nivel 1:
+
+* Quando se começam a fazer HTTP Requisition para URI que identificam recursos.
+* A API não possui um unico endpoint, ao contrário do Nivel 0
+* A API ainda não usa correctamente os verbos e Códigos HTTP
+* Os conteudos dos body das requisições são identicos com os usados no Nivel 0
+
+
+#### Nivel 2:
+
+* Introduz a utilização do verbos HTTP de acordo com a semantica de cada um.
+* Usa os codigos HTTP correctamente.
+* Os payloads passam a ser representções de recursos, embora isso não interfira com o nivel da api, o que define é nivel é a utilização correcta dos verbos e codigos HTTP.
+* Este é o nivel que a maioria das REST API se encontram hoje (2019-Dec-15).
+* O criador do REST (Roy Fielding) não considera ainda que este nivel seja REST, mas o "mercado" já considera o nivel 2 como REST.
+
+
+#### Nivel 3:
+
+* Tambem conhecido como HETEOAS (Hypertext as the Engine Of Application State), ou seja em Portugues Hypertext como motor de estado da aplicação.
+* O proposito central do HETEOAS é dizer qual é o proximo passo após um requisição em um recurso e qual é a uri desse recurso.
+* Isto pode ajudar os utilizadores/clientes da API a saberem usar a API, podem ser mais "dummies".
+
+```
+HTTP/1.1 200 OK
+
+{
+    "id": 123,
+    "name": "Macbook pro 13",
+    "links": {
+        "disable": "/payments/123",
+        "supplier": "/supplier/1234"
+    }
+}
+```
+
+* Os links podem ser variaveis com o estado da actual do recurso, ou seja, por exemplo, se um recurso já estiver inactivo, não faz sentido enviar o link para activar, nesse caso poderia ate ser adicionado um link para activar.
+* No exemplo não foi adicionado o verbo a utilizar em cada requisição, mas isso pode ser tambem adicionado, e com isso o cliente da API poderia ser completamente "ignorante" quanto a regras de negócio, apenas se preocupando com UI e formas de display.
+* Roy Fielding e todos os developers "puristas", apenas consideram que uma API é REST quando atinge este nivel de Maturidade, mas atingir este nivel de maturidade pode às vezes ser dispendioso e não trazer benefícios. 
+
+
