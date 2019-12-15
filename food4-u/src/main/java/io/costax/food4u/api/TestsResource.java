@@ -34,4 +34,9 @@ public class TestsResource {
                                          @RequestParam(value = "until", defaultValue = "10.0") BigDecimal until) {
         return restaurantRepository.findFirstByTakeAwayTaxBetween(init, until);
     }
+
+    @GetMapping("/restaurants/by-cooker-name")
+    public List<Restaurant> findByCookerName(@RequestParam(value = "cooker-name", defaultValue = "aaa") String cookerName) {
+        return restaurantRepository.findByCookerName(cookerName);
+    }
 }

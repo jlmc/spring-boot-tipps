@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings
+        xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        version="2.2">
+
+    <named-query name="Restaurant.findByCookerName">
+        <query>
+            select r
+            from Restaurant r inner join fetch r.cooker c
+            where lower( c.name ) like :name
+            order by r.id desc
+        </query>
+    </named-query>
+
+</entity-mappings>
