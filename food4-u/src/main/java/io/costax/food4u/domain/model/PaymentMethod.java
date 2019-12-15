@@ -15,19 +15,16 @@ public class PaymentMethod {
     @Column(name = "name", nullable = false)
     private String name;
 
-    private String description;
-
     @Deprecated
     protected PaymentMethod() {
     }
 
-    private PaymentMethod(String name, String description) {
+    private PaymentMethod(String name) {
         this.name = name;
-        this.description = description;
     }
 
-    private static PaymentMethod of(String name, String description) {
-        return new PaymentMethod(name, description);
+    private static PaymentMethod of(String name) {
+        return new PaymentMethod(name);
     }
 
     @Override
@@ -57,9 +54,5 @@ public class PaymentMethod {
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
     }
 }

@@ -8,6 +8,8 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -30,6 +32,23 @@ public class Restaurant {
     @ManyToOne
     @JoinColumn(name = "cooker_id", nullable = false)
     private Cooker cooker;
+
+    @JsonIgnore
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "restaurant_payment_method",
+            joinColumns = @JoinColumn(
+                    name = "restaurant_id",
+                    referencedColumnName = "id",
+                    nullable = false,
+                    updatable = false),
+            inverseJoinColumns = @JoinColumn(
+                    name = "payment_method_id",
+                    referencedColumnName = "id",
+                    nullable = false,
+                    updatable = false
+            )
+    )
+    private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
     @JsonIgnore
     @Version

@@ -54,7 +54,7 @@ public class RestaurantRegistrationService {
         final Cooker cooker = verifyAndGetIfExistsCooker(restaurant);
         restaurant.setCooker(cooker);
 
-        BeanUtils.copyProperties(restaurant, current, "id", "version");
+        BeanUtils.copyProperties(restaurant, current, "id", "paymentMethods", "version");
 
         restaurantRepository.flush();
 
