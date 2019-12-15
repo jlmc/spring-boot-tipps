@@ -94,4 +94,23 @@ curl -X GET \
 curl -X GET \
   'http://localhost:8080/tests/restaurants/first-takeAwayTax?int=0.1&until=40.0'
 ```
+
+
+### POST /payment-methods
+```shell script
+curl -X POST \
+  http://localhost:8080/payment-methods \
+  -H 'Accept: */*' \
+  -H 'Content-Type: application/json' \
+  -H 'Host: localhost:8080' \
+  -d '{
+    "name": "PayPal",
+    "description": ""
+}'
+```
+
+### GET /payment-methods
+```shell script
+curl -X GET \
+  http://localhost:8080/payment-methods
 ```
