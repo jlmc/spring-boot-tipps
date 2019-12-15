@@ -82,3 +82,16 @@ curl -X PATCH \
 curl -X GET \
   'http://localhost:8080/tests/restaurants/by-name?name=123'
 ```
+
+### GET tests/restaurants/by-takeAwayTax?int=0.1&until=40.0
+```shell script
+curl -X GET \
+  'http://localhost:8080/tests/restaurants/by-takeAwayTax?int=0.1&until=40.0'
+```
+
+### GET tests/restaurants/first-takeAwayTax?int=0.1&until=40.0
+```shell script
+curl -X GET \
+  'http://localhost:8080/tests/restaurants/first-takeAwayTax?int=0.1&until=40.0'
+```
+```
