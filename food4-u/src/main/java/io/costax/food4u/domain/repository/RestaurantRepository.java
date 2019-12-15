@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+public interface RestaurantRepository extends JpaRepository<Restaurant, Long>, RestaurantQueries {
 
     @Override
     @Query("from Restaurant r left join fetch r.cooker order by r.id desc")

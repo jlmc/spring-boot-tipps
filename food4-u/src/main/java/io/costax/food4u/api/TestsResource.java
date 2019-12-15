@@ -39,4 +39,9 @@ public class TestsResource {
     public List<Restaurant> findByCookerName(@RequestParam(value = "cooker-name", defaultValue = "aaa") String cookerName) {
         return restaurantRepository.findByCookerName(cookerName);
     }
+
+    @GetMapping("/restaurants/custom-search")
+    public List<Restaurant> customSearch(@RequestParam(value = "cooker-name", defaultValue = "aaa") String cookerName) {
+        return restaurantRepository.searchCustom("123", "456");
+    }
 }
