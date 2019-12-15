@@ -33,6 +33,9 @@ public class Restaurant {
     @JoinColumn(name = "cooker_id", nullable = false)
     private Cooker cooker;
 
+    @Embedded
+    private Address address;
+
     @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "restaurant_payment_method",
