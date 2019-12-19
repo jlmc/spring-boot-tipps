@@ -52,30 +52,22 @@ public class RestaurantResources {
 
     @PostMapping
     public ResponseEntity<?> add(@RequestBody Restaurant restaurant) {
-        try {
-            final Restaurant added = restaurantRegistrationService.add(restaurant);
+        final Restaurant added = restaurantRegistrationService.add(restaurant);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest().path("/{id}")
-                    .buildAndExpand(added.getId())
-                    .toUri();
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/{id}")
+                .buildAndExpand(added.getId())
+                .toUri();
 
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .location(location)
-                    .body(added);
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .badRequest()
-                    .header("X-reason", e.getMessage())
-                    .body(e.getMessage());
-        }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .location(location)
+                .body(added);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{restaurantId}")
     public Restaurant update(@PathVariable("restaurantId") Long restaurantId,
-                                       @RequestBody Restaurant restaurant) {
+                             @RequestBody Restaurant restaurant) {
         return restaurantRegistrationService.update(restaurantId, restaurant);
     }
 
