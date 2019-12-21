@@ -9,6 +9,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -26,11 +28,13 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
+    @PositiveOrZero
     @Column(name = "take_away_tax", nullable = false)
-    private BigDecimal takeAwayTax;
+    private BigDecimal takeAwayTax = BigDecimal.ZERO;
 
     @ManyToOne
     @JoinColumn(name = "cooker_id", nullable = false)

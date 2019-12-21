@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @JsonRootName("cook")
 @Data
@@ -19,6 +20,7 @@ public class Cooker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @JsonProperty("title")
     @Column(nullable = false)
     private String name;

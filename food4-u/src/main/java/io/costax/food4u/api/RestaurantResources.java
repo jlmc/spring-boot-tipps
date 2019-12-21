@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.List;
@@ -59,7 +60,7 @@ public class RestaurantResources {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<?> add(@RequestBody @Valid Restaurant restaurant) {
         final Restaurant added = restaurantRegistrationService.add(restaurant);
 
         URI location = ServletUriComponentsBuilder

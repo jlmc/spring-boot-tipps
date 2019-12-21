@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -200,6 +202,30 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return httpHeaders;
     }
 
+    /**
+     * Bean validation exception handler
+     */
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(final MethodArgumentNotValidException ex,
+                                                                  final HttpHeaders headers,
+                                                                  final HttpStatus status,
+                                                                  final WebRequest request) {
+        ProblemType type = ProblemType.INVALID_DATA;
+        String details = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::toString)
+                /*.map(fieldError -> new Error(
+                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
+                        fieldError.toString())
+                ).*/
+                .collect(Collectors.joining("; "));
+
+        Problem problem = createProblemBuilder(status, type, details).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(final Exception ex,
                                                              final Object body,
@@ -211,11 +237,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             customBody = Problem.builder()
                     .status(status.value())
                     .title(status.getReasonPhrase())
+                    .timestamp(Instant.now(clock))
                     .build();
         } else if (customBody instanceof String) {
             customBody = Problem.builder()
                     .status(status.value())
                     .title((String) body)
+                    .timestamp(Instant.now(clock))
                     .build();
         }
 

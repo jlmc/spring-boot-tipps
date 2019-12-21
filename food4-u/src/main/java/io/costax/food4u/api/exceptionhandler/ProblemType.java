@@ -7,6 +7,7 @@ enum ProblemType {
     BUSINESS_ERROR("/generic-business-error", "Business rule violation"),
     MESSAGE_NOT_READABLE("/message-not-readable", "Incomprehensible Message"),
     URI_PARAMETER_INVALID("/uri-parameter-invalid", "URI invalid parameter"),
+    INVALID_DATA("/invalid-data", "Invalid data"),
     INTERNAL_SERVER_ERROR("/internal-server-error", "System Internal Error");
 
     private String title;
