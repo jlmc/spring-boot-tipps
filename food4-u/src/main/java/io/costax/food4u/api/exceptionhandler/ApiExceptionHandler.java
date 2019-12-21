@@ -28,6 +28,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     // The clock instance allows us to have deterministic result when we have tests cases
     Clock clock = Clock.systemDefaultZone();
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ProblemType problemType = ProblemType.INTERNAL_SERVER_ERROR;
+
+        String detail = "An unexpected internal system error has occurred. Please try again and if the problem persists contact us.";
+
+        // Importante colocar o printStackTrace (pelo menos por enquanto, que não estamos fazendo logging)
+        // para mostrar a stacktrace na console.
+        // Se não fizer isso, ficamos sem ver o stacktrace de exceptions que seriam importantes
+        // especialmente na fase de desenvolvimento
+        ex.printStackTrace();
+
+        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
     /**
      * Customise the handler the syntax error, to have a better response.
      */
@@ -73,7 +90,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                         final HttpStatus status,
                                                         final WebRequest request) {
         if (ex instanceof MethodArgumentTypeMismatchException) {
-            return handlerMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException)ex, request);
+            return handlerMethodArgumentTypeMismatchException((MethodArgumentTypeMismatchException) ex, request);
         }
 
         return super.handleTypeMismatch(ex, headers, status, request);
@@ -122,8 +139,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String detail = String.format(
                 """
-                The property '%s' contain the value '%s', witch is of invalid type. a value of the type '%s' should be used.
-                """, path, ex.getValue(), ex.getTargetType().getSimpleName());
+                        The property '%s' contain the value '%s', witch is of invalid type. a value of the type '%s' should be used.
+                        """, path, ex.getValue(), ex.getTargetType().getSimpleName());
 
         Problem problem = Problem.createBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
