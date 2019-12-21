@@ -12,4 +12,4 @@ pipelines:
           - maven
         script: # Modify the commands below to build your repository.
           - echo ${JAVA_HOME}
-          - mvn clean install  #-B verify # -B batch mode makes Maven less verbose
+          - mvn -B verify # -B batch mode makes Maven less verbose

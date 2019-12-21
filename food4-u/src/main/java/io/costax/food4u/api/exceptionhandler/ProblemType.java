@@ -4,7 +4,8 @@ enum ProblemType {
     ENTITY_NOT_FOUND("/entity-not-found", "Entity not found"),
     ILLEGAL_ARGUMENT("/illegal-argument", "Illegal Argument"),
     RESOURCE_IN_USE("/resource-in-use", "Resource in use"),
-    BUSINESS_ERROR("/generic-business-error", "Business rule violation");
+    BUSINESS_ERROR("/generic-business-error", "Business rule violation"),
+    MESSAGE_NOT_READABLE("/message-not-readable", "Incomprehensible Message");
 
     private String title;
     private String uri;

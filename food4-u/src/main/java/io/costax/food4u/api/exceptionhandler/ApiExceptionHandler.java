@@ -6,6 +6,7 @@ import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,22 @@ import java.time.Clock;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     // The clock instance allows us to have deterministic result when we have tests cases
     Clock clock = Clock.systemDefaultZone();
+
+    /**
+     * Customise the handler the syntax error, to have a better response.
+     */
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(final HttpMessageNotReadableException ex,
+                                                                  final HttpHeaders headers,
+                                                                  final HttpStatus status,
+                                                                  final WebRequest request) {
+        ProblemType problemType = ProblemType.MESSAGE_NOT_READABLE;
+        String detail = "The request body is invalid. Check syntax error. " + ex.getMessage();
+
+        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
 
     @ResponseBody
     @ExceptionHandler(ResourceNotFoundException.class)
