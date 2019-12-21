@@ -1,6 +1,6 @@
 package io.costax.food4u.api;
 
-import io.costax.food4u.domain.ResourceNotFoundException;
+import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.PaymentMethod;
 import io.costax.food4u.domain.repository.PaymentMethodRepository;
 import io.costax.food4u.domain.services.PaymentMethodRegistrationService;
@@ -32,10 +32,9 @@ public class PaymentMethodResources {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{payment-method-id}")
     public PaymentMethod getById(@PathVariable("payment-method-id") Long id) {
-        final PaymentMethod paymentMethod = repository
-                .findById(id).orElseThrow(() -> ResourceNotFoundException.of(PaymentMethod.class, id));
         //repository.refresh(paymentMethod);
-        return paymentMethod;
+        return repository
+                .findById(id).orElseThrow(() -> new ResourceNotFoundException(PaymentMethod.class, id));
     }
 
     @PostMapping

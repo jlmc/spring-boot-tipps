@@ -1,7 +1,7 @@
 package io.costax.food4u.domain.services;
 
-import io.costax.food4u.domain.ResourceInUseException;
-import io.costax.food4u.domain.ResourceNotFoundException;
+import io.costax.food4u.domain.exceptions.CookerNotFoundException;
+import io.costax.food4u.domain.exceptions.ResourceInUseException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import org.springframework.beans.BeanUtils;
@@ -24,7 +24,7 @@ public class CookerRegistrationService {
 
     public void remove(final Long cookerId) {
         Cooker cooker = repository.findById(cookerId)
-                .orElseThrow(() -> ResourceNotFoundException.of(Cooker.class, cookerId));
+                .orElseThrow(() -> CookerNotFoundException.of(cookerId));
 
         try {
             repository.delete(cooker);
@@ -36,7 +36,7 @@ public class CookerRegistrationService {
 
     public Cooker update(final Long cookerId, final Cooker cooker) {
         Cooker cookerCurrent = repository.findById(cookerId)
-                .orElseThrow(() -> ResourceNotFoundException.of(Cooker.class, cookerId));
+                .orElseThrow(() -> CookerNotFoundException.of(cookerId));
 
         BeanUtils.copyProperties(cooker, cookerCurrent, "id");
         repository.flush();

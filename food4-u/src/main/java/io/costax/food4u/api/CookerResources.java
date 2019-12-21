@@ -1,8 +1,9 @@
 package io.costax.food4u.api;
 
 import io.costax.food4u.api.model.CookersXmlWrapper;
-import io.costax.food4u.domain.ResourceInUseException;
-import io.costax.food4u.domain.ResourceNotFoundException;
+import io.costax.food4u.domain.exceptions.CookerNotFoundException;
+import io.costax.food4u.domain.exceptions.ResourceInUseException;
+import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
@@ -54,7 +55,7 @@ public class CookerResources {
     public Cooker getById(@PathVariable("Id") Long cookerId) {
         return repository.findById(cookerId)
                 //.map(ResponseEntity::ok)
-                .orElseThrow(() -> ResourceNotFoundException.of(Cooker.class, cookerId));
+                .orElseThrow(() -> CookerNotFoundException.of(cookerId));
     }
 
     @PostMapping

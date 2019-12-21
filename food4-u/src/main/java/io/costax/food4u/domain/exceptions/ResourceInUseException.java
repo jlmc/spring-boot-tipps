@@ -1,8 +1,8 @@
-package io.costax.food4u.domain;
+package io.costax.food4u.domain.exceptions;
 
 import java.io.Serializable;
 
-public class ResourceInUseException extends RuntimeException {
+public class ResourceInUseException extends BusinessException {
     private final Class<?> resourceClass;
     private final Serializable identifier;
 

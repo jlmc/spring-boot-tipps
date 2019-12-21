@@ -1,7 +1,10 @@
 package io.costax.food4u.api.exceptionhandler;
 
-public enum ProblemType {
-    ENTITY_NOT_FOUND("/entity-not-found", "Entity not found");
+enum ProblemType {
+    ENTITY_NOT_FOUND("/entity-not-found", "Entity not found"),
+    ILLEGAL_ARGUMENT("/illegal-argument", "Illegal Argument"),
+    RESOURCE_IN_USE("/resource-in-use", "Resource in use"),
+    BUSINESS_ERROR("/generic-business-error", "Business rule violation");
 
     private String title;
     private String uri;

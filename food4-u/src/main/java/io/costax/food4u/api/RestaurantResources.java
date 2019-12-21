@@ -2,7 +2,7 @@ package io.costax.food4u.api;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.costax.food4u.domain.ResourceNotFoundException;
+import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantRegistrationService;
@@ -47,7 +47,7 @@ public class RestaurantResources {
     public Restaurant getById(@PathVariable("restaurantId") Long id) {
         return restaurantRepository
                 .findById(id)
-                .orElseThrow(() -> ResourceNotFoundException.of(Restaurant.class, id));
+                .orElseThrow(() -> RestaurantNotFoundException.of(id));
     }
 
     @PostMapping
@@ -76,7 +76,7 @@ public class RestaurantResources {
                                     @RequestBody Map<String, Object> payload) {
         final Restaurant current = restaurantRepository
                 .findById(restaurantId)
-                .orElseThrow(() -> ResourceNotFoundException.of(Restaurant.class, restaurantId));
+                .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
 
         final Restaurant merged = merge(payload, current);
 
