@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.time.Instant;
+
 /**
  * RFC 7807 (Problem Details for HTTP APIs)
  * <p>
@@ -76,14 +78,18 @@ public class Problem {
     private String title;
     private String detail;
 
+    private Instant timestamp;
+
     static Problem.ProblemBuilder createBuilder(final HttpStatus status,
-                                                        final ProblemType problemType,
-                                                        final String detail) {
+                                                final ProblemType problemType,
+                                                final String detail,
+                                                final Instant instant) {
         return Problem.builder()
                 .status(status.value())
                 .type(problemType.getUri())
                 .title(problemType.getTitle())
-                .detail(detail);
+                .detail(detail)
+                .timestamp(instant);
     }
 
 }

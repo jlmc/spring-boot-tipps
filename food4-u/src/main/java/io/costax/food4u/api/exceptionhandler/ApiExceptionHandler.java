@@ -21,6 +21,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -41,7 +42,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // especialmente na fase de desenvolvimento
         ex.printStackTrace();
 
-        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
@@ -65,7 +66,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         ProblemType problemType = ProblemType.MESSAGE_NOT_READABLE;
         String detail = "The request body is invalid. Check syntax error. " + ex.getMessage();
-        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -78,7 +79,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
         String detail = String.format("The resource '%s' do not exists.", ex.getRequestURL());
 
-        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
@@ -106,7 +107,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String details = String.format("The URI parameter '%s' was a incompatible value '%s', the expected type is '%s'",
                 e.getName(), e.getValue(), e.getRequiredType().getSimpleName());
-        Problem problem = Problem.createBuilder(status, problemType, details).build();
+        Problem problem = createProblemBuilder(status, problemType, details).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
@@ -121,7 +122,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.joining("."));
 
         String details = String.format("The property '%s' do not exists", path);
-        Problem body = Problem.createBuilder(status, ProblemType.MESSAGE_NOT_READABLE, details).build();
+        Problem body = createProblemBuilder(status, ProblemType.MESSAGE_NOT_READABLE, details).build();
 
         return handleExceptionInternal(ex, body, headers, status, request);
     }
@@ -142,7 +143,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         The property '%s' contain the value '%s', witch is of invalid type. a value of the type '%s' should be used.
                         """, path, ex.getValue(), ex.getTargetType().getSimpleName());
 
-        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -154,7 +155,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
         String detail = e.getMessage();
-        Problem problem = Problem.createBuilder(status, problemType, detail).build();
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
@@ -170,7 +171,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(e.getMessage());
          */
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        Problem problem = Problem.createBuilder(status, ProblemType.ILLEGAL_ARGUMENT, e.getMessage()).build();
+        Problem problem = createProblemBuilder(status, ProblemType.ILLEGAL_ARGUMENT, e.getMessage()).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
@@ -179,7 +180,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     ResponseEntity<?> businessExceptionHandler(BusinessException e, WebRequest request) {
         final HttpStatus status = HttpStatus.BAD_REQUEST;
-        Problem problem = Problem.createBuilder(status, ProblemType.BUSINESS_ERROR, e.getMessage()).build();
+        Problem problem = createProblemBuilder(status, ProblemType.BUSINESS_ERROR, e.getMessage()).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
@@ -188,11 +189,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceInUseException.class)
     ResponseEntity<?> resourceInUseExceptionHandler(ResourceInUseException e, WebRequest request) {
         final HttpStatus status = HttpStatus.CONFLICT;
-        Problem problem = Problem.createBuilder(status, ProblemType.RESOURCE_IN_USE, e.getMessage()).build();
+        Problem problem = createProblemBuilder(status, ProblemType.RESOURCE_IN_USE, e.getMessage()).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }
-
 
     private HttpHeaders toReasonHttpHeaders(final String message) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -221,4 +221,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return super.handleExceptionInternal(ex, customBody, headers, status, request);
     }
+
+    private Problem.ProblemBuilder createProblemBuilder(final HttpStatus status,
+                                                        final ProblemType problemType,
+                                                        final String detail) {
+        return Problem.createBuilder(status, problemType, detail, Instant.now(clock));
+    }
+
 }
