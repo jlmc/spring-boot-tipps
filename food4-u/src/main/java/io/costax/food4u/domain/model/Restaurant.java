@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -36,6 +38,8 @@ public class Restaurant {
     @Column(name = "take_away_tax", nullable = false)
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
 
+    @Valid
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "cooker_id", nullable = false)
     private Cooker cooker;

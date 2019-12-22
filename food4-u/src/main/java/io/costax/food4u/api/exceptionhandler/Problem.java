@@ -1,11 +1,11 @@
 package io.costax.food4u.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * RFC 7807 (Problem Details for HTTP APIs)
@@ -71,7 +71,7 @@ import java.time.Instant;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
-@Builder
+//@Builder
 public class Problem {
     private Integer status;
     private String type;
@@ -80,16 +80,90 @@ public class Problem {
 
     private Instant timestamp;
 
+    private List<Field> fields;
+
+    private Problem(ProblemBuilder builder) {
+        this.status = builder.status;
+        this.type = builder.type;
+        this.title = builder.title;
+        this.detail = builder.detail;
+        this.timestamp = builder.timestamp;
+        this.fields = builder.fields;
+    }
+
+    static Problem.ProblemBuilder builder() {
+        return new ProblemBuilder();
+    }
+
     static Problem.ProblemBuilder createBuilder(final HttpStatus status,
                                                 final ProblemType problemType,
                                                 final String detail,
                                                 final Instant instant) {
+
         return Problem.builder()
-                .status(status.value())
+                .status(status)
                 .type(problemType.getUri())
                 .title(problemType.getTitle())
                 .detail(detail)
                 .timestamp(instant);
     }
 
+    @Getter
+    protected static class Field {
+        private String name;
+        private String userMessage;
+
+        private Field(final String name, final String userMessage) {
+            this.name = name;
+            this.userMessage = userMessage;
+        }
+
+        public static Field of(final String name, final String userMessage) {
+            return new Field(name, userMessage);
+        }
+    }
+
+    public static class ProblemBuilder {
+        private Integer status;
+        private String type;
+        private String title;
+        private String detail;
+
+        private Instant timestamp;
+        private List<Field> fields;
+
+        public ProblemBuilder status(final HttpStatus status) {
+            this.status = status.value();
+            return this;
+        }
+
+        public ProblemBuilder type(final String type) {
+            this.type = type;
+            return this;
+        }
+
+        public ProblemBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public ProblemBuilder detail(String detail) {
+            this.detail = detail;
+            return this;
+        }
+
+        public Problem build() {
+            return new Problem(this);
+        }
+
+        public ProblemBuilder timestamp(final Instant timestamp) {
+            this.timestamp = timestamp;
+            return this;
+        }
+
+        public ProblemBuilder fields(final List<Field> fields) {
+            this.fields = fields;
+            return this;
+        }
+    }
 }

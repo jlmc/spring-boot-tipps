@@ -8,11 +8,13 @@ import io.costax.food4u.domain.exceptions.ResourceInUseException;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,12 +26,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.Clock;
 import java.time.Instant;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     // The clock instance allows us to have deterministic result when we have tests cases
     Clock clock = Clock.systemDefaultZone();
+
+    @Autowired
+    MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
@@ -69,6 +75,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemType problemType = ProblemType.MESSAGE_NOT_READABLE;
         String detail = "The request body is invalid. Check syntax error. " + ex.getMessage();
         Problem problem = createProblemBuilder(status, problemType, detail).build();
+
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
@@ -211,17 +218,24 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
         ProblemType type = ProblemType.INVALID_DATA;
-        String details = ex.getBindingResult()
+
+
+        List<Problem.Field> fields = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(FieldError::toString)
-                /*.map(fieldError -> new Error(
-                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
-                        fieldError.toString())
-                ).*/
-                .collect(Collectors.joining("; "));
+                //.map(FieldError::toString)
+                .map(fieldError -> Problem.Field.of(
+                        fieldError.getField(),
+                        //fieldError.getDefaultMessage()
+                        //messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
+                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())
+                        )
+                )
+                .collect(Collectors.toList());
 
-        Problem problem = createProblemBuilder(status, type, details).build();
+        Problem problem = createProblemBuilder(status, type, "One or more properties contains invalid values")
+                .fields(fields)
+                .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
@@ -235,13 +249,13 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Object customBody = body;
         if (customBody == null) {
             customBody = Problem.builder()
-                    .status(status.value())
+                    .status(status)
                     .title(status.getReasonPhrase())
                     .timestamp(Instant.now(clock))
                     .build();
         } else if (customBody instanceof String) {
             customBody = Problem.builder()
-                    .status(status.value())
+                    .status(status)
                     .title((String) body)
                     .timestamp(Instant.now(clock))
                     .build();
