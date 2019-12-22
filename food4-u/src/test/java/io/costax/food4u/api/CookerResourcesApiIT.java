@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static io.costax.food4u.ResourceUtils.getContentFromResource;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
@@ -30,17 +31,15 @@ import static org.hamcrest.Matchers.*;
 class CookerResourcesApiIT {
 
 
-    @LocalServerPort
-    private int port;
-
     @Autowired
     Flyway flyway;
+    @LocalServerPort
+    private int port;
 
     @BeforeEach
     void setUp() {
         // the callback after migrate will be executed
         flyway.migrate();
-
 
         RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
         RestAssured.basePath = "/cookers";
@@ -51,9 +50,9 @@ class CookerResourcesApiIT {
     @DisplayName("should return HTTP status OK (200) when GET /cookers")
     @Order(1)
     void should_return_status_OK_when_GET_cookers() {
-        List<Cooker> cookers =
-                //@formatter:off
-        given()
+
+        //@formatter:off
+        List<Cooker> cookers = given()
              //.basePath("/cookers")
              //.port(port)
              .accept(ContentType.JSON)
@@ -79,14 +78,14 @@ class CookerResourcesApiIT {
 
     @Test
     void should_return_status_CREATED_when_POST_cookers() {
-        Cooker cooker =
-                //@formatter:off
-        given()
+        //@formatter:off
+        Cooker cooker = given()
             .basePath("/cookers")
             .port(port)
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
-            .body("{ \"title\": \"Allen\" }")
+            //.body("{ \"title\": \"Allen\" }")
+            .body(getContentFromResource("/jsons/CookerResourcesApiIT-should_return_status_CREATED_when_POST_cookers.json"))
         .when()
             .post()
         .then()
