@@ -8,17 +8,19 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+@Target({TYPE, PARAMETER, FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = MultipleConstraintValidator.class)
-public @interface Multiple {
+@Constraint(validatedBy = ZeroValueIncludesDescriptionConstraintValidator.class)
+public @interface ZeroValueIncludesDescription {
 
-    String message() default "{Multiple.message}";
+    String message() default "{ZeroValueIncludesDescription.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    int number();
+    String numericPropertyName();
+
+    String descriptionPropertyName();
 
 }
