@@ -76,8 +76,8 @@ public class CookerResources {
     }
 
     @PutMapping("/{Id}")
-    public ResponseEntity<Cooker> atualizar(@PathVariable("Id") Long cookerId,
-                                            @RequestBody Cooker cooker) {
+    public ResponseEntity<Cooker> update(@PathVariable("Id") Long cookerId,
+                                         @RequestBody Cooker cooker) {
         //Cooker cookerCurrent = cookerRegistrationService.update(cookerId, cooker);
         Cooker cookerCurrent = this.cookerRegistrationService.update(cookerId, cooker);
         return ResponseEntity.ok(cookerCurrent);
