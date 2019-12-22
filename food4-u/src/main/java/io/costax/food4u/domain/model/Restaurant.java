@@ -38,6 +38,7 @@ public class Restaurant {
     private String name;
 
     //@PositiveOrZero
+    //@Multiple(number = 2)
     @TakeAwayTax
     @Column(name = "take_away_tax", nullable = false)
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
