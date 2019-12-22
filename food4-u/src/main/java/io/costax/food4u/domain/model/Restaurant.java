@@ -3,6 +3,7 @@ package io.costax.food4u.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.costax.food4u.core.validation.TakeAwayTax;
 import io.costax.food4u.domain.model.ValidationGroups.CookerId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +14,6 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
@@ -37,7 +37,8 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
-    @PositiveOrZero
+    //@PositiveOrZero
+    @TakeAwayTax
     @Column(name = "take_away_tax", nullable = false)
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
 
