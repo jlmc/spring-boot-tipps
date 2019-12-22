@@ -219,11 +219,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final WebRequest request) {
         ProblemType type = ProblemType.INVALID_DATA;
 
-
         List<Problem.Field> fields = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                //.map(FieldError::toString)
                 .map(fieldError -> Problem.Field.of(
                         fieldError.getField(),
                         //fieldError.getDefaultMessage()
