@@ -11,11 +11,13 @@ public class ZeroValueIncludesDescriptionConstraintValidator implements Constrai
 
     private String descriptionPropertyName;
     private String numericPropertyName;
+    private String subDescriptionValue;
 
     @Override
     public void initialize(final ZeroValueIncludesDescription constraintAnnotation) {
         descriptionPropertyName = constraintAnnotation.descriptionPropertyName();
         numericPropertyName = constraintAnnotation.numericPropertyName();
+        subDescriptionValue = constraintAnnotation.subDescriptionValue();
     }
 
     @Override
@@ -34,7 +36,11 @@ public class ZeroValueIncludesDescriptionConstraintValidator implements Constrai
                             .getReadMethod()
                             .invoke(obj);
 
-            return (value == null || BigDecimal.ZERO.compareTo(value) != 0) || description != null;
+            if (value != null && BigDecimal.ZERO.compareTo(value) == 0 && description != null) {
+                return description.contains(subDescriptionValue);
+            }
+
+            return true;
 
         } catch (Exception e) {
             throw new ValidationException(e);

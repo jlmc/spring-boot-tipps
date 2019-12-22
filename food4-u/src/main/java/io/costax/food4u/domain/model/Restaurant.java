@@ -25,7 +25,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-
+//@ZeroValueIncludesDescription(numericPropertyName = "takeAwayTax", descriptionPropertyName = "name", subDescriptionValue = "(Fee Take Way)")
 public class Restaurant {
 
     @EqualsAndHashCode.Include

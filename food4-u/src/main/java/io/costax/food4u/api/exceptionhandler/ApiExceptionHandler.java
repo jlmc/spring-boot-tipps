@@ -3,6 +3,7 @@ package io.costax.food4u.api.exceptionhandler;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
+import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.BusinessException;
 import io.costax.food4u.domain.exceptions.ResourceInUseException;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -209,6 +212,58 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return httpHeaders;
     }
 
+    @ResponseBody
+    @ExceptionHandler(ManualValidationException.class)
+    protected ResponseEntity<Object> manualValidationExceptionHandler(final ManualValidationException ex,
+                                                                      final WebRequest webRequest) {
+        BindingResult bindingResult = ex.getBindingResult();
+        return customValidationExceptionInternalHandler(ex, bindingResult, new HttpHeaders(), HttpStatus.BAD_REQUEST, webRequest);
+    }
+
+    public ResponseEntity<Object> customValidationExceptionInternalHandler(final Exception ex,
+                                                                           final BindingResult bindingResult,
+                                                                           final HttpHeaders headers,
+                                                                           final HttpStatus status,
+                                                                           final WebRequest request) {
+        ProblemType type = ProblemType.INVALID_DATA;
+
+        List<Problem.Field> fields = bindingResult
+                .getAllErrors()
+                .stream()
+                .map(objectError -> {
+
+                    String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+                    String name = objectError.getObjectName();
+
+                    if (objectError instanceof FieldError) {
+                        name = ((FieldError) objectError).getField();
+                    }
+
+                    return Problem.Field.of(name, message);
+                })
+                .collect(Collectors.toList());
+
+
+//        List<Problem.Field> fields = ex.getBindingResult()
+//                .getFieldErrors()
+//                .stream()
+//                .map(fieldError -> Problem.Field.of(
+//                        fieldError.getField(),
+//                        //fieldError.getDefaultMessage()
+//                        //messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
+//                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())
+//                        )
+//                )
+//                .collect(Collectors.toList());
+
+        Problem problem = createProblemBuilder(status, type, "One or more properties contains invalid values")
+                .fields(fields)
+                .build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+
+    }
+
     /**
      * Bean validation exception handler
      */
@@ -217,25 +272,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final HttpHeaders headers,
                                                                   final HttpStatus status,
                                                                   final WebRequest request) {
-        ProblemType type = ProblemType.INVALID_DATA;
-
-        List<Problem.Field> fields = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(fieldError -> Problem.Field.of(
-                        fieldError.getField(),
-                        //fieldError.getDefaultMessage()
-                        //messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
-                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())
-                        )
-                )
-                .collect(Collectors.toList());
-
-        Problem problem = createProblemBuilder(status, type, "One or more properties contains invalid values")
-                .fields(fields)
-                .build();
-
-        return handleExceptionInternal(ex, problem, headers, status, request);
+        return customValidationExceptionInternalHandler(ex, ex.getBindingResult(), headers, status, request);
     }
 
     @Override

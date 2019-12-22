@@ -23,4 +23,6 @@ public @interface ZeroValueIncludesDescription {
 
     String descriptionPropertyName();
 
+    String subDescriptionValue();
+
 }

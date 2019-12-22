@@ -2,6 +2,7 @@ package io.costax.food4u.api;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -37,13 +40,16 @@ public class RestaurantResources {
     private final RestaurantRepository restaurantRepository;
     private final RestaurantRegistrationService restaurantRegistrationService;
     private final ObjectMapper objectMapper;
+    private final SmartValidator validator;
 
     public RestaurantResources(final RestaurantRepository restaurantRepository,
                                final RestaurantRegistrationService restaurantRegistrationService,
-                               final ObjectMapper objectMapper) {
+                               final ObjectMapper objectMapper,
+                               final SmartValidator validator) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegistrationService = restaurantRegistrationService;
         this.objectMapper = objectMapper;
+        this.validator = validator;
     }
 
     @GetMapping
@@ -89,8 +95,18 @@ public class RestaurantResources {
                 .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
 
         final Restaurant merged = merge(payload, current, request);
+        validate(merged, "restaurant");
 
         return this.update(restaurantId, merged);
+    }
+
+    private void validate(Restaurant restaurant, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
+        validator.validate(restaurant, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            throw new ManualValidationException(bindingResult);
+        }
     }
 
     private Restaurant merge(Map<String, Object> payload, Restaurant restaurantTarget, HttpServletRequest request) {
