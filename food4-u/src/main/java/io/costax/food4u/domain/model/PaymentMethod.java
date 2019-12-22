@@ -23,7 +23,7 @@ public class PaymentMethod {
         this.name = name;
     }
 
-    private static PaymentMethod of(String name) {
+    public static PaymentMethod of(String name) {
         return new PaymentMethod(name);
     }
 

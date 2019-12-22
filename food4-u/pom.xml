@@ -65,17 +65,32 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+
+        <!-- Tests -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <exclusions>
+            <!-- exclusions>
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
-            </exclusions>
+            </exclusions -->
         </dependency>
+        <!--dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency-->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -101,6 +116,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- run the integration tests -->
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <argLine>--enable-preview</argLine>
