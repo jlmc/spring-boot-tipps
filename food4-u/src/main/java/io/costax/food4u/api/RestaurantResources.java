@@ -78,7 +78,7 @@ public class RestaurantResources {
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{restaurantId}")
     public Restaurant update(@PathVariable("restaurantId") Long restaurantId,
-                             @RequestBody Restaurant restaurant) {
+                             @RequestBody @Validated({Default.class, RestaurantRegistration.class}) Restaurant restaurant) {
         return restaurantRegistrationService.update(restaurantId, restaurant);
     }
 
