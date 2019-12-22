@@ -3,6 +3,7 @@ package io.costax.food4u.domain.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import io.costax.food4u.domain.model.ValidationGroups.CookerId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -19,7 +20,7 @@ public class Cooker {
 
     @EqualsAndHashCode.Include
 
-    @NotNull(groups = ValidationGroups.RestaurantRegistration.class)
+    @NotNull(groups = CookerId.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

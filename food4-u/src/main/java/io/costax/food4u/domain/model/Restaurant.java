@@ -3,6 +3,7 @@ package io.costax.food4u.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.costax.food4u.domain.model.ValidationGroups.CookerId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
@@ -39,6 +42,7 @@ public class Restaurant {
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
 
     @Valid
+    @ConvertGroup(from = Default.class, to = CookerId.class)
     @NotNull
     @ManyToOne
     @JoinColumn(name = "cooker_id", nullable = false)
