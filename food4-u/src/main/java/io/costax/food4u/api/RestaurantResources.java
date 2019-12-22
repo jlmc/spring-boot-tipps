@@ -4,6 +4,7 @@ package io.costax.food4u.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.Restaurant;
+import io.costax.food4u.domain.model.ValidationGroups.RestaurantRegistration;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantRegistrationService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -12,11 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import javax.validation.groups.Default;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.List;
@@ -60,7 +62,7 @@ public class RestaurantResources {
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid Restaurant restaurant) {
+    public ResponseEntity<?> add(@RequestBody @Validated({Default.class, RestaurantRegistration.class}) Restaurant restaurant) {
         final Restaurant added = restaurantRegistrationService.add(restaurant);
 
         URI location = ServletUriComponentsBuilder

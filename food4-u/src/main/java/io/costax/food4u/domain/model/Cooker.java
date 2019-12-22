@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @JsonRootName("cook")
 @Data
@@ -15,7 +16,10 @@ import javax.validation.constraints.NotBlank;
 @Entity
 public class Cooker {
 
+
     @EqualsAndHashCode.Include
+
+    @NotNull(groups = ValidationGroups.RestaurantRegistration.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

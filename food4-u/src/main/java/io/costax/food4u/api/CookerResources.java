@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class CookerResources {
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Cooker> add(@RequestBody Cooker cooker, UriComponentsBuilder b) {
+    public ResponseEntity<Cooker> add(@RequestBody @Valid Cooker cooker, UriComponentsBuilder b) {
         Cooker saved = cookerRegistrationService.add(cooker);
 
         //UriComponents uriComponents = b.path("/cookers/{id}").buildAndExpand(saved.getId());
