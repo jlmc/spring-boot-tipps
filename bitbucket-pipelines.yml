@@ -10,6 +10,8 @@ pipelines:
     - step:
         caches:
           - maven
+        services:
+          - database
         script: # Modify the commands below to build your repository.
           - echo ${JAVA_HOME}
           - mvn -B verify # -B batch mode makes Maven less verbose
