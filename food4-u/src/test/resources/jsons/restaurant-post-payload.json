@@ -1,0 +1,12 @@
+{
+  "name": "Casa do Rio",
+  "takeAwayTax": 0.5,
+  "cooker": {
+    "id": 1
+  },
+  "address": {
+    "street": "Quinta St. Maria",
+    "city": "Condeixa",
+    "zipCode": "3030"
+  }
+}

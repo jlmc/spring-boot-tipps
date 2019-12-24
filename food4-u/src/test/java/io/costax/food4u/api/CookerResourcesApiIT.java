@@ -61,7 +61,7 @@ class CookerResourcesApiIT {
         .then()
             .statusCode(HttpStatus.OK.value())
             .body(Matchers.notNullValue())
-            .body("", Matchers.hasSize(2))
+            .body("", Matchers.hasSize(3))
                 .extract()
                     .body()
                     .jsonPath().getList(".", Cooker.class)
@@ -72,8 +72,27 @@ class CookerResourcesApiIT {
 
         Assert.assertThat(cookers, containsInAnyOrder(
                 hasProperty("name", Matchers.is("Mario Nabais")),
-                hasProperty("name", Matchers.is("Stu"))
+                hasProperty("name", Matchers.is("Alberto Chacal")),
+                hasProperty("name", Matchers.is("Carlos Lisboa"))
         ));
+    }
+
+    @Test
+    void when_get_cooker_by_id_successful_the_json_response_should_contain_the_title_property() {
+        //@formatter:off
+        given()
+           .basePath("/cookers")
+           .port(port)
+           .contentType(ContentType.JSON)
+           .accept(ContentType.JSON)
+           .pathParam("cooker-id", 1)
+        .when()
+           .get("/{cooker-id}")
+        .then()
+           .statusCode(HttpStatus.OK.value())
+           .body(Matchers.notNullValue())
+           .body(Matchers.containsString("{\"id\":1,\"title\":\"Mario Nabais\"}"));
+        //@formatter:on
     }
 
     @Test

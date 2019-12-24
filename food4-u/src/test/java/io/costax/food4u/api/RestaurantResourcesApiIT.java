@@ -1,0 +1,171 @@
+package io.costax.food4u.api;
+
+import io.costax.food4u.domain.model.Restaurant;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import org.flywaydb.core.Flyway;
+import org.hamcrest.Matchers;
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.math.BigDecimal;
+
+import static io.costax.food4u.ResourceUtils.getContentFromResource;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+@RunWith(SpringRunner.class)
+@ActiveProfiles("it")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class RestaurantResourcesApiIT {
+
+    @Autowired
+    Flyway flyway;
+    @LocalServerPort
+    private int port;
+
+    @BeforeEach
+    void setUp() {
+        // the callback after migrate will be executed
+        flyway.migrate();
+
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.basePath = "/restaurants";
+        RestAssured.port = port;
+    }
+
+    @Test
+    void when_get_restaurants_then_should_return_2_elements() {
+        //@formatter:off
+        var result = given()
+                //.basePath("/cookers")
+                //.port(port)
+                .accept(ContentType.JSON)
+        .when()
+            .get()
+        .then()
+            .log().body()
+            .statusCode(HttpStatus.OK.value())
+            .body(Matchers.notNullValue())
+            .body("", Matchers.hasSize(2))
+        .extract()
+            .body()
+                .jsonPath().getList(".", Restaurant.class);
+        //@formatter:on
+
+        System.out.println(result);
+
+
+        final Restaurant restaurantId2 = result.get(0);
+        Assert.assertThat(restaurantId2.getId(), is(2L));
+        Assert.assertThat(restaurantId2.getName(), is("Quinta St. Maria"));
+        Assert.assertThat(restaurantId2.getTakeAwayTax().compareTo(BigDecimal.valueOf(6.00d)), is(0));
+        Assert.assertThat(restaurantId2.getCooker(), Matchers.notNullValue());
+        Assert.assertThat(restaurantId2.getAddress(), Matchers.notNullValue());
+        Assert.assertThat(restaurantId2.getCreatedAt(), Matchers.nullValue());
+        Assert.assertThat(restaurantId2.getUpdatedAt(), Matchers.nullValue());
+        Assert.assertThat(restaurantId2.getPaymentMethods(), Matchers.empty());
+    }
+
+    @Test
+    void when_get_restaurant_by_id_then_should_return_the_json_object() {
+        //@formatter:off
+        final String result = given()
+              //  .basePath("/cookers")
+                .port(port)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("id", 1)
+        .when()
+                .get("/{id}")
+        .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(notNullValue())
+        .extract().asString();
+        //@formatter:on
+
+        org.junit.jupiter.api.Assertions.assertEquals(result, getContentFromResource("/jsons/restaurant-get-by-id-expected-result.json"));
+    }
+
+    @Test
+    void when_post_restaurant_successful_then_should_return_created_status_when_the_body() {
+        //@formatter:off
+        final var restaurant = given()
+                    .contentType(ContentType.JSON)
+                    .accept(ContentType.JSON)
+                    .body(getContentFromResource("/jsons/restaurant-post-payload.json"))
+                .when()
+                    .post()
+                .then()
+                    .statusCode(HttpStatus.CREATED.value())
+                    .body(notNullValue())
+                    .header("Location", notNullValue())
+                    .log().body(false)
+                .extract()
+                   .asString();
+        //@formatter:on
+
+        Assertions.assertNotNull(restaurant);
+        //Assertions.assertEquals("Casa do Rio", restaurant.getName());
+        //Assertions.assertNotNull(restaurant.getCooker());
+
+        // {"id":3,"name":"Casa do Rio","takeAwayTax":0.5,"cooker":{"id":1,"title":"Mario Nabais"},"address":{"street":"Quinta St. Maria","city":"Condeixa","zipCode":"3030"}}
+        Assertions.assertTrue(restaurant.startsWith("{\"id\""));
+        Assertions.assertTrue(restaurant.endsWith(",\"name\":\"Casa do Rio\",\"takeAwayTax\":0.5,\"cooker\":{\"id\":1,\"title\":\"Mario Nabais\"},\"address\":{\"street\":\"Quinta St. Maria\",\"city\":\"Condeixa\",\"zipCode\":\"3030\"}}"));
+    }
+
+    @Test
+    void when_post_restaurant_with_cooker_title_then_should_return_badrequest_status_with_the_body() {
+        //@formatter:off
+        final var responseBody = given()
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .body(getContentFromResource("/jsons/restaurant-post-invalid-payload-with-cooker-title.json"))
+        .when()
+            .post()
+        .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body(notNullValue())
+            //.body(Matchers.containsString("status\": 400"))
+            .body("status", is(400))
+            .body("title", is("Incomprehensible Message"))
+            .body("detail", is("The property 'cooker.title' do not exists"))
+            .log().body(false)
+        .extract()
+            .asString();
+        //@formatter:on
+    }
+
+    @Test
+    void when_post_restaurant_with_payments_methods_then_should_return_badrequest_status_with_the_body() {
+        //@formatter:off
+        final var responseBody = given()
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .body(getContentFromResource("/jsons/restaurant-post-invalid-payload-with-payment-methods.json"))
+        .when()
+            .post()
+        .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value())
+            .body(notNullValue())
+            .body("status", is(400))
+            .body("title", is("Incomprehensible Message"))
+            .body("detail", is("The property 'cooker.title' do not exists"))
+            .log().body(true)
+        .extract()
+            .asString();
+        //@formatter:on
+    }
+
+
+}
