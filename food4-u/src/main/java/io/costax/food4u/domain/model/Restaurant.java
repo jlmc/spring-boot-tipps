@@ -2,7 +2,6 @@ package io.costax.food4u.domain.model;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.costax.food4u.core.validation.TakeAwayTax;
 import io.costax.food4u.domain.model.ValidationGroups.CookerId;
@@ -55,16 +54,14 @@ public class Restaurant {
     @Embedded
     private Address address;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
-    @JsonIgnore
+
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false, updatable = false)
     private OffsetDateTime updatedAt;
 
-    @JsonIgnore
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "restaurant_payment_method",
             joinColumns = @JoinColumn(
@@ -81,7 +78,6 @@ public class Restaurant {
     )
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
-    @JsonIgnore
     @Version
     private int version;
 
