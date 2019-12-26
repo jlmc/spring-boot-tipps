@@ -1,11 +1,9 @@
 package io.costax.food4u.api;
 
-import io.costax.food4u.domain.model.Cooker;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
@@ -18,11 +16,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
+import java.util.Map;
 
 import static io.costax.food4u.ResourceUtils.getContentFromResource;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("it")
@@ -49,32 +48,23 @@ class CookerResourcesApiIT {
     @Test
     @DisplayName("should return HTTP status OK (200) when GET /cookers")
     @Order(1)
-    void should_return_status_OK_when_GET_cookers() {
-
+    void when_get_cookers_then_should_return_ok_status_code() {
         //@formatter:off
-        List<Cooker> cookers = given()
+        given()
              //.basePath("/cookers")
              //.port(port)
              .accept(ContentType.JSON)
         .when()
             .get()
         .then()
+            .log().body()
             .statusCode(HttpStatus.OK.value())
             .body(Matchers.notNullValue())
             .body("", Matchers.hasSize(3))
-                .extract()
-                    .body()
-                    .jsonPath().getList(".", Cooker.class)
-                    //.body("name", hasItems("Mario Nabais"))
-                    //.body("nome", hasItems("Indiana", "Tailandesa"));
-        ;
-        //@formatter:on
-
-        Assert.assertThat(cookers, containsInAnyOrder(
-                hasProperty("name", Matchers.is("Mario Nabais")),
-                hasProperty("name", Matchers.is("Alberto Chacal")),
-                hasProperty("name", Matchers.is("Carlos Lisboa"))
-        ));
+            .body("$", hasItem(Map.of("id", 1, "title", "Mario Nabais")))
+            .body("$", hasItem(Map.of("id", 2, "title", "Alberto Chacal")))
+            .body("$", hasItem(Map.of("id", 3, "title", "Carlos Lisboa")))
+            ;
     }
 
     @Test
@@ -96,9 +86,9 @@ class CookerResourcesApiIT {
     }
 
     @Test
-    void should_return_status_CREATED_when_POST_cookers() {
+    void when_post_cookers_then_should_return_http_status_created() {
         //@formatter:off
-        Cooker cooker = given()
+        given()
             .basePath("/cookers")
             .port(port)
             .contentType(ContentType.JSON)
@@ -110,10 +100,6 @@ class CookerResourcesApiIT {
         .then()
             .statusCode(HttpStatus.CREATED.value())
             .body(Matchers.notNullValue())
-        .extract()
-            .as(Cooker.class);
-        //@formatter:on
-
-        Assert.assertThat(cooker, notNullValue());
+            .body("title", is("Allen"));
     }
 }

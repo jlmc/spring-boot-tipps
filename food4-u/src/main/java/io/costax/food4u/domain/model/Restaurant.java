@@ -2,7 +2,6 @@ package io.costax.food4u.domain.model;
 
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.costax.food4u.core.validation.TakeAwayTax;
 import io.costax.food4u.domain.model.ValidationGroups.CookerId;
 import lombok.Data;
@@ -43,7 +42,7 @@ public class Restaurant {
     @Column(name = "take_away_tax", nullable = false)
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
 
-    @JsonIgnoreProperties(value = "title", allowGetters = true)
+    //@JsonIgnoreProperties(value = "title", allowGetters = true)
     @Valid
     @ConvertGroup(from = Default.class, to = CookerId.class)
     @NotNull

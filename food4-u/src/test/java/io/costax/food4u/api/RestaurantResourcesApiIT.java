@@ -1,12 +1,9 @@
 package io.costax.food4u.api;
 
-import io.costax.food4u.domain.model.Restaurant;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
 import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.costax.food4u.ResourceUtils.getContentFromResource;
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("it")
@@ -60,21 +59,26 @@ class RestaurantResourcesApiIT {
             .body("", Matchers.hasSize(2))
         .extract()
             .body()
-                .jsonPath().getList(".", Restaurant.class);
+                .jsonPath().getList(".", HashMap.class);
         //@formatter:on
 
-        System.out.println(result);
-
-
-        final Restaurant restaurantId2 = result.get(0);
-        Assert.assertThat(restaurantId2.getId(), is(2L));
-        Assert.assertThat(restaurantId2.getName(), is("Quinta St. Maria"));
-        Assert.assertThat(restaurantId2.getTakeAwayTax().compareTo(BigDecimal.valueOf(6.00d)), is(0));
-        Assert.assertThat(restaurantId2.getCooker(), Matchers.notNullValue());
-        Assert.assertThat(restaurantId2.getAddress(), Matchers.notNullValue());
-        Assert.assertThat(restaurantId2.getCreatedAt(), Matchers.nullValue());
-        Assert.assertThat(restaurantId2.getUpdatedAt(), Matchers.nullValue());
-        Assert.assertThat(restaurantId2.getPaymentMethods(), Matchers.empty());
+        final Map<String, Object> restaurant0 = result.get(0);
+        Assertions.assertTrue(restaurant0.containsKey("address"));
+        Assertions.assertTrue(restaurant0.containsKey("cooker"));
+        Assertions.assertTrue(restaurant0.containsKey("name"));
+        Assertions.assertTrue(restaurant0.containsKey("id"));
+        Assertions.assertTrue(restaurant0.containsKey("takeAwayTax"));
+        Assertions.assertFalse(restaurant0.containsKey("createdAt"));
+        Assertions.assertFalse(restaurant0.containsKey("updatedAt"));
+        Assertions.assertFalse(restaurant0.containsKey("paymentMethods"));
+        Assertions.assertFalse(restaurant0.containsKey("version"));
+        Map<String, Object> cooker = (Map<String, Object>) restaurant0.getOrDefault("cooker", Map.of());
+        Assertions.assertTrue(cooker.containsKey("id"));
+        Assertions.assertTrue(cooker.containsKey("title"));
+        final Map<String, Object> address = (Map<String, Object>) restaurant0.getOrDefault("address", Map.of());
+        Assertions.assertTrue(address.containsKey("street"));
+        Assertions.assertTrue(address.containsKey("zipCode"));
+        Assertions.assertTrue(address.containsKey("city"));
     }
 
     @Test
@@ -94,7 +98,7 @@ class RestaurantResourcesApiIT {
         .extract().asString();
         //@formatter:on
 
-        org.junit.jupiter.api.Assertions.assertEquals(result, getContentFromResource("/jsons/restaurant-get-by-id-expected-result.json"));
+        Assertions.assertEquals(result, getContentFromResource("/jsons/restaurant-get-by-id-expected-result.json"));
     }
 
     @Test
@@ -116,10 +120,6 @@ class RestaurantResourcesApiIT {
         //@formatter:on
 
         Assertions.assertNotNull(restaurant);
-        //Assertions.assertEquals("Casa do Rio", restaurant.getName());
-        //Assertions.assertNotNull(restaurant.getCooker());
-
-        // {"id":3,"name":"Casa do Rio","takeAwayTax":0.5,"cooker":{"id":1,"title":"Mario Nabais"},"address":{"street":"Quinta St. Maria","city":"Condeixa","zipCode":"3030"}}
         Assertions.assertTrue(restaurant.startsWith("{\"id\""));
         Assertions.assertTrue(restaurant.endsWith(",\"name\":\"Casa do Rio\",\"takeAwayTax\":0.5,\"cooker\":{\"id\":1,\"title\":\"Mario Nabais\"},\"address\":{\"street\":\"Quinta St. Maria\",\"city\":\"Condeixa\",\"zipCode\":\"3030\"}}"));
     }
@@ -160,7 +160,7 @@ class RestaurantResourcesApiIT {
             .body(notNullValue())
             .body("status", is(400))
             .body("title", is("Incomprehensible Message"))
-            .body("detail", is("The property 'cooker.title' do not exists"))
+            .body("detail", is("The property 'paymentMethods' do not exists"))
             .log().body(true)
         .extract()
             .asString();

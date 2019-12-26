@@ -2,7 +2,6 @@ package io.costax.food4u.api;
 
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
-import io.costax.food4u.domain.repository.RestaurantSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
