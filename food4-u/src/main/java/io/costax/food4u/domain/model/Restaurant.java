@@ -87,4 +87,11 @@ public class Restaurant {
     public String getName() {
         return name;
     }
+
+    public void updateNameTaxsCookerAndAddressUsing(final Restaurant other) {
+        this.setCooker(other.getCooker());
+        this.setAddress(other.getAddress());
+        this.setName(other.getName());
+        this.setTakeAwayTax(other.getTakeAwayTax());
+    }
 }

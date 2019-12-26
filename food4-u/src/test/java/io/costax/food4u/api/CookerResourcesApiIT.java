@@ -4,10 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
 import java.util.Map;
 
 import static io.costax.food4u.ResourceUtils.getContentFromResource;
@@ -50,7 +48,7 @@ class CookerResourcesApiIT {
     @Order(1)
     void when_get_cookers_then_should_return_ok_status_code() {
         //@formatter:off
-        given()
+        final List<Map> responseBody = given()
              //.basePath("/cookers")
              //.port(port)
              .accept(ContentType.JSON)
@@ -64,7 +62,15 @@ class CookerResourcesApiIT {
             .body("$", hasItem(Map.of("id", 1, "title", "Mario Nabais")))
             .body("$", hasItem(Map.of("id", 2, "title", "Alberto Chacal")))
             .body("$", hasItem(Map.of("id", 3, "title", "Carlos Lisboa")))
-            ;
+        .extract()
+             .jsonPath().getList("", Map.class);
+
+        Assertions.assertNotNull(responseBody);
+        Assertions.assertEquals(3, responseBody.size());
+        final Map<String, Object> map = responseBody.get(0);
+        Assertions.assertNotNull(map);
+        Assertions.assertTrue(map.containsKey("id"));
+        Assertions.assertTrue(map.containsKey("title"));
     }
 
     @Test

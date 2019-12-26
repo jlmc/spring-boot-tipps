@@ -103,7 +103,14 @@ public class RestaurantResources {
     public RestaurantOutputRepresentation update(@PathVariable("restaurantId") Long restaurantId,
                                                  @RequestBody @Valid RestaurantInputRepresentation payload) {
 
-        final Restaurant restaurant = disassembler.toDomainObject(payload);
+        //final Restaurant restaurant = disassembler.toDomainObject(payload);
+
+        Restaurant restaurant = restaurantRepository
+                .findById(restaurantId)
+                .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
+
+        disassembler.copyProperties(payload, restaurant);
+
 
         final Restaurant updated = restaurantRegistrationService.update(restaurantId, restaurant);
 
@@ -157,10 +164,10 @@ public class RestaurantResources {
             //objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, true);
             //objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
 
-            Restaurant restaurantSource = objectMapper.convertValue(payload, Restaurant.class);
+            RestaurantInputRepresentation restaurantSource = objectMapper.convertValue(payload, RestaurantInputRepresentation.class);
 
             payload.forEach((propertyName, propertyValue) -> {
-                final Field field = ReflectionUtils.findField(Restaurant.class, propertyName);
+                final Field field = ReflectionUtils.findField(RestaurantInputRepresentation.class, propertyName);
                 field.setAccessible(true);
                 final Object value = ReflectionUtils.getField(field, restaurantSource);
                 ReflectionUtils.setField(field, restaurantTarget, value);

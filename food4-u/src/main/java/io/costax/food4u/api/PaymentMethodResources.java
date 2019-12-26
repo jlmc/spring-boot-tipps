@@ -3,7 +3,7 @@ package io.costax.food4u.api;
 import io.costax.food4u.api.assembler.paymentmethods.input.PaymentMethodInputRepresentationDisassembler;
 import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationAssembler;
 import io.costax.food4u.api.model.paymentmethods.input.PaymentMethodInputRepresentation;
-import io.costax.food4u.api.model.paymentmethods.input.PaymentMethodOutputRepresentation;
+import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.PaymentMethod;
 import io.costax.food4u.domain.repository.PaymentMethodRepository;

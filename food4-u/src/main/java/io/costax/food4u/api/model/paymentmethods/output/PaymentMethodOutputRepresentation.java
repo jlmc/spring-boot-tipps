@@ -1,4 +1,4 @@
-package io.costax.food4u.api.model.paymentmethods.input;
+package io.costax.food4u.api.model.paymentmethods.output;
 
 import lombok.Getter;
 import lombok.Setter;

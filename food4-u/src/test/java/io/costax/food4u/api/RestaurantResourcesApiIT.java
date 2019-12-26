@@ -3,9 +3,13 @@ package io.costax.food4u.api;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.flywaydb.core.Flyway;
+import org.hamcrest.CustomMatcher;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.hamcrest.number.BigDecimalCloseTo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +37,20 @@ class RestaurantResourcesApiIT {
     Flyway flyway;
     @LocalServerPort
     private int port;
+
+    public static Matcher<Object> numberCloseTo(final BigDecimal expected, final BigDecimal error) {
+        return new CustomMatcher<Object>("The Value should be: " + expected) {
+
+            @Override
+            public boolean matches(final Object actual) {
+                Number number = (Number) actual;
+                final BigDecimal bigDecimal = BigDecimal.valueOf(number.doubleValue());
+
+                final Matcher<BigDecimal> bigDecimalMatcher = BigDecimalCloseTo.closeTo(expected, error);
+                return bigDecimalMatcher.matches(bigDecimal);
+            }
+        };
+    }
 
     @BeforeEach
     void setUp() {
@@ -167,5 +186,27 @@ class RestaurantResourcesApiIT {
         //@formatter:on
     }
 
-
+    @Test
+    @DisplayName("Patch restaurant resource")
+    void when_patch_successful_restaurants_then_should_return_ok_status_with_the_updated_representation() {
+        //@formatter:off
+        final var responseBody = given()
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .pathParam("id", 1)
+                .body(getContentFromResource("/jsons/restaurant-patch-payload.json"))
+         .when()
+                .patch("/{id}")
+        .then()
+                .log().body(true)
+                .statusCode(HttpStatus.OK.value())
+                .body(notNullValue())
+                .body("name", is("Dona Maria1"))
+                //.body("takeAwayTax", BigDecimalCloseTo.closeTo(BigDecimal.valueOf(0.54), BigDecimal.valueOf(0.00999)))
+                //.body("takeAwayTax", is(0.54D))
+                .body("takeAwayTax", numberCloseTo(BigDecimal.valueOf(0.54D), BigDecimal.valueOf(0.00999D)))
+        .extract()
+                .as(Map.class);
+        //@formatter:on
+    }
 }

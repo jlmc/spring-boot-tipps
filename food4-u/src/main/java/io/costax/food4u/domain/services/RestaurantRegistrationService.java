@@ -55,7 +55,13 @@ public class RestaurantRegistrationService {
         final Cooker cooker = verifyAndGetIfExistsCooker(restaurant);
         restaurant.setCooker(cooker);
 
-        BeanUtils.copyProperties(restaurant, current, "id", "paymentMethods", "createdAt", "updatedAt", "version");
+        // NOTE: 26/12/2019 - the method BeanUtils.copyProperties make the code fragile, because when we need to add a new property
+        //  we must to remember that when we add a new property we have to check this method and see if the property should be ignored
+        //BeanUtils.copyProperties(restaurant, current, "id", "paymentMethods", "createdAt", "updatedAt", "version");
+
+        // FIXME: 26/12/2019 - using a dedicated method also make the code fragile, because when we need to add a new property.
+        //  For the same reasons as the BeanUtils method
+        current.updateNameTaxsCookerAndAddressUsing(restaurant);
 
         restaurantRepository.flush();
 
