@@ -1,0 +1,15 @@
+{
+  "name": "Casa do Rio",
+  "takeAwayTax": 0.5,
+  "cooker": {
+    "id": 1
+  },
+  "paymentMethods": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    }
+  ]
+}

@@ -62,7 +62,6 @@ public class PaymentMethodResourcesApiIT {
         //@formatter:on
     }
 
-
     @Test
     void should_get_one_payment_method_by_id() {
         given()

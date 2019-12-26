@@ -1,9 +1,11 @@
 package io.costax.food4u.api;
 
+import io.costax.food4u.api.assembler.cookers.input.CookerInputRepresentationDisassembler;
+import io.costax.food4u.api.assembler.cookers.output.CookerOutputRepresentationAssembler;
 import io.costax.food4u.api.model.CookersXmlWrapper;
+import io.costax.food4u.api.model.cookers.input.CookerInputRepresentation;
+import io.costax.food4u.api.model.cookers.output.CookerOutputRepresentation;
 import io.costax.food4u.domain.exceptions.CookerNotFoundException;
-import io.costax.food4u.domain.exceptions.ResourceInUseException;
-import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
@@ -18,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The {@link @RestController} annotation is a wrapper of two important annotations
@@ -34,16 +37,24 @@ public class CookerResources {
 
     private final CookerRepository repository;
     private final CookerRegistrationService cookerRegistrationService;
+    private final CookerOutputRepresentationAssembler assembler;
+    private final CookerInputRepresentationDisassembler disassembler;
 
     public CookerResources(final CookerRepository repository,
-                           final CookerRegistrationService cookerRegistrationService) {
+                           final CookerRegistrationService cookerRegistrationService,
+                           final CookerOutputRepresentationAssembler assembler,
+                           final CookerInputRepresentationDisassembler disassembler) {
         this.repository = repository;
         this.cookerRegistrationService = cookerRegistrationService;
+        this.assembler = assembler;
+        this.disassembler = disassembler;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Cooker> list() {
-        return repository.findAll();
+    public List<CookerOutputRepresentation> list() {
+        return repository.findAll().stream()
+                .map(assembler::toRepresentation)
+                .collect(Collectors.toList());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -53,16 +64,17 @@ public class CookerResources {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{Id}")
-    public Cooker getById(@PathVariable("Id") Long cookerId) {
+    public CookerOutputRepresentation getById(@PathVariable("Id") Long cookerId) {
         return repository.findById(cookerId)
-                //.map(ResponseEntity::ok)
+                .map(assembler::toRepresentation)
                 .orElseThrow(() -> CookerNotFoundException.of(cookerId));
     }
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Cooker> add(@RequestBody @Valid Cooker cooker, UriComponentsBuilder b) {
-        Cooker saved = cookerRegistrationService.add(cooker);
+    public ResponseEntity<CookerOutputRepresentation> add(@RequestBody @Valid CookerInputRepresentation payload,
+                                                          UriComponentsBuilder b) {
+        Cooker saved = cookerRegistrationService.add(disassembler.toDomainObject(payload));
 
         //UriComponents uriComponents = b.path("/cookers/{id}").buildAndExpand(saved.getId());
         //final URI uri = uriComponents.toUri();
@@ -72,25 +84,27 @@ public class CookerResources {
                 .buildAndExpand(saved.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(saved);
+        return ResponseEntity.created(location).body(assembler.toRepresentation(saved));
     }
 
     @PutMapping("/{Id}")
-    public ResponseEntity<Cooker> update(@PathVariable("Id") Long cookerId,
-                                         @RequestBody Cooker cooker) {
+    public ResponseEntity<CookerOutputRepresentation> update(@PathVariable("Id") Long cookerId,
+                                                             @RequestBody CookerInputRepresentation payload) {
+        final Cooker cooker = disassembler.toDomainObject(payload);
+
         //Cooker cookerCurrent = cookerRegistrationService.update(cookerId, cooker);
         Cooker cookerCurrent = this.cookerRegistrationService.update(cookerId, cooker);
-        return ResponseEntity.ok(cookerCurrent);
+        return ResponseEntity.ok(assembler.toRepresentation(cookerCurrent));
     }
 
 
     @DeleteMapping("/{Id}")
-    public ResponseEntity<Cooker> remover(@PathVariable("Id") Long cookerId) {
+    public ResponseEntity<?> remover(@PathVariable("Id") Long cookerId) {
         this.cookerRegistrationService.remove(cookerId);
         return ResponseEntity.noContent().build();
     }
 
-    @ResponseBody
+    /*@ResponseBody
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     ResponseEntity<?> resourceNotFoundHandler(ResourceNotFoundException e) {
@@ -102,6 +116,6 @@ public class CookerResources {
     @ResponseStatus(HttpStatus.CONFLICT)
     ResponseEntity<?> resourceInUseHandler(ResourceInUseException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).header("X-reason", e.getMessage()).build();
-    }
+    }*/
 
 }
