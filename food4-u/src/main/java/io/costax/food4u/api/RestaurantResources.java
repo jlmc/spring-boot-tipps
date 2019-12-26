@@ -2,6 +2,12 @@ package io.costax.food4u.api;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.costax.food4u.api.assembler.restaurants.input.RestaurantInputRepresentationDisassembler;
+import io.costax.food4u.api.assembler.restaurants.output.RestaurantOutputRepresentationAssembler;
+import io.costax.food4u.api.model.restaurants.input.AddressInputRepresentation;
+import io.costax.food4u.api.model.restaurants.input.CookerInputRepresentation;
+import io.costax.food4u.api.model.restaurants.input.RestaurantInputRepresentation;
+import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentation;
 import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.Restaurant;
@@ -24,6 +30,8 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(
@@ -42,32 +50,43 @@ public class RestaurantResources {
     private final ObjectMapper objectMapper;
     private final SmartValidator validator;
 
+    private final RestaurantOutputRepresentationAssembler assembler;
+    private final RestaurantInputRepresentationDisassembler disassembler;
+
     public RestaurantResources(final RestaurantRepository restaurantRepository,
                                final RestaurantRegistrationService restaurantRegistrationService,
                                final ObjectMapper objectMapper,
-                               final SmartValidator validator) {
+                               final SmartValidator validator,
+                               final RestaurantOutputRepresentationAssembler assembler,
+                               final RestaurantInputRepresentationDisassembler disassembler) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegistrationService = restaurantRegistrationService;
         this.objectMapper = objectMapper;
         this.validator = validator;
+        this.assembler = assembler;
+        this.disassembler = disassembler;
     }
 
     @GetMapping
-    public List<Restaurant> list() {
-        return restaurantRepository.findAll();
+    public List<RestaurantOutputRepresentation> list() {
+        return restaurantRepository.findAll().stream().map(assembler::toRepresentation).collect(Collectors.toList());
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{restaurantId}")
-    public Restaurant getById(@PathVariable("restaurantId") Long id) {
+    public RestaurantOutputRepresentation getById(@PathVariable("restaurantId") Long id) {
         return restaurantRepository
                 .findById(id)
+                .map(assembler::toRepresentation)
                 .orElseThrow(() -> RestaurantNotFoundException.of(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid Restaurant restaurant) {
-        final Restaurant added = restaurantRegistrationService.add(restaurant);
+    public ResponseEntity<?> add(@RequestBody @Valid RestaurantInputRepresentation payload) {
+
+        final Restaurant restaurant1 = disassembler.toDomainObject(payload);
+
+        final Restaurant added = restaurantRegistrationService.add(restaurant1);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
@@ -76,40 +95,62 @@ public class RestaurantResources {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .location(location)
-                .body(added);
+                .body(assembler.toRepresentation(added));
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/{restaurantId}")
-    public Restaurant update(@PathVariable("restaurantId") Long restaurantId,
-                             @RequestBody @Valid Restaurant restaurant) {
-        return restaurantRegistrationService.update(restaurantId, restaurant);
+    public RestaurantOutputRepresentation update(@PathVariable("restaurantId") Long restaurantId,
+                                                 @RequestBody @Valid RestaurantInputRepresentation payload) {
+
+        final Restaurant restaurant = disassembler.toDomainObject(payload);
+
+        final Restaurant updated = restaurantRegistrationService.update(restaurantId, restaurant);
+
+        return assembler.toRepresentation(updated);
     }
 
     @PatchMapping("/{restaurantId}")
-    public Restaurant partialUpdate(@PathVariable("restaurantId") Long restaurantId,
-                                    @RequestBody Map<String, Object> payload,
-                                    HttpServletRequest request) {
+    public RestaurantOutputRepresentation partialUpdate(@PathVariable("restaurantId") Long restaurantId,
+                                                        @RequestBody Map<String, Object> payload,
+                                                        HttpServletRequest request) {
         final Restaurant current = restaurantRepository
                 .findById(restaurantId)
                 .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
 
-        final Restaurant merged = merge(payload, current, request);
+        final RestaurantInputRepresentation restaurantInputRepresentationFromTheExistentDomain = new RestaurantInputRepresentation();
+        restaurantInputRepresentationFromTheExistentDomain.setName(current.getName());
+        restaurantInputRepresentationFromTheExistentDomain.setTakeAwayTax(current.getTakeAwayTax());
+        restaurantInputRepresentationFromTheExistentDomain.setCooker(Optional.ofNullable(current.getCooker()).map(c -> {
+            final CookerInputRepresentation x = new CookerInputRepresentation();
+            x.setId(c.getId());
+            return x;
+        }).orElse(null));
+        restaurantInputRepresentationFromTheExistentDomain.setAddress(Optional.ofNullable(current.getAddress()).map(a -> {
+            AddressInputRepresentation x = new AddressInputRepresentation();
+            x.setCity(a.getCity());
+            x.setStreet(a.getStreet());
+            x.setZipCode(a.getZipCode());
+            return x;
+
+        }).orElse(null));
+
+        final RestaurantInputRepresentation merged = merge(payload, restaurantInputRepresentationFromTheExistentDomain, request);
         validate(merged, "restaurant");
 
         return this.update(restaurantId, merged);
     }
 
-    private void validate(Restaurant restaurant, String objectName) {
-        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurant, objectName);
-        validator.validate(restaurant, bindingResult);
+    private void validate(RestaurantInputRepresentation restaurantInputRepresentation, String objectName) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(restaurantInputRepresentation, objectName);
+        validator.validate(restaurantInputRepresentation, bindingResult);
 
         if (bindingResult.hasErrors()) {
             throw new ManualValidationException(bindingResult);
         }
     }
 
-    private Restaurant merge(Map<String, Object> payload, Restaurant restaurantTarget, HttpServletRequest request) {
+    private RestaurantInputRepresentation merge(Map<String, Object> payload, RestaurantInputRepresentation restaurantTarget, HttpServletRequest request) {
 
         try {
             //ObjectMapper objectMapper = new ObjectMapper();
