@@ -112,6 +112,9 @@ class RestaurantResourcesApiIT {
         .when()
                 .get("/{id}")
         .then()
+                .log()
+                    .body()
+        .assertThat()
                 .statusCode(HttpStatus.OK.value())
                 .body(notNullValue())
         .extract().asString();
@@ -130,23 +133,25 @@ class RestaurantResourcesApiIT {
                 .when()
                     .post()
                 .then()
+                    .log()
+                        .body(false)
+                .assertThat()
                     .statusCode(HttpStatus.CREATED.value())
                     .body(notNullValue())
                     .header("Location", notNullValue())
-                    .log().body(false)
                 .extract()
                    .asString();
         //@formatter:on
 
         Assertions.assertNotNull(restaurant);
         Assertions.assertTrue(restaurant.startsWith("{\"id\""));
-        Assertions.assertTrue(restaurant.endsWith(",\"name\":\"Casa do Rio\",\"takeAwayTax\":0.5,\"cooker\":{\"id\":1,\"title\":\"Mario Nabais\"},\"address\":{\"street\":\"Quinta St. Maria\",\"city\":\"Condeixa\",\"zipCode\":\"3030\"}}"));
+        Assertions.assertTrue(restaurant.endsWith(",\"name\":\"Casa do Rio\",\"takeAwayTax\":0.5,\"cooker\":{\"id\":1,\"title\":\"Mario Nabais\"},\"address\":{\"street\":\"Quinta St. Maria\",\"city\":\"Condeixa\",\"zipCode\":\"3030\"},\"active\":false}"));
     }
 
     @Test
     void when_post_restaurant_with_cooker_title_then_should_return_badrequest_status_with_the_body() {
         //@formatter:off
-        final var responseBody = given()
+        given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .body(getContentFromResource("/jsons/restaurant-post-invalid-payload-with-cooker-title.json"))
@@ -168,7 +173,7 @@ class RestaurantResourcesApiIT {
     @Test
     void when_post_restaurant_with_payments_methods_then_should_return_badrequest_status_with_the_body() {
         //@formatter:off
-        final var responseBody = given()
+        given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .body(getContentFromResource("/jsons/restaurant-post-invalid-payload-with-payment-methods.json"))
@@ -190,7 +195,7 @@ class RestaurantResourcesApiIT {
     @DisplayName("Patch restaurant resource")
     void when_patch_successful_restaurants_then_should_return_ok_status_with_the_updated_representation() {
         //@formatter:off
-        final var responseBody = given()
+        given()
                 .contentType(ContentType.JSON)
                 .accept(ContentType.JSON)
                 .pathParam("id", 1)
@@ -207,6 +212,40 @@ class RestaurantResourcesApiIT {
                 .body("takeAwayTax", numberCloseTo(BigDecimal.valueOf(0.54D), BigDecimal.valueOf(0.00999D)))
         .extract()
                 .as(Map.class);
+        //@formatter:on
+    }
+
+    @Test
+    void when_delete_restaurants_id_inactivation_then_should_active_the_resource_and_return_204() {
+        //@formatter:off
+        given()
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .pathParam("id", 1)
+        .when()
+            .delete("/{id}/inactivation")
+        .then()
+            .log().headers()
+        .assertThat()
+            .statusCode(HttpStatus.NO_CONTENT.value())
+            .body(notNullValue());
+        //@formatter:on
+    }
+
+    @Test
+    void when_put_restaurants_id_activation_then_should_active_the_resource_and_return_204() {
+        //@formatter:off
+        given()
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+            .pathParam("id", 1)
+        .when()
+            .put("/{id}/activation")
+        .then()
+            .log().headers()
+        .assertThat()
+            .statusCode(HttpStatus.NO_CONTENT.value())
+            .body(notNullValue());
         //@formatter:on
     }
 }

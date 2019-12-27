@@ -48,9 +48,7 @@ public class RestaurantRegistrationService {
     }
 
     public Restaurant update(final Long restaurantId, final Restaurant restaurant) {
-        Restaurant current = restaurantRepository
-                .findById(restaurantId)
-                .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
+        Restaurant current = getRestaurantOrNotFoundException(restaurantId);
 
         final Cooker cooker = verifyAndGetIfExistsCooker(restaurant);
         restaurant.setCooker(cooker);
@@ -67,4 +65,25 @@ public class RestaurantRegistrationService {
 
         return current;
     }
+
+    private Restaurant getRestaurantOrNotFoundException(final Long restaurantId) {
+        return restaurantRepository
+                    .findById(restaurantId)
+                    .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
+    }
+
+    @Transactional
+    public void activate(Long restaurantId) {
+        Restaurant restauranteAtual = getRestaurantOrNotFoundException(restaurantId);
+
+        restauranteAtual.activate();
+    }
+
+    @Transactional
+    public void inactivate(Long restaurantId) {
+        Restaurant restauranteAtual = getRestaurantOrNotFoundException(restaurantId);
+
+        restauranteAtual.inactivate();
+    }
+
 }

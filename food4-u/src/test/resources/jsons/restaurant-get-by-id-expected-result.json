@@ -1,1 +1,1 @@
-{"id":1,"name":"River House","takeAwayTax":3.00,"cooker":{"id":1,"title":"Mario Nabais"},"address":{"street":"At the top of the bridge","city":"Soure","zipCode":"3130"}}
+{"id":1,"name":"River House","takeAwayTax":3.00,"cooker":{"id":1,"title":"Mario Nabais"},"address":{"street":"At the top of the bridge","city":"Soure","zipCode":"3130"},"active":false}

@@ -183,4 +183,16 @@ public class RestaurantResources {
             throw new HttpMessageNotReadableException(e.getMessage(), rootCause, serverHttpRequest);
         }
     }
+
+    @PutMapping("/{restaurantId}/activation")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restaurantId) {
+        restaurantRegistrationService.activate(restaurantId);
+    }
+
+    @DeleteMapping("/{restaurantId}/inactivation")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inactivate(@PathVariable Long restaurantId) {
+        restaurantRegistrationService.inactivate(restaurantId);
+    }
 }

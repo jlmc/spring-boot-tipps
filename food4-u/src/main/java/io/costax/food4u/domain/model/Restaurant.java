@@ -77,6 +77,8 @@ public class Restaurant {
     )
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
+    private boolean active = false;
+
     @Version
     private int version;
 
@@ -93,5 +95,13 @@ public class Restaurant {
         this.setAddress(other.getAddress());
         this.setName(other.getName());
         this.setTakeAwayTax(other.getTakeAwayTax());
+    }
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void inactivate() {
+        this.active = false;
     }
 }
