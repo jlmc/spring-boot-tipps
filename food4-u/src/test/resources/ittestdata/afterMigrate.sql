@@ -8,6 +8,16 @@ delete
 from restaurant_payment_method;
 delete
 from restaurant;
+delete
+from user_group;
+delete
+from group_permission;
+delete
+from user;
+delete
+from `group`;
+delete
+from permission;
 
 set foreign_key_checks = 1;
 
@@ -16,6 +26,12 @@ alter table cooker
 alter table payment_method
     auto_increment = 1;
 alter table restaurant
+    auto_increment = 1;
+alter table user
+    auto_increment = 1;
+alter table `group`
+    auto_increment = 1;
+alter table permission
     auto_increment = 1;
 
 insert into payment_method (description, name)

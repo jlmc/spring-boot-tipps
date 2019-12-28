@@ -6,7 +6,6 @@ import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.repository.RestaurantRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

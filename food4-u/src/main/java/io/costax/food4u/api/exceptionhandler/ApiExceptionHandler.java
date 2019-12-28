@@ -7,10 +7,12 @@ import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.BusinessException;
 import io.costax.food4u.domain.exceptions.ResourceInUseException;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
+import io.costax.food4u.domain.exceptions.UserWithSameEmailAlreadyExistsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,9 +29,15 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import java.beans.Introspector;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -82,7 +90,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
-
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
                                                                    HttpHeaders headers,
@@ -112,8 +119,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     //@ResponseBody
     //@ExceptionHandler(MethodArgumentTypeMismatchException.class)
     private ResponseEntity<Object> handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, final WebRequest request) {
-        System.out.println("---");
-
         ProblemType problemType = ProblemType.URI_PARAMETER_INVALID;
         HttpStatus status = HttpStatus.BAD_REQUEST;
 
@@ -152,7 +157,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         String detail = String.format(
                 """
-                        The property '%s' contain the value '%s', witch is of invalid type. a value of the type '%s' should be used.
+                         The property '%s' contain the value '%s', witch is of invalid type. a value of the type '%s' should be used.
                         """, path, ex.getValue(), ex.getTargetType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, problemType, detail).build();
@@ -198,6 +203,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ResponseBody
+    @ExceptionHandler(UserWithSameEmailAlreadyExistsException.class)
+    ResponseEntity<?> userWithSameEmailAlreadyExistsExceptionHandler(UserWithSameEmailAlreadyExistsException e, WebRequest request) {
+        final HttpStatus status = HttpStatus.CONFLICT;
+        Problem problem = createProblemBuilder(status, ProblemType.USER_EMAIL_IN_USE, e.getMessage()).build();
+        return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
+    }
+
+    @ResponseBody
     @ExceptionHandler(ResourceInUseException.class)
     ResponseEntity<?> resourceInUseExceptionHandler(ResourceInUseException e, WebRequest request) {
         final HttpStatus status = HttpStatus.CONFLICT;
@@ -227,7 +240,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                            final WebRequest request) {
         ProblemType type = ProblemType.INVALID_DATA;
 
-        List<Problem.Field> fields = bindingResult
+        List<Problem.Error> errors = bindingResult
                 .getAllErrors()
                 .stream()
                 .map(objectError -> {
@@ -239,25 +252,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                         name = ((FieldError) objectError).getField();
                     }
 
-                    return Problem.Field.of(name, message);
+                    return Problem.Error.of(name, message);
                 })
                 .collect(Collectors.toList());
 
-
-//        List<Problem.Field> fields = ex.getBindingResult()
-//                .getFieldErrors()
-//                .stream()
-//                .map(fieldError -> Problem.Field.of(
-//                        fieldError.getField(),
-//                        //fieldError.getDefaultMessage()
-//                        //messageSource.getMessage(fieldError, LocaleContextHolder.getLocale()),
-//                        messageSource.getMessage(fieldError, LocaleContextHolder.getLocale())
-//                        )
-//                )
-//                .collect(Collectors.toList());
-
         Problem problem = createProblemBuilder(status, type, "One or more properties contains invalid values")
-                .fields(fields)
+                .errors(errors)
                 .build();
 
         return handleExceptionInternal(ex, problem, headers, status, request);
@@ -274,6 +274,53 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   final WebRequest request) {
         return customValidationExceptionInternalHandler(ex, ex.getBindingResult(), headers, status, request);
     }
+
+    @ExceptionHandler({ /*DataIntegrityViolationException.class,*/ ConstraintViolationException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(ConstraintViolationException ex,
+                                                                        WebRequest request) {
+        final HttpStatus status = HttpStatus.CONFLICT;
+        final Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        final List<Problem.Error> errors = constraintViolations
+                .stream()
+                .map(cv -> {
+
+                    final String basePath = Optional
+                            .ofNullable(cv.getLeafBean())
+                            .map(Object::getClass)
+                            .map(Class::getSimpleName)
+                            .map(Introspector::decapitalize)
+                            .map(c -> c + ".")
+                            .orElse("");
+
+                    final String path = Optional
+                            .ofNullable(cv.getPropertyPath())
+                            .map(Path::toString)
+                            .orElse("");
+
+                    String propertyPath = basePath + path;
+
+                    final String message1 = resolveMessageOrTheSame(propertyPath);
+                    final String message2 = resolveMessageOrTheSame(cv.getMessage());
+
+                    return Problem.Error.of(message1, message2);
+                }).collect(Collectors.toList());
+
+        String detail = "The operation has incorrect data, or causes side effects in the system.";
+        Problem problem = createProblemBuilder(status, ProblemType.INVALID_DATA, detail)
+                .errors(errors)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    private String resolveMessageOrTheSame(final String key) {
+        try {
+            return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+        } catch (NoSuchMessageException e) {
+            return key;
+        }
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(final Exception ex,
