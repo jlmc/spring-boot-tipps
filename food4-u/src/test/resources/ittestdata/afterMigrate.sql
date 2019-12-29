@@ -1,6 +1,12 @@
 set foreign_key_checks = 0;
 
 delete
+from product;
+delete
+from request_item;
+delete
+from request;
+delete
 from cooker;
 delete
 from payment_method;
@@ -32,6 +38,12 @@ alter table user
 alter table `group`
     auto_increment = 1;
 alter table permission
+    auto_increment = 1;
+alter table product
+    auto_increment = 1;
+alter table request_item
+    auto_increment = 1;
+alter table request
     auto_increment = 1;
 
 insert into payment_method (description, name)

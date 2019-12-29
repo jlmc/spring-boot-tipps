@@ -1,6 +1,7 @@
 package io.costax.food4u.domain.repository;
 
 import io.costax.food4u.domain.model.PaymentMethod;
+import io.costax.food4u.domain.model.Product;
 import io.costax.food4u.domain.model.Restaurant;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.QueryHint;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RestaurantRepository extends
@@ -53,4 +55,19 @@ public interface RestaurantRepository extends
     })
     @Query("select distinct pm from Restaurant r inner join r.paymentMethods pm where r.id = :restaurantId order by pm.id")
     List<PaymentMethod> getRestaurantPaymentMethods(Long restaurantId);
+
+
+    @QueryHints({
+            @QueryHint(name = org.hibernate.annotations.QueryHints.PASS_DISTINCT_THROUGH, value = "false")
+    })
+    @Query("select distinct pm from Restaurant r inner join r.products pm where r.id = :restaurantId order by pm.id")
+
+    List<Product> getRestaurantProducts(Long restaurantId);
+
+    @QueryHints({
+            @QueryHint(name = org.hibernate.annotations.QueryHints.PASS_DISTINCT_THROUGH, value = "false"),
+            @QueryHint(name = org.hibernate.annotations.QueryHints.FETCH_SIZE, value = "1"),
+    })
+    @Query("select distinct p from Restaurant r inner join r.products p where r.id = :restaurantId and p.id = :productId ")
+    Optional<Product> findProduct(Long restaurantId, Long productId);
 }

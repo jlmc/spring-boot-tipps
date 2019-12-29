@@ -1,5 +1,6 @@
 package io.costax.food4u.domain.repository.internal;
 
+import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantQueries;
 import io.costax.food4u.domain.repository.RestaurantRepository;
@@ -44,6 +45,20 @@ public class RestaurantRepositoryImpl implements RestaurantQueries {
                 .findAll(
                         RestaurantSpecifications.withFeeTakeAwayTax()
                                 .and(RestaurantSpecifications.withSimilarName(name)));
+    }
+
+    @Override
+    public Restaurant getRestaurantOrNotFoundException(final Long restaurantId) {
+        return restaurantRepository
+                .findById(restaurantId)
+                .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
+    }
+
+    @Override
+    public Restaurant getRestaurantForUpdateOrNotFoundException(final Long restaurantId) {
+        return restaurantRepository
+                .findByIdForceIncrement(restaurantId)
+                .orElseThrow(() -> RestaurantNotFoundException.of(restaurantId));
     }
 
 
