@@ -12,4 +12,8 @@ import org.springframework.data.repository.NoRepositoryBean;
 public interface CustomJpaRepository<T, ID> extends JpaRepository<T, ID> {
 
     T refresh(T obj);
+
+    void detach(final T obj);
+
+    void clearAllContext();
 }

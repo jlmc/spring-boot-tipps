@@ -1,18 +1,20 @@
 package io.costax.food4u.domain.repository;
 
+import io.costax.food4u.domain.model.PaymentMethod;
 import io.costax.food4u.domain.model.Restaurant;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.QueryHint;
 import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface RestaurantRepository extends
-        JpaRepository<Restaurant, Long>,
+        CustomJpaRepository<Restaurant, Long>,
         RestaurantQueries,
         JpaSpecificationExecutor<Restaurant> {
 
@@ -45,4 +47,10 @@ public interface RestaurantRepository extends
      */
     //@Query("select r from Restaurant r inner join fetch r.cooker where lower(r.cooker.name) like %:name%")
     List<Restaurant> findByCookerName(@Param("name") String name);
+
+    @QueryHints({
+            @QueryHint(name = org.hibernate.annotations.QueryHints.PASS_DISTINCT_THROUGH, value = "false")
+    })
+    @Query("select distinct pm from Restaurant r inner join r.paymentMethods pm where r.id = :restaurantId order by pm.id")
+    List<PaymentMethod> getRestaurantPaymentMethods(Long restaurantId);
 }

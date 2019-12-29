@@ -16,4 +16,8 @@ public class ResourceNotFoundException extends BusinessException {
         this.resourceClass = resourceClass;
         this.identifier = identifier;
     }
+
+    public Serializable getIdentifier() {
+        return identifier;
+    }
 }

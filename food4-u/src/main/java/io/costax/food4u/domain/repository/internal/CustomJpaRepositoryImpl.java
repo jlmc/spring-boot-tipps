@@ -32,4 +32,15 @@ public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID>
         manager.refresh(obj);
         return obj;
     }
+
+    @Override
+    public void detach(final T obj) {
+        manager.detach(obj);
+    }
+
+
+    @Override
+    public void clearAllContext() {
+        manager.clear();
+    }
 }

@@ -104,4 +104,12 @@ public class Restaurant {
     public void inactivate() {
         this.active = false;
     }
+
+    public void addPaymentMethod(final PaymentMethod paymentMethod) {
+        this.paymentMethods.add(paymentMethod);
+    }
+
+    public void removePaymentMethod(final PaymentMethod paymentMethod) {
+        this.paymentMethods.remove(paymentMethod);
+    }
 }

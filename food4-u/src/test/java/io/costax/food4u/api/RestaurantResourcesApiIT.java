@@ -216,14 +216,14 @@ class RestaurantResourcesApiIT {
     }
 
     @Test
-    void when_delete_restaurants_id_inactivation_then_should_active_the_resource_and_return_204() {
+    void when_delete_restaurants_id_activation_then_should_inactive_the_resource_and_return_204() {
         //@formatter:off
         given()
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
             .pathParam("id", 1)
         .when()
-            .delete("/{id}/inactivation")
+            .delete("/{id}/activation")
         .then()
             .log().headers()
         .assertThat()
