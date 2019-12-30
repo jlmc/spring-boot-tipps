@@ -157,4 +157,16 @@ HTTP/1.1 200 OK
 * No exemplo não foi adicionado o verbo a utilizar em cada requisição, mas isso pode ser tambem adicionado, e com isso o cliente da API poderia ser completamente "ignorante" quanto a regras de negócio, apenas se preocupando com UI e formas de display.
 * Roy Fielding e todos os developers "puristas", apenas consideram que uma API é REST quando atinge este nivel de Maturidade, mas atingir este nivel de maturidade pode às vezes ser dispendioso e não trazer benefícios. 
 
+---
 
+## Other important topics
+
+* [Http verbs - Safe method and Idempotence Methods](/docs/Http-verbs.md)
+
+* [Granularidade de recursos: Chatty vs Chunky APIs](docs/12.2.Granularidade-de-recursos-Chatty-vs-Chunky-APIs.md)
+
+* [Data e Hora em REST APIs](/docs/11.6.Date-and-time-in-REST-APIs.md)
+
+* [Spring Exception handler for Rest APIs](/docs/Spring-Tratamento-e-modelagem-de-erros-da-API.md)
+
+* [Spring - How to join BeanValidation.properties joined with message.properties](/docs/Join-spring-message-with-bean-validations.md)
