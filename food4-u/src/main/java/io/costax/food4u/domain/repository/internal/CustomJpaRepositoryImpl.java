@@ -1,12 +1,16 @@
 package io.costax.food4u.domain.repository.internal;
 
 import io.costax.food4u.domain.repository.CustomJpaRepository;
+import org.hibernate.NaturalIdLoadAccess;
+import org.hibernate.Session;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import java.io.Serializable;
+import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings("SpringJavaConstructorAutowiringInspection")
@@ -36,6 +40,25 @@ public class CustomJpaRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID>
         final Class<T> domainClass = super.getDomainClass();
 
         return Optional.ofNullable(manager.find(domainClass, id, LockModeType.OPTIMISTIC_FORCE_INCREMENT));
+    }
+
+    @Override
+    public Optional<T> findBySimpleNaturalId(final Serializable naturalId) {
+        return manager
+                .unwrap(Session.class)
+                .bySimpleNaturalId(this.getDomainClass())
+                .loadOptional(naturalId);
+    }
+
+    @Override
+    public Optional<T> findByNaturalId(final Map<String, Object> naturalIds) {
+        NaturalIdLoadAccess<T> loadAccess = manager
+                .unwrap(Session.class)
+                .byNaturalId(this.getDomainClass());
+
+        naturalIds.forEach(loadAccess::using);
+
+        return loadAccess.loadOptional();
     }
 
     @Override

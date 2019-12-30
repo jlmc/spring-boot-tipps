@@ -68,6 +68,16 @@ VALUES (1, 1)
      , (2, 3)
 ;
 
+insert into product (name, description, price, active, restaurant_id)
+VALUES ('Francesinha', 'Francesinha à moda do Porto', 15.0, true, 1)
+     , ('Hot dog', 'Hot dog Basic', 2.0, true, 1)
+;
+
 insert into `group` (name)
 values ('ADMIN'),
        ('CHEF');
+
+insert into user (name, email, pw, registration_at)
+values ('dummy1', 'dummy1@dummy.io.moc', 'abc', '2019-01-02')
+     , ('dummy2', 'dummy2@dummy.io.moc', 'abc', '2019-01-02')
+;

@@ -20,6 +20,11 @@ public class ModelMapperConfiguration {
     public ModelMapper modelMapper() {
         final ModelMapper modelMapper = new ModelMapper();
 
+        modelMapper.getConfiguration()
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+        //.setMethodAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
+
         modelMapper.createTypeMap(Cooker.class, CookerOutputRepresentation.class)
                 .addMapping(Cooker::getName, CookerOutputRepresentation::setTitle);
         modelMapper.createTypeMap(CookerInputRepresentation.class, Cooker.class)
@@ -39,6 +44,7 @@ public class ModelMapperConfiguration {
                 // toUppercase will be called with the property types from getFirstName() and setName()
                 mapper -> mapper.using(TO_LOWER_CASE)
                         .map(UserInputRepresentation::getEmail, User::setEmail));
+
 
         return modelMapper;
     }

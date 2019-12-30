@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -211,10 +212,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(ResourceInUseException.class)
-    ResponseEntity<?> resourceInUseExceptionHandler(ResourceInUseException e, WebRequest request) {
+    @ExceptionHandler({ResourceInUseException.class, DataIntegrityViolationException.class})
+    ResponseEntity<?> resourceInUseExceptionHandler(Exception e, WebRequest request) {
         final HttpStatus status = HttpStatus.CONFLICT;
-        Problem problem = createProblemBuilder(status, ProblemType.RESOURCE_IN_USE, e.getMessage()).build();
+
+        String message = e.getMessage();
+        if (e instanceof DataIntegrityViolationException) {
+            message = "The resource is in Use by some other resource";
+        }
+
+        Problem problem = createProblemBuilder(status, ProblemType.RESOURCE_IN_USE, message).build();
 
         return handleExceptionInternal(e, problem, new HttpHeaders(), status, request);
     }

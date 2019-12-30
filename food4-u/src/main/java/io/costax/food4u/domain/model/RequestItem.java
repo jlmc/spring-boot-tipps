@@ -22,4 +22,19 @@ public class RequestItem {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false, updatable = false)
     private Product product;
+
+    @Deprecated
+    protected RequestItem() {}
+
+    public RequestItem(final Product product, final Integer qty, final String observations) {
+        this.observations = observations;
+        this.product = product;
+        this.unitPrice = product.getPrice();
+        this.qty = qty;
+        this.totalPrice = this.unitPrice.multiply(BigDecimal.valueOf(qty));
+    }
+
+    public static RequestItem of(final Product product, final Integer qty, final String observations) {
+        return new RequestItem(product, qty, observations);
+    }
 }

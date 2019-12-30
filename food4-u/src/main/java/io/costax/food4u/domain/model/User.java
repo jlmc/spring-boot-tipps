@@ -42,6 +42,19 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
     private Set<Group> grupos = new HashSet<>();
 
+
+    @Deprecated
+    public User() {
+    }
+
+    private User(Long id) {
+        this.id = id;
+    }
+
+    public static User createUser(Long id) {
+        return new User(id);
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -66,4 +79,5 @@ public class User {
 
        this.pw = newPassword;
     }
+
 }
