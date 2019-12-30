@@ -14,5 +14,6 @@ public class RestaurantOutputRepresentation {
     private BigDecimal takeAwayTax = BigDecimal.ZERO;
     private CookerOutputRepresentation cooker;
     private AddressOutputRepresentation address;
+    private boolean active;
 
 }

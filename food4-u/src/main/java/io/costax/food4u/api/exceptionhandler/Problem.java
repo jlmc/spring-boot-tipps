@@ -80,7 +80,7 @@ public class Problem {
 
     private Instant timestamp;
 
-    private List<Field> fields;
+    private List<Error> errors;
 
     private Problem(ProblemBuilder builder) {
         this.status = builder.status;
@@ -88,7 +88,7 @@ public class Problem {
         this.title = builder.title;
         this.detail = builder.detail;
         this.timestamp = builder.timestamp;
-        this.fields = builder.fields;
+        this.errors = builder.errors;
     }
 
     static Problem.ProblemBuilder builder() {
@@ -109,17 +109,17 @@ public class Problem {
     }
 
     @Getter
-    protected static class Field {
+    protected static class Error {
         private String name;
         private String userMessage;
 
-        private Field(final String name, final String userMessage) {
+        private Error(final String name, final String userMessage) {
             this.name = name;
             this.userMessage = userMessage;
         }
 
-        public static Field of(final String name, final String userMessage) {
-            return new Field(name, userMessage);
+        public static Error of(final String name, final String userMessage) {
+            return new Error(name, userMessage);
         }
     }
 
@@ -130,7 +130,7 @@ public class Problem {
         private String detail;
 
         private Instant timestamp;
-        private List<Field> fields;
+        private List<Error> errors;
 
         public ProblemBuilder status(final HttpStatus status) {
             this.status = status.value();
@@ -161,8 +161,8 @@ public class Problem {
             return this;
         }
 
-        public ProblemBuilder fields(final List<Field> fields) {
-            this.fields = fields;
+        public ProblemBuilder errors(final List<Error> errors) {
+            this.errors = errors;
             return this;
         }
     }

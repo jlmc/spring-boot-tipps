@@ -11,9 +11,13 @@ public class ResourceNotFoundException extends BusinessException {
        this(resourceClass, identifier, String.format("Resource [%s] with the identifier [%s] no found", resourceClass.getSimpleName(), identifier));
     }
 
-    private ResourceNotFoundException(final Class<?> resourceClass, final Serializable identifier, String message) {
+    protected ResourceNotFoundException(final Class<?> resourceClass, final Serializable identifier, String message) {
         super(message);
         this.resourceClass = resourceClass;
         this.identifier = identifier;
+    }
+
+    public Serializable getIdentifier() {
+        return identifier;
     }
 }

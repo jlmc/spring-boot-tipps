@@ -85,7 +85,10 @@ public class DataBaseCleaner {
     private void addTruncateSatements(List<String> tableNames, Statement statement) {
         tableNames.forEach(tableName -> {
             try {
-                statement.addBatch(sql("TRUNCATE TABLE " + tableName));
+
+                String tableNameWithIgnoreSqlSpecialKeywords = "`" + tableName + "`";
+
+                statement.addBatch(sql("TRUNCATE TABLE " + tableNameWithIgnoreSqlSpecialKeywords));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

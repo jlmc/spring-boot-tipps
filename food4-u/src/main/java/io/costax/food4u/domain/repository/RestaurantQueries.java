@@ -21,4 +21,8 @@ public interface RestaurantQueries {
     List<Restaurant> searchCustom(String name, String cooker);
 
     List<Restaurant> findWithoutTaxAndWithSimilarName(String nome);
+
+    Restaurant getRestaurantOrNotFoundException(final Long restaurantId);
+
+    Restaurant getRestaurantForUpdateOrNotFoundException(final Long restaurantId);
 }

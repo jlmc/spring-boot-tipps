@@ -17,8 +17,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -77,6 +76,12 @@ public class Restaurant {
     )
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "restaurant_id", nullable = false, updatable = false)
+    private Set<Product> products = new HashSet<>();
+
+    private boolean active = false;
+
     @Version
     private int version;
 
@@ -93,5 +98,63 @@ public class Restaurant {
         this.setAddress(other.getAddress());
         this.setName(other.getName());
         this.setTakeAwayTax(other.getTakeAwayTax());
+    }
+
+    public void activate() {
+        this.active = true;
+    }
+
+    public void inactivate() {
+        this.active = false;
+    }
+
+    public void addPaymentMethod(final PaymentMethod paymentMethod) {
+        this.paymentMethods.add(paymentMethod);
+    }
+
+    public void removePaymentMethod(final PaymentMethod paymentMethod) {
+        this.paymentMethods.remove(paymentMethod);
+    }
+
+    public void addProduct(final Product product) {
+        //product.setRestaurant(this);
+        products.add(product);
+    }
+
+    public void removeProduct(final Long productId) {
+        final Product product = getProduct(productId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("No Product found with the id '%d'", productId)));
+
+        removeProduct(product);
+    }
+
+    private void removeProduct(final Product product) {
+        //product.setRestaurant(null);
+        products.remove(product);
+    }
+
+    public boolean containProduct(final Long productId) {
+        return getProduct(productId).isPresent();
+    }
+
+    public boolean notContainProduct(final Long productId) {
+        return !containProduct(productId);
+    }
+
+    public Optional<Product> getProduct(final Long productId) {
+        return products
+                .stream()
+                .filter(p -> Objects.equals(productId, p.getId()))
+                .limit(1L)
+                .findFirst();
+    }
+
+    public Product updateProductData(final Long productId, final Product other) {
+        final Product product = getProduct(productId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("No Product found with the id '%d'", productId)));
+
+        product.updateData(other);
+
+        return product;
     }
 }
