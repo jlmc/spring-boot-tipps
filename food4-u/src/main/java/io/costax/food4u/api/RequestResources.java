@@ -7,6 +7,8 @@ import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Request;
 import io.costax.food4u.domain.model.User;
 import io.costax.food4u.domain.repository.RequestRepository;
+import io.costax.food4u.domain.repository.RequestSpecifications;
+import io.costax.food4u.domain.repository.filters.RequestFilter;
 import io.costax.food4u.domain.services.RequestCreatorService;
 import io.costax.food4u.domain.services.RequestFlowService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/requests")
@@ -30,6 +33,15 @@ public class RequestResources {
 
     @Autowired
     RequestRepository requestRepository;
+
+    /**
+     * http://localhost:8080/requests?clientId=1&restaurantActive=true
+     */
+    @GetMapping
+    public List<RequestOutputRepresentation> search(RequestFilter filters) {
+        final List<Request> all = requestRepository.findAll(RequestSpecifications.withFilters(filters));
+        return requestsAssembler.toListOfRepresentations(all);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
