@@ -21,9 +21,22 @@ public final class RequestSpecifications {
     public static Specification<Request> withFilters(RequestFilter requestFilter) {
         return (Specification<Request>) (root, query, cb) -> {
 
-            final Join<Request, Restaurant> restaurant = (Join) root.fetch("restaurant", JoinType.LEFT);
-            restaurant.fetch("cooker", JoinType.LEFT);
-            final Join<Request, Client> client = (Join) root.fetch("client", JoinType.LEFT);
+            Join<Request, Restaurant> restaurant;
+            Join<Request, Client> client;
+
+            if (Request.class.equals(query.getResultType())) {
+                restaurant = (Join) root.fetch("restaurant", JoinType.LEFT);
+                restaurant.fetch("cooker", JoinType.LEFT);
+                client = (Join) root.fetch("client", JoinType.LEFT);
+                //final Fetch items = root.fetch("items", JoinType.LEFT);
+                //items.fetch("product");
+                root.fetch("paymentMethod");
+            } else {
+                restaurant = root.join("restaurant", JoinType.LEFT);
+                restaurant.join("cooker", JoinType.LEFT);
+                client = root.join("client", JoinType.LEFT);
+            }
+
 
             List<Predicate> predicates = new ArrayList<>();
 

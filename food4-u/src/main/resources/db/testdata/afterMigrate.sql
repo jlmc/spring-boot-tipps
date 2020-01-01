@@ -81,3 +81,28 @@ insert into user (name, email, pw, registration_at)
 values ('dummy1', 'dummy1@dummy.io.moc', 'abc', '2019-01-02')
      , ('dummy2', 'dummy2@dummy.io.moc', 'abc', '2019-01-02')
 ;
+
+
+insert into request
+(id, code, status, restaurant_id, sub_total, take_away_tax, total_value, created_at, payment_method_id, user_client_id,
+ delivery_address_street, delivery_address_city, delivery_address_zip_code, version, delivery_at, canceled_at,
+ confirmed_at)
+values (1, 'cf9a9dd5-b602-4d77-9914-69cbac80af73', 'CREATED', 1, 30.00, 3.00, 33.00, '2020-01-01 16:05:39', 1, 1,
+        'nothing 1',
+        'abc', '1234', 0, null, null, null)
+     , (2, '04f15303-5944-422d-a3c8-68fec0455c96', 'CREATED', 1, 30.00, 3.00, 33.00, '2020-01-01 16:05:40', 1, 1, 'abc',
+        'abc', '1234', 0, null, null, null)
+     , (3, 'd895b0cb-ef00-4150-a9e9-4b1cdcf074d8', 'CREATED', 1, 30.00, 3.00, 33.00, '2020-01-01 16:05:41', 1, 1, 'abc',
+        'abc', '1234', 0, null, null, null)
+     , (4, '53abcbea-fb77-497a-a98a-ed9bdf9445e0', 'CREATED', 1, 30.00, 3.00, 33.00, '2020-01-01 16:05:42', 1, 1, 'abc',
+        'abc', '1234', 0, null, null, null)
+     , (5, '30fc7b0a-8b09-4f4c-986d-149ee4fa3845', 'CREATED', 1, 30.00, 3.00, 33.00, '2020-01-01 16:05:43', 1, 1, 'abc',
+        'abc', '1234', 0, null, null, null);
+
+
+insert into request_item (id, request_id, unit_price, total_price, qty, observations, product_id)
+values (1, 1, 15.00, 30.00, 2, 'nothing', 1)
+     , (2, 2, 15.00, 30.00, 2, 'nothing', 1)
+     , (3, 3, 15.00, 30.00, 2, 'nothing', 1)
+     , (4, 4, 15.00, 30.00, 2, 'nothing', 1)
+     , (5, 5, 15.00, 30.00, 2, 'nothing', 1);
