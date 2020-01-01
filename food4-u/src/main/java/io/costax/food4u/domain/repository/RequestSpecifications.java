@@ -1,9 +1,9 @@
 package io.costax.food4u.domain.repository;
 
 import ch.qos.logback.core.net.server.Client;
+import io.costax.food4u.domain.filters.RequestFilter;
 import io.costax.food4u.domain.model.Request;
 import io.costax.food4u.domain.model.Restaurant;
-import io.costax.food4u.domain.repository.filters.RequestFilter;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Join;
@@ -55,6 +55,4 @@ public final class RequestSpecifications {
             return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-
 }
