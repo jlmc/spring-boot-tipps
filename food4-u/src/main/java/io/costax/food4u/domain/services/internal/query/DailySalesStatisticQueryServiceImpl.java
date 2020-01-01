@@ -1,4 +1,4 @@
-package io.costax.food4u.domain.services.internal;
+package io.costax.food4u.domain.services.internal.query;
 
 import io.costax.food4u.domain.filters.DailySalesStatisticFilter;
 import io.costax.food4u.domain.model.DailySalesStatistic;
