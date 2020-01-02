@@ -31,6 +31,17 @@
         </dependency>
 
         <dependency>
+            <!--
+             this is necessary when we need to use a component with the annotation:
+             org.springframework.boot.context.properties.ConfigurationProperties
+            -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
