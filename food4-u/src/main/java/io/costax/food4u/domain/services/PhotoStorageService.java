@@ -7,7 +7,19 @@ import java.io.InputStream;
 
 public interface PhotoStorageService {
 
+    InputStream getFile(String fileName);
+
     String storage(PhotoStream photoStream);
+
+    void remove(String fileName);
+
+    default String replace(String fileName, PhotoStream photoStream) {
+        if (fileName != null) {
+            remove(fileName);
+        }
+
+        return storage(photoStream);
+    }
 
     @Builder
     @Getter

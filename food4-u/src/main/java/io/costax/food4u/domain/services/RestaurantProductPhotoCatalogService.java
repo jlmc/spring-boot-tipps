@@ -7,6 +7,9 @@ import io.costax.food4u.domain.repository.RestaurantRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+import java.util.Optional;
+
 @Service
 public class RestaurantProductPhotoCatalogService {
 
@@ -27,15 +30,44 @@ public class RestaurantProductPhotoCatalogService {
                         productId,
                         String.format("Product with the identifier %d not found in the restaurant %d", productId, restaurantId)));
 
+
+        Optional<Photo> existingPhoto = restaurantRepository.getProductPhoto(restaurantId, productId);
+        if (existingPhoto.isPresent()) {
+            existingPhoto.map(Photo::getStoredName).ifPresent(photoStorageService::remove);
+            restaurantRepository.removeProductPhoto(restaurantId, productId);
+        }
+
         photo.setProduct(product);
 
-        String storagePath = photoStorageService.storage(PhotoStorageService.PhotoStream
+        PhotoStorageService.PhotoStream photoStream = PhotoStorageService.PhotoStream
                 .builder()
                 .name(photo.getFileName())
                 .inputStream(photo.getInputStream())
-                .build());
+                .build();
 
-        photo.setPath(storagePath);
+        String storagePath = photoStorageService.storage(photoStream);
+
+        photo.setStoredName(storagePath);
         return restaurantRepository.saveProductPhoto(photo);
+    }
+
+    public Photo getProductPhoto(final Long restaurantId, final Long productId) {
+        return restaurantRepository.getProductPhoto(restaurantId, productId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        Photo.class, productId, String.format("The is no Photo in Product %d in the restaurant %d", productId, restaurantId)
+                ));
+    }
+
+    public InputStream getProductPhoto(String fileName) {
+        return photoStorageService.getFile(fileName);
+    }
+
+    @Transactional
+    public void remove(final Long restaurantId, final Long productId) {
+        Optional<Photo> existingPhoto = restaurantRepository.getProductPhoto(restaurantId, productId);
+        if (existingPhoto.isPresent()) {
+            existingPhoto.map(Photo::getStoredName).ifPresent(photoStorageService::remove);
+            restaurantRepository.removeProductPhoto(restaurantId, productId);
+        }
     }
 }

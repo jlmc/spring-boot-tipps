@@ -31,4 +31,8 @@ public interface RestaurantQueries {
     Photo saveProductPhoto(Photo photo);
 
     Optional<Photo> findProductPhoto(Long restaurantId, Long productId);
+
+    Optional<Photo> getProductPhoto(Long restaurantId, Long productId);
+
+    void removeProductPhoto(Long restaurantId, Long productId);
 }

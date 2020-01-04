@@ -26,7 +26,9 @@ public class Photo {
     private String contentType;
 
     private Long size;
-    private String path;
+
+    @Column(name = "path")
+    private String storedName;
 
     @Transient
     private InputStream inputStream;

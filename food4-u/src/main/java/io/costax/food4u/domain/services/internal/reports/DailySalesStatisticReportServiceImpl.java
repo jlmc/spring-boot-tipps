@@ -18,7 +18,6 @@ public class DailySalesStatisticReportServiceImpl implements DailySalesStatistic
     @Autowired
     DailySalesStatisticQueryService queryService;
 
-
     @Override
     public byte[] generateReport(final DailySalesStatisticFilter filter, final String timeOffset) {
         try {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,24 +20,48 @@ public class LocalPhotoStorageService implements PhotoStorageService {
     PhotoStorageConfiguration configuration;
 
     @Override
+    public InputStream getFile(final String fileName) {
+        try {
+            Path filePath = getFilePath(fileName);
+            return Files.newInputStream(filePath);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    @Override
     public String storage(PhotoStream photoStream) {
         try {
 
-            Path destinationPath = getDestinationPath(photoStream);
+            String fileName = generateFileName(photoStream);
+
+            Path destinationPath = getFilePath(fileName);
 
             FileCopyUtils.copy(photoStream.getInputStream(), Files.newOutputStream(destinationPath, StandardOpenOption.CREATE_NEW));
-            String s = destinationPath.toString();
-            return s;
+
+            return fileName;
 
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    private Path getDestinationPath(final PhotoStream photoStream) {
+    @Override
+    public void remove(final String fileName) {
+        try {
+            Path filePath = getFilePath(fileName);
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private Path getFilePath(final String fileName) {
+        return configuration.getLocalPath().resolve(Path.of(fileName));
+    }
+
+    private String generateFileName(final PhotoStream photoStream) {
         UUID uuid1 = UUID.randomUUID();
-        Path of = Path.of(uuid1.toString() + "__" + photoStream.getName());
-        Path resolve = configuration.getLocalPath().resolve(of);
-        return resolve;
+        return String.format("%s__%s", uuid1, photoStream.getName());
     }
 }
