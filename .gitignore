@@ -32,3 +32,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Project Enviroment
+.volumes/
