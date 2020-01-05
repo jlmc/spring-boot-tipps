@@ -17,3 +17,25 @@ services:
       - DATA_DIR=/tmp/localstack/data
     volumes:
       - '.volumes/localstack:/tmp/localstack'
+    networks:
+      - food4u-network
+
+  db-mysql:
+    image: mysql:8.0.18
+    container_name: db-mysql-demo
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pw
+      - MYSQL_DATABASE=food4u
+      - MYSQL_USER=food4u
+      - MYSQL_PASSWORD=food4u
+    volumes:
+      - '.volumes/db-mysql:/var/lib/mysql'
+    networks:
+      - food4u-network
+
+
+networks:
+  food4u-network:
+    driver: bridge

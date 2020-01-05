@@ -4,10 +4,11 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 public interface PhotoStorageService {
 
-    InputStream getFile(String fileName);
+    StoragedPhoto getFile(String fileName);
 
     String storage(PhotoStream photoStream);
 
@@ -26,5 +27,18 @@ public interface PhotoStorageService {
     class PhotoStream {
         private String name;
         private InputStream inputStream;
+        private String contentType;
+    }
+
+    @Builder
+    @Getter
+    class StoragedPhoto {
+        private InputStream inputStream;
+        private String url;
+    }
+
+    static String generateFileName(final PhotoStream photoStream) {
+        UUID uuid1 = UUID.randomUUID();
+        return String.format("%s__%s", uuid1, photoStream.getName());
     }
 }

@@ -43,6 +43,7 @@ public class RestaurantProductPhotoCatalogService {
                 .builder()
                 .name(photo.getFileName())
                 .inputStream(photo.getInputStream())
+                .contentType(photo.getContentType())
                 .build();
 
         String storagePath = photoStorageService.storage(photoStream);
@@ -59,7 +60,7 @@ public class RestaurantProductPhotoCatalogService {
     }
 
     public InputStream getProductPhoto(String fileName) {
-        return photoStorageService.getFile(fileName);
+        return photoStorageService.getFile(fileName).getInputStream();
     }
 
     @Transactional
