@@ -14,8 +14,8 @@ import javax.validation.constraints.NotNull;
 public class ProductPhotoInputRepresentation {
 
     @NotNull
-    @FileSize(max = "500KB")
-    @FileContentType(allowed = { MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
+    @FileSize(max = "20MB")
+    @FileContentType(allowed = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
     private MultipartFile file;
     private String description;
 }

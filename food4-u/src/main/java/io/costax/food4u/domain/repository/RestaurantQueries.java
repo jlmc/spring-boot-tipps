@@ -1,8 +1,10 @@
 package io.costax.food4u.domain.repository;
 
+import io.costax.food4u.domain.model.Photo;
 import io.costax.food4u.domain.model.Restaurant;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * This interface is a technique to add more power to Spring data Repositories
@@ -25,4 +27,12 @@ public interface RestaurantQueries {
     Restaurant getRestaurantOrNotFoundException(final Long restaurantId);
 
     Restaurant getRestaurantForUpdateOrNotFoundException(final Long restaurantId);
+
+    Photo saveProductPhoto(Photo photo);
+
+    Optional<Photo> findProductPhoto(Long restaurantId, Long productId);
+
+    Optional<Photo> getProductPhoto(Long restaurantId, Long productId);
+
+    void removeProductPhoto(Long restaurantId, Long productId);
 }
