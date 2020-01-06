@@ -35,6 +35,10 @@ public class OrderRegistationService {
                 .to("costajlmpp+test@gmail.com")
                 .subject("ping test - " + System.currentTimeMillis())
                 .body("ping test - " + System.currentTimeMillis())
+
+                .templateName("order-confirmed.html")
+                .templateParam("clientName", "Duke the Greater")
+
                 .build();
 
         emailSenderService.send(message);

@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.Singular;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EmailSenderService {
 
@@ -24,6 +25,10 @@ public interface EmailSenderService {
         private String subject;
         @NonNull
         private String body;
+
+        private String templateName;
+        @Singular
+        private Map<String, Object> templateParams;
 
     }
 }
