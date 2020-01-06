@@ -1,27 +1,20 @@
 package io.costax.springemaildemos.domain.orders.boundary;
 
-import io.costax.springemaildemos.domain.notifications.EmailSenderService;
 import io.costax.springemaildemos.domain.orders.control.OrderRepository;
-import io.costax.springemaildemos.domain.orders.control.OrdersConfigurationProperties;
 import io.costax.springemaildemos.domain.orders.entity.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static io.costax.springemaildemos.domain.notifications.EmailSenderService.Message;
+import java.time.OffsetDateTime;
 
 @Service
 public class OrderRegistationService {
 
     private final OrderRepository repository;
-    private final OrdersConfigurationProperties ordersConfigurationProperties;
 
-    private final EmailSenderService emailSenderService;
 
-    public OrderRegistationService(final OrderRepository repository,
-                                   final OrdersConfigurationProperties ordersConfigurationProperties, final EmailSenderService emailSenderService) {
+    public OrderRegistationService(final OrderRepository repository) {
         this.repository = repository;
-        this.ordersConfigurationProperties = ordersConfigurationProperties;
-        this.emailSenderService = emailSenderService;
     }
 
     @Transactional
@@ -30,18 +23,10 @@ public class OrderRegistationService {
 
         // do other shits ...
 
-        final Message message = Message.builder()
-                .from(ordersConfigurationProperties.getEmails().getFrom())
-                .to("costajlmpp+test@gmail.com")
-                .subject("ping test - " + System.currentTimeMillis())
-                .body("ping test - " + System.currentTimeMillis())
+        order.confirm(OffsetDateTime.now());
 
-                .templateName("order-confirmed.html")
-                .templateParam("clientName", "Duke the Greater")
-
-                .build();
-
-        emailSenderService.send(message);
+        // we need to execute the save method
+        repository.save(order);
 
         return order;
     }
