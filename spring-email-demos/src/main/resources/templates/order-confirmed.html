@@ -2,6 +2,29 @@
 <body>
 <h1 style="color: red; font-size: 26px">Order confirmed!</h1>
 
-<p>${clientName}, you order was been confirmed.</p>
+<p>${order.client}, you order was been confirmed.</p>
+
+<h2 style="font-size: 20px">Probike Shop</h2>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0"
+       style="max-width: 400px; color: #6F6F6F">
+    <#list order.items as item>
+    <tr>
+        <td style="padding: 10px 0">${item.qty}x ${item.product}</td>
+        <td style="width: 30px">${item.value?string.currency}</td>
+    </tr>
+    </#list>
+
+    <tr>
+        <td style="padding: 10px 0">Approved At</td>
+        <td>${order.confirmedAt.toLocalDate()}</td>
+    </tr>
+    <tr style="font-weight: bold">
+        <td style="padding: 10px 0">Total</td>
+        <td>${order.total?string.currency}</td>
+    </tr>
+</table>
+
+
 </body>
 </html>

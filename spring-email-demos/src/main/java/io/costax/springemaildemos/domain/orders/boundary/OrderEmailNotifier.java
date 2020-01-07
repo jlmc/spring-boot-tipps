@@ -20,7 +20,6 @@ public class OrderEmailNotifier {
     }
 
     //@EventListener
-
     @TransactionalEventListener(
             phase = TransactionPhase.AFTER_COMMIT
     )
@@ -30,11 +29,12 @@ public class OrderEmailNotifier {
         final EmailSenderService.Message message = EmailSenderService.Message.builder()
                 .from(ordersConfigurationProperties.getEmails().getFrom())
                 .to("costajlmpp+test@gmail.com")
+
                 .subject("ping test - " + System.currentTimeMillis())
                 .body("ping test - " + System.currentTimeMillis())
 
                 .templateName("order-confirmed.html")
-                .templateParam("clientName", "Duke the Greater")
+                .templateParam("order", order)
 
                 .build();
 
