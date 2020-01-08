@@ -12,5 +12,6 @@
         <module>jackson-serialization-demos</module>
         <module>spring-email-demos</module>
         <module>food4-u</module>
+        <module>food4-u-java-client</module>
     </modules>
 </project>
