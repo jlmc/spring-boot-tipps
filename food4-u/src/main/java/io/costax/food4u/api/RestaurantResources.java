@@ -233,9 +233,9 @@ public class RestaurantResources {
 
     /**
      * <code>
-     *     curl --location --request PUT 'http://localhost:8080/restaurants/activations' \
-     *          --header 'Content-Type: application/json' \
-     *          --data-raw '[ 1, 2 ]'
+     * curl --location --request PUT 'http://localhost:8080/restaurants/activations' \
+     * --header 'Content-Type: application/json' \
+     * --data-raw '[ 1, 2 ]'
      * </code>
      */
     @PutMapping("/activations")
