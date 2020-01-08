@@ -17,6 +17,7 @@ import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantRegistrationService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -74,8 +75,14 @@ public class RestaurantResources {
     }
 
     @GetMapping
-    public List<RestaurantOutputRepresentation> list() {
-        return restaurantRepository.findAll().stream().map(assembler::toRepresentation).collect(Collectors.toList());
+    public ResponseEntity<List<RestaurantOutputRepresentation>> list() {
+        final List<RestaurantOutputRepresentation> list = restaurantRepository.findAll()
+                .stream()
+                .map(assembler::toRepresentation)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                .body(list);
     }
 
     @ResponseStatus(HttpStatus.OK)
