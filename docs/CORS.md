@@ -13,28 +13,34 @@ Useful links:
 
 A Simple requisitions have the following restrictions:
 
-- One of the allowed methods: 
-  - GET 
-  - HEAD 
-  - POST
-  
-- Some HTTP Header also define if the requisition is simple or not. If we add to the HTTP Request any Header that is not in the following list the Request **is no longer** a **simple request**:
 
-  - Accept
-  - Accept-Language
-  - Content-Language
-  - Content-Type (but note the additional requirements below)
-  - DPR
-  - Downlink
-  - Save-Data
-  - Viewport-Width
-  - Width
+1. One of the allowed methods: 
   
-- The only allowed values for the Content-Type header are in the following list (even if it's a GET, HEAD, or POST request). For example if we use the header 'Content-Type: application/json' then the requisition is not a simple request, no matter the wich Http verb we use. 
+    - GET 
+    - HEAD 
+    - POST
 
-  - application/x-www-form-urlencoded
-  - multipart/form-data
-  - text/plain
+
+2. Some HTTP Header also define if the requisition is simple or not. If we add to the HTTP Request any Header that is not in the following list the Request **is no longer** a **simple request**:
+
+    - Accept
+    - Accept-Language
+    - Content-Language
+    - Content-Type (but note the additional requirements below)
+    - DPR
+    - Downlink
+    - Save-Data
+    - Viewport-Width
+    - Width
+
+
+3. The only allowed values for the Content-Type header are in the following list (even if it's a GET, HEAD, or POST request). For example if we use the header `Content-Type: application/json` then the requisition is not a simple request, no matter the wich Http verb we use. 
+
+    - application/x-www-form-urlencoded
+    - multipart/form-data
+    - text/plain
+
+
 
 ### Simple Request flow:
 
@@ -50,22 +56,21 @@ Access-Control-Allow-Origin: http://example-client-js.com:8000
 
 About this Header we can say:
 
-  - ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-  - Header required when you have cross-source clients.
-    - when is not present the clients suffer from CORS issue.
-  - When the API is public and cannot specify the value of this header then the value '*' should be used.
-  - When there is a possibility to know exactly the client `Origin`, then the request `Origin` value should be validated and returned:
-  
-  
+- ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+- Header required when you have cross-source clients.
+- when is not present the clients suffer from CORS issue.
+- When the API is public and cannot specify the value of this header then the value '*' should be used.
+- When there is a possibility to know exactly the client `Origin`, then the request `Origin` value should be validated and returned:
+
 
 
 
 ## [The Preflight Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Preflighted_requests)
 
 - If The Request is not a Simple Request then it may need a Preflighted requests before (`OPTIONS`)
-  - Other wise, the requisition is refused, because in this case before the put request is executed a `OPTIONS` request.
-  - This behavior is called `preflight` (Em Portugues, Pré voo, ou, Pré envio)
-  - The Server when receive the preflight request it should return the CORS HTTP headers indicated if the the request is allowed, or, the status 403.
+    - Other wise, the requisition is refused, because in this case before the put request is executed a `OPTIONS` request.
+    - This behavior is called `preflight` (Em Portugues, Pré voo, ou, Pré envio)
+    - The Server when receive the preflight request it should return the CORS HTTP headers indicated if the the request is allowed, or, the status 403.
 
 ![The preflight request flow](https://mdn.mozillademos.org/files/16753/preflight_correct.png)
 
@@ -83,6 +88,7 @@ About this Header we can say:
     - Maximum time in seconds the preflight response is considered valid and can be cached.
 
 - Access-Control-Allow-Headers
+
     - What the headers are allowed
     - The request Header `Access-Control-Request-Headers` is used
 
