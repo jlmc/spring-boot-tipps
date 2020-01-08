@@ -13,5 +13,6 @@
         <module>spring-email-demos</module>
         <module>food4-u</module>
         <module>amazon-s3-mock-service</module>
+        <module>food4-u-java-client</module>
     </modules>
 </project>
