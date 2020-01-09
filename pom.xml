@@ -11,5 +11,6 @@
         <module>examples-api</module>
         <module>jackson-serialization-demos</module>
         <module>food4-u</module>
+        <module>amazon-s3-mock-service</module>
     </modules>
 </project>

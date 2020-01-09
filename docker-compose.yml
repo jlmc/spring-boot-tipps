@@ -4,6 +4,8 @@ version: "3.7"
 # https://github.com/localstack/localstack
 # https://hub.docker.com/r/localstack/localstack
 # https://dev.to/goodidea/how-to-fake-aws-locally-with-localstack-27me
+# http://localhost:4572/
+# http://localhost:8055/#!/infra
 services:
   s3-localstack:
     image: localstack/localstack:0.10.6
