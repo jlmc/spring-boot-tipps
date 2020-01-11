@@ -80,8 +80,9 @@ public class RestaurantResources {
                 .stream()
                 .map(assembler::toRepresentation)
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok()
-                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
+                //.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
                 .body(list);
     }
 
