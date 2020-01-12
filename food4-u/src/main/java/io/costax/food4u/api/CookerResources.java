@@ -9,6 +9,7 @@ import io.costax.food4u.domain.exceptions.CookerNotFoundException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
+import io.swagger.annotations.Api;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * The {@link @RestController} annotation is a wrapper of two important annotations
  * {@link Controller} and {@link ResponseBody}
  */
+@Api(tags = "Cookers")
 @RestController
 @RequestMapping(
         value = "/cookers",

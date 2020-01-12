@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
@@ -24,7 +25,8 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
                 //.apis(RequestHandlerSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("io.costax.food4u.api"))
                 .build()
-                .apiInfo(apiInfo());
+                .apiInfo(apiInfo())
+                .tags(new Tag("Cookers", "Management of cookers"));
     }
 
     /**
