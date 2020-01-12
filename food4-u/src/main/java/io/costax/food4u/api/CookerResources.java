@@ -11,6 +11,7 @@ import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,9 @@ public class CookerResources {
     @ApiOperation("Get cooker by id")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{Id}")
-    public CookerOutputRepresentation getById(@PathVariable("Id") Long cookerId) {
+    public CookerOutputRepresentation getById(
+            @ApiParam(value = "Cooker ID", example = "1")
+            @PathVariable("Id") Long cookerId) {
         return repository.findById(cookerId)
                 .map(assembler::toRepresentation)
                 .orElseThrow(() -> CookerNotFoundException.of(cookerId));
@@ -80,7 +83,9 @@ public class CookerResources {
     @ApiOperation("Create new cooker")
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CookerOutputRepresentation> add(@RequestBody @Valid CookerInputRepresentation payload,
+    public ResponseEntity<CookerOutputRepresentation> add(
+            @ApiParam(name = "body", value = "Cooker Input Representation")
+            @RequestBody @Valid CookerInputRepresentation payload,
                                                           UriComponentsBuilder b) {
         Cooker saved = cookerRegistrationService.add(disassembler.toDomainObject(payload));
 
@@ -97,8 +102,11 @@ public class CookerResources {
 
     @ApiOperation("Update cookers")
     @PutMapping("/{Id}")
-    public ResponseEntity<CookerOutputRepresentation> update(@PathVariable("Id") Long cookerId,
-                                                             @RequestBody CookerInputRepresentation payload) {
+    public ResponseEntity<CookerOutputRepresentation> update(
+            @ApiParam(value = "Cooker ID", example = "1")
+            @PathVariable("Id") Long cookerId,
+
+            @RequestBody CookerInputRepresentation payload) {
         final Cooker cooker = disassembler.toDomainObject(payload);
 
         //Cooker cookerCurrent = cookerRegistrationService.update(cookerId, cooker);
@@ -108,7 +116,7 @@ public class CookerResources {
 
     @ApiOperation("Delete cooker")
     @DeleteMapping("/{Id}")
-    public ResponseEntity<?> remover(@PathVariable("Id") Long cookerId) {
+    public ResponseEntity<?> remover(@ApiParam(value = "Cooker ID", example = "1") @PathVariable("Id") Long cookerId) {
         this.cookerRegistrationService.remove(cookerId);
         return ResponseEntity.noContent().build();
     }
