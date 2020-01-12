@@ -125,7 +125,10 @@ Desvantagens/Vantagens:
 - Cansegue-se diminuir o consumo da network, existirá um menor volume de dados a circular na rede.
 
 
-### Shallow ETags
+
+---
+
+# Shallow ETags
 
 - O Spring possui um filtro o qual tem como objectivo interceptar a responses e calcular a Hash, desta forma o controladores não ficam poluidos com o código do ETags.
 
@@ -169,7 +172,7 @@ public class WebConfig implements WebMvcConfigurer {
 
 
 
-## outras diretivas de Cache-Control na resposta HTTP
+# outras diretivas de Cache-Control na resposta HTTP
 
 - HTTP Response Header  Cache-Control: max-age=10 private
     
@@ -207,3 +210,39 @@ Por vezes precisamos de ignorar o valor da cache, isto é, queremos fazer um ped
 GET /payments-methods/1
 Cache-Control: no-cache
 ```
+
+
+---
+
+# Deep ETags
+
+Deep tag é uma outra forma de calcular Etag mais profunda e funciona exatamente da mesma principio, mas tem tambem como objectivo poupar uma pouco mais de processamento do servidor:
+
+```java
+ @GetMapping
+    public ResponseEntity<List<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest) {
+        // disable Shallow Etag for the current request
+        ShallowEtagHeaderFilter.disableContentCaching(servletWebRequest.getRequest());
+
+        // Calculate the current ETag
+        String eTag = Optional.ofNullable(repository.findMaxLastModification()).map(OffsetDateTime::toEpochSecond).map(String::valueOf).orElse("0");
+
+        // Validate if the Request contain the Header If-None-Match and is the same value of the current ETag
+        if (servletWebRequest.checkNotModified(eTag)) {
+            return null;
+        }
+
+        final List<PaymentMethod> paymentMethods = repository.findAll(Sort.by("id"));
+        final List<PaymentMethodOutputRepresentation> paymentMethodOutputRepresentations = assembler.toListOfRepresentations(paymentMethods);
+
+        return ResponseEntity
+                .ok()
+                //header Cache-Control: max-age=10 segundo
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                //.header("ETag", eTag)
+                .eTag(eTag)
+                .body(paymentMethodOutputRepresentations);
+    }
+```
+
+
