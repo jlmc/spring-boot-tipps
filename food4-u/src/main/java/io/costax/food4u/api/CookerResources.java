@@ -10,6 +10,7 @@ import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,7 @@ public class CookerResources {
         this.disassembler = disassembler;
     }
 
+    @ApiOperation("Get all cookers")
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CookerOutputRepresentation> list() {
         return repository.findAll().stream()
@@ -59,11 +61,14 @@ public class CookerResources {
                 .collect(Collectors.toList());
     }
 
+    //@ApiIgnore
+    @ApiOperation("Get all cookers in xml")
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
     public CookersXmlWrapper listXml() {
         return new CookersXmlWrapper(repository.findAll());
     }
 
+    @ApiOperation("Get cooker by id")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{Id}")
     public CookerOutputRepresentation getById(@PathVariable("Id") Long cookerId) {
@@ -72,6 +77,7 @@ public class CookerResources {
                 .orElseThrow(() -> CookerNotFoundException.of(cookerId));
     }
 
+    @ApiOperation("Create new cooker")
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CookerOutputRepresentation> add(@RequestBody @Valid CookerInputRepresentation payload,
@@ -89,6 +95,7 @@ public class CookerResources {
         return ResponseEntity.created(location).body(assembler.toRepresentation(saved));
     }
 
+    @ApiOperation("Update cookers")
     @PutMapping("/{Id}")
     public ResponseEntity<CookerOutputRepresentation> update(@PathVariable("Id") Long cookerId,
                                                              @RequestBody CookerInputRepresentation payload) {
@@ -99,7 +106,7 @@ public class CookerResources {
         return ResponseEntity.ok(assembler.toRepresentation(cookerCurrent));
     }
 
-
+    @ApiOperation("Delete cooker")
     @DeleteMapping("/{Id}")
     public ResponseEntity<?> remover(@PathVariable("Id") Long cookerId) {
         this.cookerRegistrationService.remove(cookerId);
