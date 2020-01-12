@@ -47,10 +47,10 @@ alter table request_item
 alter table request
     auto_increment = 1;
 
-insert into payment_method (description, name)
-values ('cach', 'CACH'),
-       ('visa', 'VISA'),
-       ('paypal', 'PAYPAL')
+insert into payment_method (description, name, last_modification_at)
+values ('cach', 'CACH', utc_timestamp),
+       ('visa', 'VISA', utc_timestamp),
+       ('paypal', 'PAYPAL', utc_timestamp)
 ;
 
 insert into cooker (name, version)

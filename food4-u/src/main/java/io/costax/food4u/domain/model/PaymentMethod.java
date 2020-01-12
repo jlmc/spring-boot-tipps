@@ -1,6 +1,9 @@
 package io.costax.food4u.domain.model;
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +17,10 @@ public class PaymentMethod {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    //@CreationTimestamp
+    @UpdateTimestamp
+    private OffsetDateTime lastModificationAt;
 
     @Deprecated
     protected PaymentMethod() {

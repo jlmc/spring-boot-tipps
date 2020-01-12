@@ -10,13 +10,19 @@ import io.costax.food4u.domain.repository.PaymentMethodRepository;
 import io.costax.food4u.domain.services.PaymentMethodRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.filter.ShallowEtagHeaderFilter;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/payment-methods")
@@ -35,18 +41,47 @@ public class PaymentMethodResources {
     PaymentMethodOutputRepresentationAssembler assembler;
 
     @GetMapping
-    public List<PaymentMethod> list() {
-        return repository.findAll(Sort.by("id"));
+    public ResponseEntity<List<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest) {
+        // disable Shallow Etag for the current request
+        ShallowEtagHeaderFilter.disableContentCaching(servletWebRequest.getRequest());
+
+        // Calculate the current ETag
+        String eTag = Optional.ofNullable(repository.findMaxLastModification()).map(OffsetDateTime::toEpochSecond).map(String::valueOf).orElse("0");
+
+        // Validate if the Request contain the Header If-None-Match and is the same value of the current ETag
+        if (servletWebRequest.checkNotModified(eTag)) {
+            return null;
+        }
+
+        final List<PaymentMethod> paymentMethods = repository.findAll(Sort.by("id"));
+        final List<PaymentMethodOutputRepresentation> paymentMethodOutputRepresentations = assembler.toListOfRepresentations(paymentMethods);
+
+        return ResponseEntity
+                .ok()
+                //header Cache-Control: max-age=10 segundo
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                //.header("ETag", eTag)
+                .eTag(eTag)
+                .body(paymentMethodOutputRepresentations);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{payment-method-id}")
-    public PaymentMethodOutputRepresentation getById(@PathVariable("payment-method-id") Long id) {
+    public ResponseEntity<PaymentMethodOutputRepresentation> getById(@PathVariable("payment-method-id") Long id) {
         //repository.refresh(paymentMethod);
-        return repository
+        final PaymentMethodOutputRepresentation paymentMethodOutputRepresentation = repository
                 .findById(id)
                 .map(assembler::toRepresentation)
                 .orElseThrow(() -> new ResourceNotFoundException(PaymentMethod.class, id));
+
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePrivate())
+                //.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS).cachePublic())
+                //.cacheControl(CacheControl.noCache())
+                //.cacheControl(CacheControl.noStore())
+                .body(paymentMethodOutputRepresentation);
     }
 
     @PostMapping
