@@ -97,3 +97,34 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
 
 }
 ```
+
+## Customizations Open Api Documentation
+
+Podemos adicionar mais informação à open Api.
+
+```
+    @Bean
+    public Docket apiDocket() {
+        // to generation of
+        // docket is the SpringFox Document of the documentation
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                //.apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("io.costax.food4u.api"))
+                .build()
+                .apiInfo(apiInfo());
+    }
+
+    /**
+     * Customisations of the swagger-ui default titles and descriptions
+     */
+    public ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Food-4-U Api")
+                .description("Open API for restaurants clients")
+                .version("1")
+                .contact(new springfox.documentation.service.Contact("costax", "https://github.com/jlmc", "costajlmpp@gmail.com"))
+                .build();
+    }
+
+```
