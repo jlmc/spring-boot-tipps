@@ -19,9 +19,23 @@
         <java.version>13</java.version>
         <modelmapper.version>2.3.0</modelmapper.version>
         <jasperreports.version>6.10.0</jasperreports.version>
+        <springfox.version>2.9.2</springfox.version>
     </properties>
 
     <dependencies>
+
+        <!-- Open API to generate /v2/api-docs -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <!-- Open API generate /swagger-ui.html -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
