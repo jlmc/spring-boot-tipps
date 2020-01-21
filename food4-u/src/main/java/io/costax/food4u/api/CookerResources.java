@@ -2,6 +2,7 @@ package io.costax.food4u.api;
 
 import io.costax.food4u.api.assembler.cookers.input.CookerInputRepresentationDisassembler;
 import io.costax.food4u.api.assembler.cookers.output.CookerOutputRepresentationAssembler;
+import io.costax.food4u.api.exceptionhandler.Problem;
 import io.costax.food4u.api.model.CookersXmlWrapper;
 import io.costax.food4u.api.model.cookers.input.CookerInputRepresentation;
 import io.costax.food4u.api.model.cookers.output.CookerOutputRepresentation;
@@ -9,9 +10,7 @@ import io.costax.food4u.domain.exceptions.CookerNotFoundException;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -70,6 +69,10 @@ public class CookerResources {
     }
 
     @ApiOperation("Get cooker by id")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Invalid Cooker ID", response = Problem.class),
+            @ApiResponse(code = 404, message = "Cooker not found", response = Problem.class)
+    })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{Id}")
     public CookerOutputRepresentation getById(
@@ -81,8 +84,11 @@ public class CookerResources {
     }
 
     @ApiOperation("Create new cooker")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "Cooker Created"),
+    })
     @PostMapping
-    //@ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CookerOutputRepresentation> add(
             @ApiParam(name = "body", value = "Cooker Input Representation")
             @RequestBody @Valid CookerInputRepresentation payload,
@@ -101,6 +107,10 @@ public class CookerResources {
     }
 
     @ApiOperation("Update cookers")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Updated Cooker"),
+            @ApiResponse(code = 404, message = "Cooker not found", response = Problem.class)
+    })
     @PutMapping("/{Id}")
     public ResponseEntity<CookerOutputRepresentation> update(
             @ApiParam(value = "Cooker ID", example = "1")
@@ -115,7 +125,12 @@ public class CookerResources {
     }
 
     @ApiOperation("Delete cooker")
+    @ApiResponses({
+            @ApiResponse(code = 204, message = "Cooker deleted"),
+            @ApiResponse(code = 404, message = "Cooker not found", response = Problem.class)
+    })
     @DeleteMapping("/{Id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> remover(@ApiParam(value = "Cooker ID", example = "1") @PathVariable("Id") Long cookerId) {
         this.cookerRegistrationService.remove(cookerId);
         return ResponseEntity.noContent().build();
