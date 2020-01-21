@@ -58,10 +58,12 @@ public class GlobalHttpVerbResponseMessages {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Invalid request (client error)")
+                        .responseModel(new ModelRef("Problem"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Server expected error")
+                        .responseModel(new ModelRef("Problem"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.NOT_ACCEPTABLE.value())
@@ -70,6 +72,7 @@ public class GlobalHttpVerbResponseMessages {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.UNSUPPORTED_MEDIA_TYPE.value())
                         .message("Request declined because the body is in an unsupported format")
+                        .responseModel(new ModelRef("Problem"))
                         .build()
         );
     }
@@ -90,10 +93,12 @@ public class GlobalHttpVerbResponseMessages {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Invalid request (client error)")
+                        .responseModel(new ModelRef("Problem"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Server expected error")
+                        .responseModel(new ModelRef("Problem"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.NOT_ACCEPTABLE.value())
@@ -118,10 +123,12 @@ public class GlobalHttpVerbResponseMessages {
                 new ResponseMessageBuilder()
                         .code(HttpStatus.BAD_REQUEST.value())
                         .message("Invalid request (client error)")
+                        .responseModel(new ModelRef("Problem"))
                         .build(),
                 new ResponseMessageBuilder()
                         .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                         .message("Server expected error")
+                        .responseModel(new ModelRef("Problem"))
                         .build()
         );
     }
