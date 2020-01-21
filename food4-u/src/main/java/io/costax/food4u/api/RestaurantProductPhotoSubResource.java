@@ -3,6 +3,7 @@ package io.costax.food4u.api;
 import io.costax.food4u.api.assembler.Assembler;
 import io.costax.food4u.api.model.restaurants.input.ProductPhotoInputRepresentation;
 import io.costax.food4u.api.model.restaurants.output.PhotoProductRepresentation;
+import io.costax.food4u.api.openapi.controllers.RestaurantProductPhotoSubResourceOpenApi;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Photo;
 import io.costax.food4u.domain.services.RestaurantProductPhotoCatalogService;
@@ -20,8 +21,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/products/{productId}/photo")
-public class RestaurantProductPhotoSubResource {
+@RequestMapping(
+        path = "/restaurants/{restaurantId}/products/{productId}/photo"
+        //produces = MediaType.APPLICATION_JSON_VALUE
+)
+public class RestaurantProductPhotoSubResource implements RestaurantProductPhotoSubResourceOpenApi {
 
     private final Assembler<PhotoProductRepresentation, Photo> assembler;
     private final RestaurantProductPhotoCatalogService restaurantProductPhotoCatalogService;

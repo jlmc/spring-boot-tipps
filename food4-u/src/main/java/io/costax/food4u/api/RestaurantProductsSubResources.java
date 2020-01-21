@@ -4,12 +4,14 @@ import io.costax.food4u.api.assembler.Assembler;
 import io.costax.food4u.api.assembler.Disassembler;
 import io.costax.food4u.api.model.restaurants.input.ProductInputRepresentation;
 import io.costax.food4u.api.model.restaurants.output.ProductOutputRepresentation;
+import io.costax.food4u.api.openapi.controllers.RestaurantProductsSubResourcesOpenApi;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Product;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantProductsRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,8 +19,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/restaurants/{restaurantId}/products")
-public class RestaurantProductsSubResources {
+@RequestMapping(
+        path = "/restaurants/{restaurantId}/products",
+        produces = MediaType.APPLICATION_JSON_VALUE
+        //consumes = MediaType.APPLICATION_JSON_VALUE
+)
+public class RestaurantProductsSubResources implements RestaurantProductsSubResourcesOpenApi {
 
     @Autowired
     private RestaurantRepository restaurantRepository;

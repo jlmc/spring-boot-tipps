@@ -1,6 +1,5 @@
 package io.costax.food4u.api;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.costax.food4u.api.assembler.Assembler;
 import io.costax.food4u.api.assembler.restaurants.input.RestaurantInputRepresentationDisassembler;
@@ -10,6 +9,7 @@ import io.costax.food4u.api.model.restaurants.input.AddressInputRepresentation;
 import io.costax.food4u.api.model.restaurants.input.CookerInputRepresentation;
 import io.costax.food4u.api.model.restaurants.input.RestaurantInputRepresentation;
 import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentation;
+import io.costax.food4u.api.openapi.controllers.RestaurantResourcesOpenApi;
 import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
 import io.costax.food4u.domain.model.PaymentMethod;
@@ -17,8 +17,8 @@ import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantRegistrationService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -39,15 +39,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(
-        value = "/restaurants"
-        /*,
-        produces = {
-                MediaType.APPLICATION_JSON_VALUE
-        },
-        consumes = {
-                MediaType.APPLICATION_JSON_VALUE
-        }*/)
-public class RestaurantResources {
+        path = "/restaurants",
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
+public class RestaurantResources implements RestaurantResourcesOpenApi {
 
     private final RestaurantRepository restaurantRepository;
     private final RestaurantRegistrationService restaurantRegistrationService;

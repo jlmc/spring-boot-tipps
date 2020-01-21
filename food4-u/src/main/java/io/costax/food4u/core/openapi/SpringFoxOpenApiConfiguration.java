@@ -5,7 +5,10 @@ import io.costax.food4u.api.exceptionhandler.Problem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -16,6 +19,12 @@ import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLStreamHandler;
 
 import static io.costax.food4u.core.openapi.GlobalHttpVerbResponseMessages.*;
 
@@ -42,12 +51,30 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, getPostHttpVerbResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, getPutHttpVerbResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, getDeleteHttpVerbResponseMessages())
+                // do not add to the open Api the parameter of the types
+                .ignoredParameterTypes(
+                        ServletWebRequest.class,
+                        URL.class,
+                        URI.class,
+                        URLStreamHandler.class,
+                        Resource.class,
+                        File.class,
+                        InputStreamResource.class,
+                        InputStream.class)
                 // adding additional model that is missing in the documentation
-                .additionalModels(typeResolver.arrayType(Problem.class) )
-
+                .additionalModels(typeResolver.arrayType(Problem.class))
                 // configure the title and description of the documentation
                 .apiInfo(apiInfo())
-                .tags(new Tag("Cookers", "Management of cookers"));
+                // Api documentations tags, basally are the titles that group endpoints requests
+                .tags(
+                        new Tag("Cookers", "Management of cookers"),
+                        new Tag("Groups", "Management of user groups"),
+                        new Tag("Payment methods", "Management Payment Methods"),
+                        new Tag("Restaurants", "Restaurant Management"),
+                        new Tag("Requests", "Requests Management"),
+                        new Tag("Statistics", "Get Statistics Reports")
+                );
+
     }
 
     /**

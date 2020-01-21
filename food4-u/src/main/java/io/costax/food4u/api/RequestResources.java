@@ -5,6 +5,7 @@ import io.costax.food4u.api.assembler.requests.RequestsAssembler;
 import io.costax.food4u.api.model.requests.input.RequestInputRepresentation;
 import io.costax.food4u.api.model.requests.output.RequestOutputRepresentation;
 import io.costax.food4u.api.model.requests.output.RequestSummaryOutputRepresentation;
+import io.costax.food4u.api.openapi.controllers.RequestResourcesOpenApi;
 import io.costax.food4u.core.data.PageableTranslator;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.filters.RequestFilter;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/requests")
-public class RequestResources {
+@RequestMapping(path = "/requests", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RequestResources implements RequestResourcesOpenApi {
 
     @Autowired
     RequestsAssembler requestsAssembler;

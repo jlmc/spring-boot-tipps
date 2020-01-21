@@ -4,6 +4,7 @@ import io.costax.food4u.api.assembler.paymentmethods.input.PaymentMethodInputRep
 import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationAssembler;
 import io.costax.food4u.api.model.paymentmethods.input.PaymentMethodInputRepresentation;
 import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
+import io.costax.food4u.api.openapi.controllers.PaymentMethodResourcesOpenApi;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.PaymentMethod;
 import io.costax.food4u.domain.repository.PaymentMethodRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -25,8 +27,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/payment-methods")
-public class PaymentMethodResources {
+@RequestMapping(path = "/payment-methods", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PaymentMethodResources implements PaymentMethodResourcesOpenApi {
 
     @Autowired
     PaymentMethodRepository repository;

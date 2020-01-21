@@ -1,8 +1,10 @@
 package io.costax.food4u.api.model.cookers.output;
 
 import io.costax.food4u.domain.model.Cooker;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+@ApiModel(value = "CookerOutput")
 @Data
 public class CookerOutputRepresentation {
 
