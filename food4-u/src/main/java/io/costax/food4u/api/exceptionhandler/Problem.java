@@ -1,6 +1,8 @@
 package io.costax.food4u.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -73,13 +75,17 @@ import java.util.List;
 @Getter
 //@Builder
 public class Problem {
+    @ApiModelProperty(example = "400", position = 1)
     private Integer status;
+    @ApiModelProperty(example = "https://dummy.io/invalid-data", position = 5)
     private String type;
+    @ApiModelProperty(example = "Invalid data", position = 10)
     private String title;
+    @ApiModelProperty(example = "One or more properties contains invalid values", position = 15)
     private String detail;
-
+    @ApiModelProperty(example = "2020-01-21T12:41:07.011644Z", position = 20)
     private Instant timestamp;
-
+    @ApiModelProperty(value = "List of objects or fields that generated the error (optional)", position = 30)
     private List<Error> errors;
 
     private Problem(ProblemBuilder builder) {
@@ -108,9 +114,12 @@ public class Problem {
                 .timestamp(instant);
     }
 
+    @ApiModel("Problem Error")
     @Getter
     protected static class Error {
+        @ApiModelProperty(example = "title")
         private String name;
+        @ApiModelProperty(example = "title must not be blank")
         private String userMessage;
 
         private Error(final String name, final String userMessage) {

@@ -1,5 +1,7 @@
 package io.costax.food4u.core.openapi;
 
+import com.fasterxml.classmate.TypeResolver;
+import io.costax.food4u.api.exceptionhandler.Problem;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,6 +26,9 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
 
     @Bean
     public Docket apiDocket() {
+
+        TypeResolver typeResolver = new TypeResolver();
+
         // to generation of
         // docket is the SpringFox Document of the documentation
         return new Docket(DocumentationType.SWAGGER_2)
@@ -37,6 +42,9 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
                 .globalResponseMessage(RequestMethod.POST, getPostHttpVerbResponseMessages())
                 .globalResponseMessage(RequestMethod.PUT, getPutHttpVerbResponseMessages())
                 .globalResponseMessage(RequestMethod.DELETE, getDeleteHttpVerbResponseMessages())
+                // adding additional model that is missing in the documentation
+                .additionalModels(typeResolver.arrayType(Problem.class) )
+
                 // configure the title and description of the documentation
                 .apiInfo(apiInfo())
                 .tags(new Tag("Cookers", "Management of cookers"));
