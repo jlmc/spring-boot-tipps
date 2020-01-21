@@ -36,6 +36,12 @@
             <artifactId>springfox-swagger-ui</artifactId>
             <version>${springfox.version}</version>
         </dependency>
+        <!-- Open API generate /swagger-ui.html to integrate the BeanValidations annotations with openAPI -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
