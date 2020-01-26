@@ -19,11 +19,16 @@ import springfox.documentation.spi.schema.contexts.ModelContext;
 
 import java.lang.reflect.Type;
 
-import static com.google.common.base.Optional.fromNullable;
+import static java.util.Optional.ofNullable;
 import static springfox.documentation.schema.Collections.containerType;
 import static springfox.documentation.schema.Collections.isContainerType;
 import static springfox.documentation.schema.Types.typeNameFor;
 
+/**
+ * this is a workaround to fix some problem in conflict of versions with hateoas
+ *
+ * @see <a href="https://github.com/springfox/springfox/issues/2932">Issue when using Swagger latest version 2.9.2 with Spring boot 2.2.0</a>
+ */
 @Primary
 @Component
 public class TypeNameExtractorAdapter extends TypeNameExtractor {
@@ -59,7 +64,10 @@ public class TypeNameExtractorAdapter extends TypeNameExtractor {
         GenericTypeNamingStrategy namingStrategy = context.getGenericNamingStrategy();
         ModelNameContext nameContext = new ModelNameContext(resolvedType.getErasedType(),
                 context.getDocumentationType());
-        String simpleName = fromNullable(typeNameFor(erasedType)).or(typeName(nameContext));
+
+        String simpleName = ofNullable(typeNameFor(erasedType))
+                .orElseGet(() -> typeName(nameContext));
+        //String simpleName = fromNullable(typeNameFor(erasedType)).or(typeName(nameContext));
         StringBuilder sb = new StringBuilder(String.format("%s%s", simpleName, namingStrategy.getOpenGeneric()));
         boolean first = true;
         for (int index = 0; index < erasedType.getTypeParameters().length; index++) {
