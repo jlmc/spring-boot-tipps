@@ -2,11 +2,16 @@ package io.costax.food4u.core.openapi;
 
 import com.fasterxml.classmate.TypeResolver;
 import io.costax.food4u.api.exceptionhandler.Problem;
+import io.costax.food4u.api.model.requests.output.RequestSummaryOutputRepresentation;
+import io.costax.food4u.api.openapi.models.PageableModelOpenApi;
+import io.costax.food4u.api.openapi.models.RequestPageOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -14,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
@@ -63,6 +69,11 @@ public class SpringFoxOpenApiConfiguration implements WebMvcConfigurer {
                         InputStream.class)
                 // adding additional model that is missing in the documentation
                 .additionalModels(typeResolver.arrayType(Problem.class))
+                // Use a substitute class in the documentation
+                .directModelSubstitute(Pageable.class, PageableModelOpenApi.class)
+                .alternateTypeRules(AlternateTypeRules.newRule(
+                        typeResolver.resolve(Page.class, RequestSummaryOutputRepresentation.class),
+                        RequestPageOpenApi.class))
                 // configure the title and description of the documentation
                 .apiInfo(apiInfo())
                 // Api documentations tags, basally are the titles that group endpoints requests

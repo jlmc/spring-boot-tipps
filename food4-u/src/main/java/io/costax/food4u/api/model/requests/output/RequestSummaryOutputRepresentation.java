@@ -7,11 +7,10 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@ApiModel(value = "RequestSummaryOutput")
+@ApiModel(value = "RequestSummary")
 @Getter
 @Setter
 public class RequestSummaryOutputRepresentation {
-
 
     private String code;
     private BigDecimal subTotal;
