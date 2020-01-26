@@ -12,7 +12,6 @@ import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +22,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * The {@link @RestController} annotation is a wrapper of two important annotations
@@ -59,8 +53,11 @@ public class CookerResources implements CookerResourcesOpenApi {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<CookerOutputRepresentation> list() {
+        return assembler.toCollectionModel(repository.findAll());
+
+        /*
         final List<CookerOutputRepresentation> list = repository.findAll().stream()
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .collect(Collectors.toList());
 
         list.forEach(m -> {
@@ -76,6 +73,8 @@ public class CookerResources implements CookerResourcesOpenApi {
         collectionModel.add(linkTo(CookerResources.class).withSelfRel());
 
         return collectionModel;
+
+         */
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -88,15 +87,15 @@ public class CookerResources implements CookerResourcesOpenApi {
     public CookerOutputRepresentation getById(@PathVariable("Id") Long cookerId) {
 
         final CookerOutputRepresentation cookerOutput = repository.findById(cookerId)
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .orElseThrow(() -> CookerNotFoundException.of(cookerId));
 
-        cookerOutput.add(linkTo(
-                methodOn(CookerResources.class)
-                        .getById(cookerOutput.getId())).withSelfRel());
-        cookerOutput.add(linkTo(
-                methodOn(CookerResources.class)
-                        .list()).withRel(IanaLinkRelations.COLLECTION));
+//        cookerOutput.add(linkTo(
+//                methodOn(CookerResources.class)
+//                        .getById(cookerOutput.getId())).withSelfRel());
+//        cookerOutput.add(linkTo(
+//                methodOn(CookerResources.class)
+//                        .list()).withRel(IanaLinkRelations.COLLECTION));
 
         return cookerOutput;
     }
@@ -117,7 +116,7 @@ public class CookerResources implements CookerResourcesOpenApi {
                 .buildAndExpand(saved.getId())
                 .toUri();
 
-        return ResponseEntity.created(location).body(assembler.toRepresentation(saved));
+        return ResponseEntity.created(location).body(assembler.toModel(saved));
     }
 
     @PutMapping("/{Id}")
@@ -128,7 +127,7 @@ public class CookerResources implements CookerResourcesOpenApi {
 
         //Cooker cookerCurrent = cookerRegistrationService.update(cookerId, cooker);
         Cooker cookerCurrent = this.cookerRegistrationService.update(cookerId, cooker);
-        return ResponseEntity.ok(assembler.toRepresentation(cookerCurrent));
+        return ResponseEntity.ok(assembler.toModel(cookerCurrent));
     }
 
     @DeleteMapping("/{Id}")
