@@ -5,16 +5,15 @@ import io.costax.food4u.api.model.CookersXmlWrapper;
 import io.costax.food4u.api.model.cookers.input.CookerInputRepresentation;
 import io.costax.food4u.api.model.cookers.output.CookerOutputRepresentation;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.List;
 
 @Api(tags = "Cookers")
 public interface CookerResourcesOpenApi {
 
     @ApiOperation("Get all cookers")
-    List<CookerOutputRepresentation> list();
+    CollectionModel<CookerOutputRepresentation> list();
 
     //@ApiIgnore
     @ApiOperation("Get all cookers in xml")

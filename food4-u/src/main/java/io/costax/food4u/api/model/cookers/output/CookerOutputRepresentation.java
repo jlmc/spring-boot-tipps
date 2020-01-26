@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
+@Relation(collectionRelation = "cookers")
 @ApiModel(value = "CookerOutput")
 @Data
 public class CookerOutputRepresentation extends RepresentationModel<CookerOutputRepresentation> {

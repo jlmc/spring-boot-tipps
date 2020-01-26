@@ -11,6 +11,7 @@ import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -57,10 +58,24 @@ public class CookerResources implements CookerResourcesOpenApi {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CookerOutputRepresentation> list() {
-        return repository.findAll().stream()
+    public CollectionModel<CookerOutputRepresentation> list() {
+        final List<CookerOutputRepresentation> list = repository.findAll().stream()
                 .map(assembler::toRepresentation)
                 .collect(Collectors.toList());
+
+        list.forEach(m -> {
+            m.add(linkTo(methodOn(CookerResources.class).getById(m.getId()))
+                    .withSelfRel());
+            m.add(linkTo(methodOn(CookerResources.class).list())
+                    .withRel(IanaLinkRelations.COLLECTION));
+        });
+
+
+        final CollectionModel<CookerOutputRepresentation> collectionModel = new CollectionModel<>(list);
+
+        collectionModel.add(linkTo(CookerResources.class).withSelfRel());
+
+        return collectionModel;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
