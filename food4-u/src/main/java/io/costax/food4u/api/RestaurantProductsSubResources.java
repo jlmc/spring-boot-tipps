@@ -58,6 +58,9 @@ public class RestaurantProductsSubResources implements RestaurantProductsSubReso
                                            @RequestBody @Valid ProductInputRepresentation payload) {
 
         final Product product = restaurantProductsRegistrationService.add(restaurantId, disassembler.toDomainObject(payload));
+
+        ResourceUriHelper.addUriInResponseHeader(product);
+
         return assembler.toRepresentation(product);
     }
 

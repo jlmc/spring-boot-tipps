@@ -91,6 +91,9 @@ public class RequestResources implements RequestResourcesOpenApi {
         User currentUser = User.createUser(1L);
 
         final Request record = requestCreatorService.create(currentUser, request);
+
+        ResourceUriHelper.addUriInResponseHeader(record);
+
         return requestsAssembler.toRepresentation(record);
     }
 
