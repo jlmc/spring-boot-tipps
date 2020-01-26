@@ -29,6 +29,16 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox.version}</version>
+            <exclusions>
+                <exclusion>
+                    <!--
+                    in the current version 2.9.2 exists a
+                     of dependency between the springfx and spring-boot-starter-hateoas
+                     -->
+                    <groupId>org.springframework.plugin</groupId>
+                    <artifactId>spring-plugin-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Open API generate /swagger-ui.html -->
         <dependency>
@@ -41,6 +51,16 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-bean-validators</artifactId>
             <version>${springfox.version}</version>
+            <exclusions>
+                <exclusion>
+                    <!--
+                    in the current version 2.9.2 exists a
+                     of dependency between the springfx and spring-boot-starter-hateoas
+                     -->
+                    <groupId>org.springframework.plugin</groupId>
+                    <artifactId>spring-plugin-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -68,6 +88,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
 
         <dependency>
