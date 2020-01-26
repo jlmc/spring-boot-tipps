@@ -1,7 +1,7 @@
 package io.costax.food4u.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.costax.food4u.api.assembler.Assembler;
+import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationModelAssembler;
 import io.costax.food4u.api.assembler.restaurants.input.RestaurantInputRepresentationDisassembler;
 import io.costax.food4u.api.assembler.restaurants.output.RestaurantOutputRepresentationAssembler;
 import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
@@ -12,11 +12,11 @@ import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentat
 import io.costax.food4u.api.openapi.controllers.RestaurantResourcesOpenApi;
 import io.costax.food4u.core.validation.ManualValidationException;
 import io.costax.food4u.domain.exceptions.RestaurantNotFoundException;
-import io.costax.food4u.domain.model.PaymentMethod;
 import io.costax.food4u.domain.model.Restaurant;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantRegistrationService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,7 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
 
     private final RestaurantOutputRepresentationAssembler assembler;
     private final RestaurantInputRepresentationDisassembler disassembler;
-    private final Assembler<PaymentMethodOutputRepresentation, PaymentMethod> paymentMethodAssembler;
+    private final PaymentMethodOutputRepresentationModelAssembler paymentMethodAssembler;
 
     public RestaurantResources(final RestaurantRepository restaurantRepository,
                                final RestaurantRegistrationService restaurantRegistrationService,
@@ -59,7 +59,7 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
                                final SmartValidator validator,
                                final RestaurantOutputRepresentationAssembler assembler,
                                final RestaurantInputRepresentationDisassembler disassembler,
-                               final Assembler<PaymentMethodOutputRepresentation, PaymentMethod> paymentMethodAssembler) {
+                               final PaymentMethodOutputRepresentationModelAssembler paymentMethodAssembler) {
         this.restaurantRepository = restaurantRepository;
         this.restaurantRegistrationService = restaurantRegistrationService;
         this.objectMapper = objectMapper;
@@ -207,9 +207,8 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
 
 
     @GetMapping("/{restaurantId}/payment-methods")
-    public List<PaymentMethodOutputRepresentation> getRestaurantPaymentMethods(@PathVariable Long restaurantId) {
-        List<PaymentMethod> pay = restaurantRepository.getRestaurantPaymentMethods(restaurantId);
-        return paymentMethodAssembler.toListOfRepresentations(pay);
+    public CollectionModel<PaymentMethodOutputRepresentation> getRestaurantPaymentMethods(@PathVariable Long restaurantId) {
+        return paymentMethodAssembler.toCollectionModel(restaurantRepository.getRestaurantPaymentMethods(restaurantId));
     }
 
     @PutMapping("/{restaurantId}/payment-methods/{paymentMethodId}")

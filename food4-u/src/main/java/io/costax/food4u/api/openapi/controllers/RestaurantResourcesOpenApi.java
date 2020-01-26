@@ -5,6 +5,7 @@ import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepre
 import io.costax.food4u.api.model.restaurants.input.RestaurantInputRepresentation;
 import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentation;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,7 +82,7 @@ public interface RestaurantResourcesOpenApi {
     @ApiResponses({
             @ApiResponse(code = 404, message = "Restaurant not found", response = Problem.class)
     })
-    List<PaymentMethodOutputRepresentation> getRestaurantPaymentMethods(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
+    CollectionModel<PaymentMethodOutputRepresentation> getRestaurantPaymentMethods(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
 
     @ApiOperation(value = "Add Restaurant Payment Method", code = 204)
     @ApiResponses({

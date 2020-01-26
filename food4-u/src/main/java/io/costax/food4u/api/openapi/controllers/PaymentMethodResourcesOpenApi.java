@@ -4,18 +4,17 @@ import io.costax.food4u.api.exceptionhandler.Problem;
 import io.costax.food4u.api.model.paymentmethods.input.PaymentMethodInputRepresentation;
 import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import java.util.List;
-
 @Api(tags = "Payment methods")
 public interface PaymentMethodResourcesOpenApi {
 
     @ApiOperation("List all the payment methods")
-    ResponseEntity<List<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest);
+    ResponseEntity<CollectionModel<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest);
 
     @ApiOperation("Get Payment Method by ID")
     @ApiResponses({

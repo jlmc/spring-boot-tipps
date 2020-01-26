@@ -1,7 +1,7 @@
 package io.costax.food4u.api;
 
 import io.costax.food4u.api.assembler.paymentmethods.input.PaymentMethodInputRepresentationDisassembler;
-import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationAssembler;
+import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationModelAssembler;
 import io.costax.food4u.api.model.paymentmethods.input.PaymentMethodInputRepresentation;
 import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
 import io.costax.food4u.api.openapi.controllers.PaymentMethodResourcesOpenApi;
@@ -11,6 +11,7 @@ import io.costax.food4u.domain.repository.PaymentMethodRepository;
 import io.costax.food4u.domain.services.PaymentMethodRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,10 +41,10 @@ public class PaymentMethodResources implements PaymentMethodResourcesOpenApi {
     PaymentMethodInputRepresentationDisassembler disassembler;
 
     @Autowired
-    PaymentMethodOutputRepresentationAssembler assembler;
+    PaymentMethodOutputRepresentationModelAssembler assembler;
 
     @GetMapping
-    public ResponseEntity<List<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest) {
+    public ResponseEntity<CollectionModel<PaymentMethodOutputRepresentation>> list(ServletWebRequest servletWebRequest) {
         // disable Shallow Etag for the current request
         ShallowEtagHeaderFilter.disableContentCaching(servletWebRequest.getRequest());
 
@@ -56,7 +57,7 @@ public class PaymentMethodResources implements PaymentMethodResourcesOpenApi {
         }
 
         final List<PaymentMethod> paymentMethods = repository.findAll(Sort.by("id"));
-        final List<PaymentMethodOutputRepresentation> paymentMethodOutputRepresentations = assembler.toListOfRepresentations(paymentMethods);
+        final CollectionModel<PaymentMethodOutputRepresentation> paymentMethodOutputRepresentations = assembler.toCollectionModel(paymentMethods);
 
         return ResponseEntity
                 .ok()
@@ -73,7 +74,7 @@ public class PaymentMethodResources implements PaymentMethodResourcesOpenApi {
         //repository.refresh(paymentMethod);
         final PaymentMethodOutputRepresentation paymentMethodOutputRepresentation = repository
                 .findById(id)
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .orElseThrow(() -> new ResourceNotFoundException(PaymentMethod.class, id));
 
         return ResponseEntity
