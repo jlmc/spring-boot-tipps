@@ -1,32 +1,39 @@
 package io.costax.food4u.api;
 
-import io.costax.food4u.api.assembler.Assembler;
+import io.costax.food4u.api.assembler.groups.GroupOutputRepresentationModelAssembler;
 import io.costax.food4u.api.model.groups.output.GroupOutputRepresentation;
 import io.costax.food4u.api.openapi.controllers.GroupResourcesOpenApi;
+import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.model.Group;
 import io.costax.food4u.domain.repository.GroupRepository;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/groups", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GroupResources implements GroupResourcesOpenApi {
 
     private final GroupRepository groupRepository;
-    private final Assembler<GroupOutputRepresentation, Group> assembler;
+    private final GroupOutputRepresentationModelAssembler assembler;
 
     public GroupResources(final GroupRepository groupRepository,
-                          final Assembler<GroupOutputRepresentation, Group> assembler) {
+                          final GroupOutputRepresentationModelAssembler assembler) {
         this.groupRepository = groupRepository;
         this.assembler = assembler;
     }
 
     @GetMapping
-    public List<GroupOutputRepresentation> list() {
-        return assembler.toListOfRepresentations(groupRepository.findAll());
+    public CollectionModel<GroupOutputRepresentation> list() {
+        return assembler.toCollectionModel(groupRepository.findAll());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/{Id}")
+    public GroupOutputRepresentation getById(@PathVariable("Id") Long id) {
+        return groupRepository.findById(id)
+                .map(assembler::toModel)
+                .orElseThrow(() -> new ResourceNotFoundException(Group.class, id));
     }
 }
