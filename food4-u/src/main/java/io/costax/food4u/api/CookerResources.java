@@ -11,6 +11,7 @@ import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 /**
  * The {@link @RestController} annotation is a wrapper of two important annotations
@@ -66,11 +70,20 @@ public class CookerResources implements CookerResourcesOpenApi {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{Id}")
-    public CookerOutputRepresentation getById(
-            @PathVariable("Id") Long cookerId) {
-        return repository.findById(cookerId)
+    public CookerOutputRepresentation getById(@PathVariable("Id") Long cookerId) {
+
+        final CookerOutputRepresentation cookerOutput = repository.findById(cookerId)
                 .map(assembler::toRepresentation)
                 .orElseThrow(() -> CookerNotFoundException.of(cookerId));
+
+        cookerOutput.add(linkTo(
+                methodOn(CookerResources.class)
+                        .getById(cookerOutput.getId())).withSelfRel());
+        cookerOutput.add(linkTo(
+                methodOn(CookerResources.class)
+                        .list()).withRel(IanaLinkRelations.COLLECTION));
+
+        return cookerOutput;
     }
 
     @ApiOperation("Create new cooker")
