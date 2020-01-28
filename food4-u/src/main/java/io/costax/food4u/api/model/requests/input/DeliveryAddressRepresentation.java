@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
-class DeliveryAddressPresentation {
+class DeliveryAddressRepresentation {
 
     @ApiModelProperty(example = "Cezamo street", required = true)
     @NotBlank

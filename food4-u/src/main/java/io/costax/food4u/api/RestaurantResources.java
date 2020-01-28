@@ -3,7 +3,7 @@ package io.costax.food4u.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.costax.food4u.api.assembler.paymentmethods.output.PaymentMethodOutputRepresentationModelAssembler;
 import io.costax.food4u.api.assembler.restaurants.input.RestaurantInputRepresentationDisassembler;
-import io.costax.food4u.api.assembler.restaurants.output.RestaurantOutputRepresentationAssembler;
+import io.costax.food4u.api.assembler.restaurants.output.RestaurantOutputRepresentationModelAssembler;
 import io.costax.food4u.api.model.paymentmethods.output.PaymentMethodOutputRepresentation;
 import io.costax.food4u.api.model.restaurants.input.AddressInputRepresentation;
 import io.costax.food4u.api.model.restaurants.input.CookerInputRepresentation;
@@ -26,16 +26,13 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.lang.reflect.Field;
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(
@@ -49,7 +46,7 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
     private final ObjectMapper objectMapper;
     private final SmartValidator validator;
 
-    private final RestaurantOutputRepresentationAssembler assembler;
+    private final RestaurantOutputRepresentationModelAssembler assembler;
     private final RestaurantInputRepresentationDisassembler disassembler;
     private final PaymentMethodOutputRepresentationModelAssembler paymentMethodAssembler;
 
@@ -57,7 +54,7 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
                                final RestaurantRegistrationService restaurantRegistrationService,
                                final ObjectMapper objectMapper,
                                final SmartValidator validator,
-                               final RestaurantOutputRepresentationAssembler assembler,
+                               final RestaurantOutputRepresentationModelAssembler assembler,
                                final RestaurantInputRepresentationDisassembler disassembler,
                                final PaymentMethodOutputRepresentationModelAssembler paymentMethodAssembler) {
         this.restaurantRepository = restaurantRepository;
@@ -70,15 +67,19 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
     }
 
     @GetMapping
-    public ResponseEntity<List<RestaurantOutputRepresentation>> list() {
+    public ResponseEntity<CollectionModel<RestaurantOutputRepresentation>> list() {
+        final CollectionModel<RestaurantOutputRepresentation> representations = assembler.toCollectionModel(restaurantRepository.findAll());
+
+        /*
         final List<RestaurantOutputRepresentation> list = restaurantRepository.findAll()
                 .stream()
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .collect(Collectors.toList());
+         */
 
         return ResponseEntity.ok()
                 //.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, "*")
-                .body(list);
+                .body(representations);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -86,25 +87,21 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
     public RestaurantOutputRepresentation getById(@PathVariable("restaurantId") Long id) {
         return restaurantRepository
                 .findById(id)
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .orElseThrow(() -> RestaurantNotFoundException.of(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody @Valid RestaurantInputRepresentation payload) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public RestaurantOutputRepresentation add(@RequestBody @Valid RestaurantInputRepresentation payload) {
 
         final Restaurant restaurant1 = disassembler.toDomainObject(payload);
 
         final Restaurant added = restaurantRegistrationService.add(restaurant1);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(added.getId())
-                .toUri();
+        ResourceUriHelper.addUriInResponseHeader(added.getId());
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .location(location)
-                .body(assembler.toRepresentation(added));
+        return assembler.toModel(added);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -123,7 +120,7 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
 
         final Restaurant updated = restaurantRegistrationService.update(restaurantId, restaurant);
 
-        return assembler.toRepresentation(updated);
+        return assembler.toModel(updated);
     }
 
     @PatchMapping("/{restaurantId}")
@@ -195,16 +192,17 @@ public class RestaurantResources implements RestaurantResourcesOpenApi {
 
     @PutMapping("/{restaurantId}/activation")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void ativar(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> ativar(@PathVariable Long restaurantId) {
         restaurantRegistrationService.activate(restaurantId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{restaurantId}/activation")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void inactivate(@PathVariable Long restaurantId) {
+    public ResponseEntity<Void> inactivate(@PathVariable Long restaurantId) {
         restaurantRegistrationService.inactivate(restaurantId);
+        return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/{restaurantId}/payment-methods")
     public CollectionModel<PaymentMethodOutputRepresentation> getRestaurantPaymentMethods(@PathVariable Long restaurantId) {

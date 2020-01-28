@@ -2,6 +2,7 @@ package io.costax.food4u.api;
 
 import io.costax.food4u.api.assembler.requests.RequestSummaryAssembler;
 import io.costax.food4u.api.assembler.requests.RequestsAssembler;
+import io.costax.food4u.api.assembler.requests.RequestsRepresentationModelAssembler;
 import io.costax.food4u.api.model.requests.input.RequestInputRepresentation;
 import io.costax.food4u.api.model.requests.output.RequestOutputRepresentation;
 import io.costax.food4u.api.model.requests.output.RequestSummaryOutputRepresentation;
@@ -34,6 +35,9 @@ public class RequestResources implements RequestResourcesOpenApi {
 
     @Autowired
     RequestsAssembler requestsAssembler;
+
+    @Autowired
+    RequestsRepresentationModelAssembler assembler;
 
     @Autowired
     RequestCreatorService requestCreatorService;
@@ -94,13 +98,13 @@ public class RequestResources implements RequestResourcesOpenApi {
 
         ResourceUriHelper.addUriInResponseHeader(record);
 
-        return requestsAssembler.toRepresentation(record);
+        return assembler.toModel(record);
     }
 
     @GetMapping("/{code}")
     public RequestOutputRepresentation getByCode(@PathVariable String code) {
         return requestRepository.getByCodeWithAllInformation(code)
-                .map(requestsAssembler::toRepresentation)
+                .map(assembler::toModel)
                 .orElseThrow(() -> new ResourceNotFoundException(Request.class, code));
     }
 

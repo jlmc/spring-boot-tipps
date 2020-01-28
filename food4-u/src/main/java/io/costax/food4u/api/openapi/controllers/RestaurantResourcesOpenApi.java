@@ -16,7 +16,7 @@ import java.util.Map;
 public interface RestaurantResourcesOpenApi {
 
     @ApiOperation("Get List of all Restaurants")
-    ResponseEntity<List<RestaurantOutputRepresentation>> list();
+    ResponseEntity<CollectionModel<RestaurantOutputRepresentation>> list();
 
     @ApiOperation(value = "Get Restaurant by ID", code = 200)
     @ApiResponses({
@@ -30,7 +30,7 @@ public interface RestaurantResourcesOpenApi {
     @ApiResponses({
             @ApiResponse(code = 201, message = "The created Restaurant")
     })
-    ResponseEntity<?> add(
+    RestaurantOutputRepresentation add(
             @ApiParam(
                     name = "payload",
                     value = "Restaurant Input Representation",
@@ -69,14 +69,14 @@ public interface RestaurantResourcesOpenApi {
             @ApiResponse(code = 204, message = "Accepted and executed operation"),
             @ApiResponse(code = 404, message = "Restaurant not found", response = Problem.class)
     })
-    void ativar(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
+    ResponseEntity<Void> ativar(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
 
     @ApiOperation(value = "Inactive the restaurant", code = 204)
     @ApiResponses({
             @ApiResponse(code = 204, message = "Accepted and executed operation"),
             @ApiResponse(code = 404, message = "Restaurant not found", response = Problem.class)
     })
-    void inactivate(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
+    ResponseEntity<Void> inactivate(@ApiParam(value = "Restaurant ID", required = true, example = "1") Long restaurantId);
 
     @ApiOperation(value = "Get Restaurant Payments Methods")
     @ApiResponses({

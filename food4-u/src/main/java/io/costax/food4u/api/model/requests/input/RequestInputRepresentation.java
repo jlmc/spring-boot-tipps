@@ -24,7 +24,7 @@ public class RequestInputRepresentation {
 
     @Valid
     @NotNull
-    private DeliveryAddressPresentation deliveryAddress;
+    private DeliveryAddressRepresentation deliveryAddress;
 
     @Valid
     @NotEmpty

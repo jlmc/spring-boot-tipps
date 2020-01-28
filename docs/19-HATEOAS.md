@@ -134,3 +134,33 @@
    ```
 
 
+## 
+
+
+```json
+{
+    "_embedded": {
+        "restaurants": [
+            {
+                "takeAwayTax": 0,
+                "active": false,
+                "_links": {
+                    "self": {
+                        "href": "http://localhost:8080/restaurants/2"
+                    }
+                }
+            },
+            {
+                "takeAwayTax": 0,
+                "active": false,
+                "_links": {
+                    "self": {
+                        "href": "http://localhost:8080/restaurants/1"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
+

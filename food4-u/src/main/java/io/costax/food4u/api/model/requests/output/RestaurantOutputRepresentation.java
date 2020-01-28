@@ -4,10 +4,10 @@ import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
 
-@ApiModel(value = "RequestUserOutput")
-@Setter
+@ApiModel(value = "RequestRestaurantOutput")
 @Getter
-class UserOutputPresentation {
+@Setter
+class RestaurantOutputRepresentation {
 
     private Long id;
     private String name;

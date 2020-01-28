@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @ApiModel(value = "RequestItemOutput")
 @Getter
 @Setter
-class RequestItemOutputPresentation {
+class RequestItemOutputRepresentation {
 
     private Long productId;
     private String productName;

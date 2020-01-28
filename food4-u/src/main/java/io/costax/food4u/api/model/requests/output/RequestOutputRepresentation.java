@@ -5,6 +5,7 @@ import io.costax.food4u.api.model.restaurants.output.AddressOutputRepresentation
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -14,7 +15,7 @@ import java.util.List;
 @ApiModel(value = "RequestOutput")
 @Getter
 @Setter
-public class RequestOutputRepresentation {
+public class RequestOutputRepresentation extends RepresentationModel<RequestOutputRepresentation> {
 
     private String code;
     private BigDecimal subTotal;
@@ -23,10 +24,10 @@ public class RequestOutputRepresentation {
     private String status;
     private OffsetDateTime createdAt;
 
-    private RestaurantOutputPresentation restaurant;
-    private UserOutputPresentation client;
+    private RestaurantOutputRepresentation restaurant;
+    private UserOutputRepresentation client;
     private PaymentMethodOutputRepresentation paymentMethod;
     private AddressOutputRepresentation deliveryAddress;
-    private List<RequestItemOutputPresentation> items = new ArrayList<>();
+    private List<RequestItemOutputRepresentation> items = new ArrayList<>();
 
 }
