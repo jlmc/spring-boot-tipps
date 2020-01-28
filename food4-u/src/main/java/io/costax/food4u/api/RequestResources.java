@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -110,20 +111,23 @@ public class RequestResources implements RequestResourcesOpenApi {
 
     @PutMapping("/{code}/confirmation")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void confirm(@PathVariable String code) {
+    public ResponseEntity<Void> confirm(@PathVariable String code) {
         requestFlowService.confirm(code);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{code}/cancellation")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancel(@PathVariable String code) {
+    public ResponseEntity<Void> cancel(@PathVariable String code) {
         requestFlowService.cancel(code);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{code}/delivery")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delivery(@PathVariable String code) {
+    public ResponseEntity<Void> delivery(@PathVariable String code) {
         requestFlowService.delivery(code);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

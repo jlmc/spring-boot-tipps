@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RequestsAssembler implements
         Disassembler<Request, RequestInputRepresentation> {
-        //Assembler<RequestOutputRepresentation, Request> {
 
     @Autowired
     ModelMapper modelMapper;

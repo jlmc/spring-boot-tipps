@@ -9,6 +9,7 @@ import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 
 @Api(tags = "Requests")
 public interface RequestResourcesOpenApi {
@@ -47,7 +48,7 @@ public interface RequestResourcesOpenApi {
             @ApiResponse(code = 204, message = "Restaurant Request confirmed with success"),
             @ApiResponse(code = 404, message = "Restaurant Request not found", response = Problem.class)
     })
-    void confirm(
+    ResponseEntity<Void> confirm(
             @ApiParam(
                     value = "Restaurant Request code",
                     example = "f9981ca4-5a5e-4da3-af04-933861df3e55",
@@ -60,7 +61,7 @@ public interface RequestResourcesOpenApi {
             @ApiResponse(code = 204, message = "Restaurant Request canceled with success"),
             @ApiResponse(code = 404, message = "Restaurant Request not found", response = Problem.class)
     })
-    void cancel(
+    ResponseEntity<Void> cancel(
             @ApiParam(
                     value = "Restaurant Request code",
                     example = "f9981ca4-5a5e-4da3-af04-933861df3e55",
@@ -73,7 +74,7 @@ public interface RequestResourcesOpenApi {
             @ApiResponse(code = 204, message = "Restaurant Request Delivered with success"),
             @ApiResponse(code = 404, message = "Restaurant Request not found", response = Problem.class)
     })
-    void delivery(@ApiParam(
+    ResponseEntity<Void> delivery(@ApiParam(
             value = "Restaurant Request code",
             example = "f9981ca4-5a5e-4da3-af04-933861df3e55",
             required = true)
