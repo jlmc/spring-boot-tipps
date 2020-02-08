@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PageModelOpenApi <T> {
+public class PageModelOpenApi<T> {
 
     private List<T> content;
 

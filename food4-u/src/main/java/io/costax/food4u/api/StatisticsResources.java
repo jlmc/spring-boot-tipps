@@ -27,14 +27,14 @@ public class StatisticsResources implements StatisticsResourcesOpenApi {
     @GetMapping(value = "/daily-sales", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<DailySalesStatistic> dailySalesStatisticsJson(DailySalesStatisticFilter filter,
-                                                          @RequestParam(defaultValue = "+01:00") String timeOffset) {
+                                                              @RequestParam(defaultValue = "+01:00") String timeOffset) {
         return dailySalesStatisticQuery.getStatistics(filter, timeOffset);
     }
 
     @GetMapping(value = "/daily-sales", produces = MediaType.APPLICATION_PDF_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<byte[]> dailySalesStatisticsPdf(DailySalesStatisticFilter filter,
-                                                              @RequestParam(defaultValue = "+01:00") String timeOffset) {
+                                                          @RequestParam(defaultValue = "+01:00") String timeOffset) {
         final byte[] pdf = dailySalesStatisticReportService.generateReport(filter, timeOffset);
 
         final HttpHeaders httpHeaders = new HttpHeaders();

@@ -1,7 +1,6 @@
 package io.costax.food4u.api.assembler.restaurants.output;
 
 import io.costax.food4u.api.ApiLinks;
-import io.costax.food4u.api.CookerResources;
 import io.costax.food4u.api.RestaurantResources;
 import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentation;
 import io.costax.food4u.domain.model.Restaurant;
@@ -15,7 +14,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Component
 public class RestaurantOutputRepresentationModelAssembler
-    extends RepresentationModelAssemblerSupport<Restaurant, RestaurantOutputRepresentation> {
+        extends RepresentationModelAssemblerSupport<Restaurant, RestaurantOutputRepresentation> {
 
     @Autowired
     ModelMapper modelMapper;
@@ -40,7 +39,6 @@ public class RestaurantOutputRepresentationModelAssembler
         model.add(linkTo(RestaurantResources.class).withRel(IanaLinkRelations.COLLECTION));
         model.add(apiLinks.restaurantProductsLink(entity.getId(), "products"));
         model.add(apiLinks.restaurantPaymentMethodsLink(entity.getId(), "payment-methods"));
-
 
 
         if (!entity.isActive()) {

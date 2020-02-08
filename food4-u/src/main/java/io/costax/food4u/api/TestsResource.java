@@ -25,13 +25,13 @@ public class TestsResource {
 
     @GetMapping("/restaurants/by-takeAwayTax")
     public List<Restaurant> searchBetween(@RequestParam(value = "init", defaultValue = "0.0") BigDecimal init,
-                                         @RequestParam(value = "until", defaultValue = "10.0") BigDecimal until) {
+                                          @RequestParam(value = "until", defaultValue = "10.0") BigDecimal until) {
         return restaurantRepository.findByTakeAwayTaxBetween(init, until);
     }
 
     @GetMapping("/restaurants/first-takeAwayTax")
     public Restaurant firstBetween(@RequestParam(value = "init", defaultValue = "0.0") BigDecimal init,
-                                         @RequestParam(value = "until", defaultValue = "10.0") BigDecimal until) {
+                                   @RequestParam(value = "until", defaultValue = "10.0") BigDecimal until) {
         return restaurantRepository.findFirstByTakeAwayTaxBetween(init, until);
     }
 

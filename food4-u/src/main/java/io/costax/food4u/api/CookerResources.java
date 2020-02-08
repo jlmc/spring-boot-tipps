@@ -14,7 +14,6 @@ import io.costax.food4u.domain.repository.CookerSpecifications;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -30,8 +29,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The {@link @RestController} annotation is a wrapper of two important annotations
@@ -57,7 +54,7 @@ public class CookerResources implements CookerResourcesOpenApi {
                            final CookerOutputRepresentationAssembler assembler,
                            final CookerInputRepresentationDisassembler disassembler,
                            final PagedResourcesAssembler<Cooker> cookerPagedResourcesAssembler
-        ) {
+    ) {
         this.repository = repository;
         this.cookerRegistrationService = cookerRegistrationService;
         this.assembler = assembler;
