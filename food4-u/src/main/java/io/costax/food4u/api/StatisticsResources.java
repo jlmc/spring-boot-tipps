@@ -6,6 +6,7 @@ import io.costax.food4u.domain.model.DailySalesStatistic;
 import io.costax.food4u.domain.services.DailySalesStatisticQueryService;
 import io.costax.food4u.domain.services.DailySalesStatisticReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,18 @@ public class StatisticsResources implements StatisticsResourcesOpenApi {
 
     @Autowired
     DailySalesStatisticReportService dailySalesStatisticReportService;
+
+    @Autowired
+    ApiLinks apiLinks;
+
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public StatisticsModel statistics() {
+        var statisticsModel = new StatisticsModel();
+
+        statisticsModel.add(apiLinks.linkToDailySalesStatistics("daily-sales"));
+
+        return statisticsModel;
+    }
 
     @GetMapping(value = "/daily-sales", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
@@ -45,5 +58,8 @@ public class StatisticsResources implements StatisticsResourcesOpenApi {
                 .contentType(MediaType.APPLICATION_PDF)
                 .headers(headers)
                 .body(pdf);
+    }
+
+    public static class StatisticsModel extends RepresentationModel<StatisticsModel> {
     }
 }

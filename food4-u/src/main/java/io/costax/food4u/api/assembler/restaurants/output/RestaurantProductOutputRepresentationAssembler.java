@@ -39,7 +39,7 @@ public class RestaurantProductOutputRepresentationAssembler
 
     private void addLinks(final Long restaurantId, final Long productId, final ProductOutputRepresentation model) {
         model.add(
-                apiLinks.restaurantProductLink(restaurantId, productId, IanaLinkRelations.SELF.value()),
-                apiLinks.restaurantProductPhotoLink(restaurantId, productId, "photo"));
+                apiLinks.linkToRestaurantProduct(restaurantId, productId, IanaLinkRelations.SELF.value()),
+                apiLinks.linkToRestaurantProductPhoto(restaurantId, productId, "photo"));
     }
 }

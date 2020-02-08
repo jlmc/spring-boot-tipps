@@ -32,10 +32,10 @@ public class RequestsRepresentationModelAssembler extends RepresentationModelAss
         // add all the others links
         model.add(
                 //apiLinks.requestsLink(IanaLinkRelations.COLLECTION.value()),
-                apiLinks.requestsLinks(IanaLinkRelations.COLLECTION.value()),
-                apiLinks.requestsConfirmationLink(entity.getCode(), "confirmation"),
+                apiLinks.linkToRequestsTemplateLinks(IanaLinkRelations.COLLECTION.value()),
+                apiLinks.linkToRequestsConfirmation(entity.getCode(), "confirmation"),
                 apiLinks.requestsCancelLink(entity.getCode(), "cancel"),
-                apiLinks.requestsDeliveryLink(entity.getCode(), "delivery")
+                apiLinks.linkToRequestsDelivery(entity.getCode(), "delivery")
         );
 
         return model;

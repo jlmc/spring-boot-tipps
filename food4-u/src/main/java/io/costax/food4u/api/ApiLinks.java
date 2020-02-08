@@ -12,43 +12,49 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class ApiLinks {
 
-    public Link cookerByIdLink(Long cookerId, String rel) {
+    public Link linkToCookers(String rel) {
+        return linkTo(
+                methodOn(CookerResources.class).list())
+                .withRel(rel);
+    }
+
+    public Link linkToCookerById(Long cookerId, String rel) {
         return linkTo(methodOn(CookerResources.class)
                 .getById(cookerId))
                 .withRel(rel);
     }
 
 
-    public Link restaurantProductsLink(Long restaurantId, String rel) {
+    public Link linkToRestaurantProducts(Long restaurantId, String rel) {
         // RestaurantProductsSubResources
         return linkTo(methodOn(RestaurantProductsSubResources.class)
                 .list(restaurantId, null))
                 .withRel(rel);
     }
 
-    public Link restaurantPaymentMethodsLink(Long restaurantId, String rel) {
+    public Link linkToRestaurantPaymentMethods(Long restaurantId, String rel) {
         return linkTo(methodOn(RestaurantResources.class)
                 .getRestaurantPaymentMethods(restaurantId))
                 .withRel(rel);
     }
 
-    public Link restaurantActivationLink(Long restaurantId, String rel) {
+    public Link linkToRestaurantActivation(Long restaurantId, String rel) {
         return linkTo(methodOn(RestaurantResources.class)
                 .ativar(restaurantId))
                 .withRel(rel);
     }
 
-    public Link restaurantInactivationLink(Long restaurantId, String rel) {
+    public Link linkToRestaurantInactivation(Long restaurantId, String rel) {
         return linkTo(methodOn(RestaurantResources.class)
                 .inactivate(restaurantId))
                 .withRel(rel);
     }
 
-    public Link requestsLink(final String rel) {
+    public Link linkToRequests(final String rel) {
         return linkTo(RequestResources.class).withRel(rel);
     }
 
-    public Link requestsConfirmationLink(final String code, final String rel) {
+    public Link linkToRequestsConfirmation(final String code, final String rel) {
         return linkTo(methodOn(RequestResources.class).confirm(code)).withRel(rel);
     }
 
@@ -56,14 +62,14 @@ public class ApiLinks {
         return linkTo(methodOn(RequestResources.class).cancel(code)).withRel(rel);
     }
 
-    public Link requestsDeliveryLink(final String code, final String rel) {
+    public Link linkToRequestsDelivery(final String code, final String rel) {
         return linkTo(methodOn(RequestResources.class).delivery(code)).withRel(rel);
     }
 
     /**
      * Build the template link to requests endpoint with all the query parameters.
      */
-    public Link requestsLinks(final String rel) {
+    public Link linkToRequestsTemplateLinks(final String rel) {
 
         // Template Links Example
         TemplateVariables pageVariables = new TemplateVariables(
@@ -83,15 +89,47 @@ public class ApiLinks {
         return new Link(UriTemplate.of(requestsUrl, pageVariables.concat(searchVariables)), rel);
     }
 
-    public Link restaurantProductLink(Long restaurantId, Long productId, String rel) {
+    public Link linkToRestaurantProduct(Long restaurantId, Long productId, String rel) {
         return linkTo(
                 methodOn(RestaurantProductsSubResources.class).findById(restaurantId, productId))
                 .withRel(rel);
     }
 
-    public Link restaurantProductPhotoLink(Long restaurantId, Long productId, String rel) {
+    public Link linkToRestaurantProductPhoto(Long restaurantId, Long productId, String rel) {
         return linkTo(methodOn(RestaurantProductPhotoSubResource.class, restaurantId, productId)
                 .getPhoto(restaurantId, productId))
                 .withRel(rel);
+    }
+
+    public Link linkToGroups(final String rel) {
+        return linkTo(methodOn(GroupResources.class).list()).withRel(rel);
+    }
+
+    public Link linkToPaymentMethods(final String rel) {
+        return linkTo(methodOn(PaymentMethodResources.class).list(null)).withRel(rel);
+    }
+
+    public Link linkToRestaurants(final String rel) {
+        return linkTo(methodOn(RestaurantResources.class).list()).withRel(rel);
+    }
+
+    public Link linkToUsers(final String rel) {
+        return linkTo(methodOn(UserResources.class).list()).withRel(rel);
+    }
+
+    public Link linkToStatistics(String rel) {
+        return linkTo(StatisticsResources.class).withRel(rel);
+    }
+
+    public Link linkToDailySalesStatistics(String rel) {
+
+        TemplateVariables filtersVariables = new TemplateVariables(
+                new TemplateVariable("restaurantActive", TemplateVariable.VariableType.REQUEST_PARAM),
+                new TemplateVariable("createdAt", TemplateVariable.VariableType.REQUEST_PARAM));
+
+        String pedidosUrl = linkTo(methodOn(StatisticsResources.class)
+                .dailySalesStatisticsJson(null, null)).toUri().toString();
+
+        return new Link(UriTemplate.of(pedidosUrl, filtersVariables), rel);
     }
 }

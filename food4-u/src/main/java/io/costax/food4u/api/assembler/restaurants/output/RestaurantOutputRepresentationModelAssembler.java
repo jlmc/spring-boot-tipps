@@ -33,18 +33,18 @@ public class RestaurantOutputRepresentationModelAssembler
 
 
         if (model.getCooker() != null) {
-            model.getCooker().add(apiLinks.cookerByIdLink(model.getCooker().getId(), IanaLinkRelations.SELF.value()));
+            model.getCooker().add(apiLinks.linkToCookerById(model.getCooker().getId(), IanaLinkRelations.SELF.value()));
         }
 
         model.add(linkTo(RestaurantResources.class).withRel(IanaLinkRelations.COLLECTION));
-        model.add(apiLinks.restaurantProductsLink(entity.getId(), "products"));
-        model.add(apiLinks.restaurantPaymentMethodsLink(entity.getId(), "payment-methods"));
+        model.add(apiLinks.linkToRestaurantProducts(entity.getId(), "products"));
+        model.add(apiLinks.linkToRestaurantPaymentMethods(entity.getId(), "payment-methods"));
 
 
         if (!entity.isActive()) {
-            model.add(apiLinks.restaurantActivationLink(entity.getId(), "ativar"));
+            model.add(apiLinks.linkToRestaurantActivation(entity.getId(), "ativar"));
         } else {
-            model.add(apiLinks.restaurantInactivationLink(entity.getId(), "inactivate"));
+            model.add(apiLinks.linkToRestaurantInactivation(entity.getId(), "inactivate"));
         }
 
         return model;
