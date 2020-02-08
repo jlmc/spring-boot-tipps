@@ -39,7 +39,8 @@ public class RestaurantProductsSubResources implements RestaurantProductsSubReso
     private Assembler<ProductOutputRepresentation, Product> assembler;
 
     @GetMapping
-    public List<ProductOutputRepresentation> list(@PathVariable Long restaurantId, @RequestParam Map<String, String> allParams) {
+    public List<ProductOutputRepresentation> list(@PathVariable Long restaurantId,
+                                                  @RequestParam Map<String, String> allParams) {
         List<Product> products = restaurantRepository.getRestaurantProducts(restaurantId);
         return assembler.toListOfRepresentations(products);
     }

@@ -89,7 +89,7 @@ class RestaurantResourcesApiIT {
         Assertions.assertTrue(embedded.containsKey("restaurants"));
         final List restaurants = (List) embedded.get("restaurants");
         Assertions.assertNotNull(restaurants);
-            
+
 
         /*
         final Map<String, Object> restaurant0 = result.get(0);

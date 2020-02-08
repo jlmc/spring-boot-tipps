@@ -1,6 +1,7 @@
 package io.costax.food4u.api.assembler.restaurants.output;
 
 import io.costax.food4u.api.ApiLinks;
+import io.costax.food4u.api.CookerResources;
 import io.costax.food4u.api.RestaurantResources;
 import io.costax.food4u.api.model.restaurants.output.RestaurantOutputRepresentation;
 import io.costax.food4u.domain.model.Restaurant;
@@ -31,8 +32,16 @@ public class RestaurantOutputRepresentationModelAssembler
 
         modelMapper.map(entity, model);
 
+
+        if (model.getCooker() != null) {
+            model.getCooker().add(apiLinks.cookerByIdLink(model.getCooker().getId(), IanaLinkRelations.SELF.value()));
+        }
+
         model.add(linkTo(RestaurantResources.class).withRel(IanaLinkRelations.COLLECTION));
+        model.add(apiLinks.restaurantProductsLink(entity.getId(), "products"));
         model.add(apiLinks.restaurantPaymentMethodsLink(entity.getId(), "payment-methods"));
+
+
 
         if (!entity.isActive()) {
             model.add(apiLinks.restaurantActivationLink(entity.getId(), "ativar"));

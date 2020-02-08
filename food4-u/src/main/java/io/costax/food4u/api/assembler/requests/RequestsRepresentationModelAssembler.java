@@ -29,8 +29,10 @@ public class RequestsRepresentationModelAssembler extends RepresentationModelAss
 
         modelMapper.map(entity, model);
 
+        // add all the others links
         model.add(
-                apiLinks.requestsLink(IanaLinkRelations.COLLECTION.value()),
+                //apiLinks.requestsLink(IanaLinkRelations.COLLECTION.value()),
+                apiLinks.requestsLinks(IanaLinkRelations.COLLECTION.value()),
                 apiLinks.requestsConfirmationLink(entity.getCode(), "confirmation"),
                 apiLinks.requestsCancelLink(entity.getCode(), "cancel"),
                 apiLinks.requestsDeliveryLink(entity.getCode(), "delivery")
@@ -38,4 +40,6 @@ public class RequestsRepresentationModelAssembler extends RepresentationModelAss
 
         return model;
     }
+
+
 }
