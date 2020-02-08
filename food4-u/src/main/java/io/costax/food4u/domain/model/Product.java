@@ -1,6 +1,7 @@
 package io.costax.food4u.domain.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +31,9 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = Boolean.TRUE;
 
+    @Formula("restaurant_id")
+    private Long restaurantId;
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
@@ -52,4 +56,5 @@ public class Product {
 
         return this;
     }
+
 }

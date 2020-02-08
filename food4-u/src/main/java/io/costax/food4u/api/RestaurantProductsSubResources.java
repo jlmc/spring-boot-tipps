@@ -1,7 +1,7 @@
 package io.costax.food4u.api;
 
-import io.costax.food4u.api.assembler.Assembler;
 import io.costax.food4u.api.assembler.Disassembler;
+import io.costax.food4u.api.assembler.restaurants.output.RestaurantProductOutputRepresentationAssembler;
 import io.costax.food4u.api.model.restaurants.input.ProductInputRepresentation;
 import io.costax.food4u.api.model.restaurants.output.ProductOutputRepresentation;
 import io.costax.food4u.api.openapi.controllers.RestaurantProductsSubResourcesOpenApi;
@@ -10,6 +10,7 @@ import io.costax.food4u.domain.model.Product;
 import io.costax.food4u.domain.repository.RestaurantRepository;
 import io.costax.food4u.domain.services.RestaurantProductsRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -36,20 +37,21 @@ public class RestaurantProductsSubResources implements RestaurantProductsSubReso
     private Disassembler<Product, ProductInputRepresentation> disassembler;
 
     @Autowired
-    private Assembler<ProductOutputRepresentation, Product> assembler;
+    private RestaurantProductOutputRepresentationAssembler assembler;
 
     @GetMapping
-    public List<ProductOutputRepresentation> list(@PathVariable Long restaurantId,
-                                                  @RequestParam Map<String, String> allParams) {
+    public CollectionModel<ProductOutputRepresentation> list(@PathVariable Long restaurantId,
+                                                             @RequestParam Map<String, String> allParams) {
         List<Product> products = restaurantRepository.getRestaurantProducts(restaurantId);
-        return assembler.toListOfRepresentations(products);
+        final CollectionModel<ProductOutputRepresentation> productOutputRepresentations = assembler.toCollectionModel(products);
+        return productOutputRepresentations;
     }
 
     @GetMapping("/{productId}")
     public ProductOutputRepresentation findById(@PathVariable Long restaurantId, @PathVariable Long productId) {
         return restaurantRepository
                 .findProduct(restaurantId, productId)
-                .map(assembler::toRepresentation)
+                .map(assembler::toModel)
                 .orElseThrow(() -> new ResourceNotFoundException(Product.class, productId));
     }
 
@@ -62,7 +64,7 @@ public class RestaurantProductsSubResources implements RestaurantProductsSubReso
 
         ResourceUriHelper.addUriInResponseHeader(product);
 
-        return assembler.toRepresentation(product);
+        return assembler.toModel(product);
     }
 
     @PutMapping("/{productId}")
@@ -70,7 +72,7 @@ public class RestaurantProductsSubResources implements RestaurantProductsSubReso
                                               @PathVariable Long productId,
                                               @RequestBody @Valid ProductInputRepresentation payload) {
         final Product product = restaurantProductsRegistrationService.update(restaurantId, productId, disassembler.toDomainObject(payload));
-        return assembler.toRepresentation(product);
+        return assembler.toModel(product);
     }
 
     @DeleteMapping("/{productId}")

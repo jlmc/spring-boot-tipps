@@ -82,4 +82,16 @@ public class ApiLinks {
 
         return new Link(UriTemplate.of(requestsUrl, pageVariables.concat(searchVariables)), rel);
     }
+
+    public Link restaurantProductLink(Long restaurantId, Long productId, String rel) {
+        return linkTo(
+                methodOn(RestaurantProductsSubResources.class).findById(restaurantId, productId))
+                .withRel(rel);
+    }
+
+    public Link restaurantProductPhotoLink(Long restaurantId, Long productId, String rel) {
+        return linkTo(methodOn(RestaurantProductPhotoSubResource.class, restaurantId, productId)
+                .getPhoto(restaurantId, productId))
+                .withRel(rel);
+    }
 }
