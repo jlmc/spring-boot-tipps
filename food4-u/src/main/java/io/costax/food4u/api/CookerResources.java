@@ -7,11 +7,19 @@ import io.costax.food4u.api.model.cookers.input.CookerInputRepresentation;
 import io.costax.food4u.api.model.cookers.output.CookerOutputRepresentation;
 import io.costax.food4u.api.openapi.controllers.CookerResourcesOpenApi;
 import io.costax.food4u.domain.exceptions.CookerNotFoundException;
+import io.costax.food4u.domain.filters.CookerFilter;
 import io.costax.food4u.domain.model.Cooker;
 import io.costax.food4u.domain.repository.CookerRepository;
+import io.costax.food4u.domain.repository.CookerSpecifications;
 import io.costax.food4u.domain.services.CookerRegistrationService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +30,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The {@link @RestController} annotation is a wrapper of two important annotations
@@ -40,16 +50,41 @@ public class CookerResources implements CookerResourcesOpenApi {
     private final CookerRegistrationService cookerRegistrationService;
     private final CookerOutputRepresentationAssembler assembler;
     private final CookerInputRepresentationDisassembler disassembler;
+    private final PagedResourcesAssembler<Cooker> cookerPagedResourcesAssembler;
 
     public CookerResources(final CookerRepository repository,
                            final CookerRegistrationService cookerRegistrationService,
                            final CookerOutputRepresentationAssembler assembler,
-                           final CookerInputRepresentationDisassembler disassembler) {
+                           final CookerInputRepresentationDisassembler disassembler,
+                           final PagedResourcesAssembler<Cooker> cookerPagedResourcesAssembler
+        ) {
         this.repository = repository;
         this.cookerRegistrationService = cookerRegistrationService;
         this.assembler = assembler;
         this.disassembler = disassembler;
+        this.cookerPagedResourcesAssembler = cookerPagedResourcesAssembler;
     }
+
+    @GetMapping(path = "/page")
+    //public Page<CookerOutputRepresentation> search(CookerFilter filter, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+    public PagedModel<CookerOutputRepresentation> search(CookerFilter filter, @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        final Page<Cooker> all = repository.findAll(CookerSpecifications.withFilters(filter), pageable);
+
+        /*
+        // Original before the hateoas page implementation
+        final List<CookerOutputRepresentation> collect = all.getContent().stream().map(assembler::toModel).collect(Collectors.toList());
+        return new PageImpl<CookerOutputRepresentation>(collect, pageable, all.getTotalElements());
+         */
+
+        // Implements Page hateoas result
+        // 1. need to inject the PagedResourcesAssembler<Cooker> cookerPagedResourcesAssembler
+        // the result PagedModel result will give links automatically, for the first, last, next and self
+
+        PagedModel<CookerOutputRepresentation> pagedModel = cookerPagedResourcesAssembler.toModel(all, assembler);
+
+        return pagedModel;
+    }
+
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public CollectionModel<CookerOutputRepresentation> list() {

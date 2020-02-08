@@ -4,13 +4,24 @@ import io.costax.food4u.api.exceptionhandler.Problem;
 import io.costax.food4u.api.model.CookersXmlWrapper;
 import io.costax.food4u.api.model.cookers.input.CookerInputRepresentation;
 import io.costax.food4u.api.model.cookers.output.CookerOutputRepresentation;
+import io.costax.food4u.domain.filters.CookerFilter;
 import io.swagger.annotations.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Api(tags = "Cookers")
 public interface CookerResourcesOpenApi {
+
+    @ApiOperation("Search all Cooker by the name")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value = "Property names to filter in the response",
+                    name = "filter", paramType = "query", type = "string")
+    })
+    PagedModel<CookerOutputRepresentation> search(CookerFilter filter, @PageableDefault(size = 10, page = 0) Pageable pageable);
 
     @ApiOperation("Get all cookers")
     CollectionModel<CookerOutputRepresentation> list();
