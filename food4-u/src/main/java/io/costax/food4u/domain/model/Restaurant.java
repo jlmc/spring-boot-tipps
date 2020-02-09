@@ -45,7 +45,7 @@ public class Restaurant {
     @Valid
     @ConvertGroup(from = Default.class, to = CookerId.class)
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "cooker_id", nullable = false)
     private Cooker cooker;
 
