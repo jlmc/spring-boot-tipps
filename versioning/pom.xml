@@ -3,17 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.costax</groupId>
-    <artifactId>spring-boot-rest-notes</artifactId>
+    <artifactId>versioning</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>examples-api</module>
-        <module>jackson-serialization-demos</module>
-        <module>spring-email-demos</module>
-        <module>food4-u</module>
-        <module>amazon-s3-mock-service</module>
-        <module>food4-u-java-client</module>
-        <module>versioning</module>
+        <module>versioning-apis-with-media-types</module>
+        <module>versioning-apis-with-uris</module>
     </modules>
 </project>
