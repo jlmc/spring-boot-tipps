@@ -148,3 +148,72 @@ Accept: application/json
 GET /api/v2/books
 Accept: application/json
 ```
+
+---
+
+# Versionamento atraves de infrainstrutura
+
+![version-using-multiple-servers.png](diagrams/version-using-multiple-servers.png)
+
+#### Caracteristicas:
+
+  - Existe um servidor load balance publico, com a responabolidade de fazer o roteamento para o servidor da versão correcta.
+  - Se o path contiver V1 o request é reencaminhado para o servidor da versão 1
+  - Se o path contiver V2 o request é reencaminhado para o servidor da versão 2
+
+#### Vantagens:
+
+  - O source-code esta completamente separado. Ou seja, alterações de codigo na versão 1 não terão impacto na versão 2 e vice versa.
+  - Os servidores podem ser parados e reiniciados individualmente sem impactos para a outra versão.
+  - As versões podem estar desenvolvidas em linguagens diferentes, por exemplo a versão 1 em java e a version 2 em payton.
+  - Facilita muito a manutenção de APIs.
+
+#### Desvantagens
+
+  - Pode existir duplicação de codigo entre as versões.
+
+
+
+# Projecto unico com reaproveitamento de codigo.
+
+![version-using-the-same-server.png](diagrams/version-using-the-same-server.png)
+
+#### Caracteristicas:
+
+  - Manter uma unica aplicação, reaproveitando codigo da API.
+  - O que for comum em ambas as versões será o mesmo controlador a responder, tanto para a versão 1 como para a versão 2.
+  - O que for diferente será outro controlador criado para o efeito (ControladorV2).
+
+#### Vantagens:
+
+  - O business model e infratrutura source-code é compartilhado por ambas as versões.
+  - Evita-se Duplicação de código.
+
+#### Desvantagens
+
+  - Manutenção de código mais dificil e com possiveis efeitos colaterais.
+  - Alterações na versão 2 podem afectar uma versão 1 que devia ser estavel.
+  - O risco é muito grande, às vezes o barato sai caro.
+  - Bloqueio technologico. A stack technologica das versões tem de ser sempre a mesma.
+
+
+
+# Projecto unico com Separação total de Versões.
+
+![version-same-server-segragation-api.png](diagrams/version-same-server-segragation-api.png)
+
+#### Caracteristicas:
+
+  - O campada de API das versões é completamente desacuplada entre versões.
+  - O código de suporte (backend) é o mesmo.
+
+#### Vantagens:
+
+  - A implementações das versões da API são separadas, podem estar em modulos separados.
+
+#### Desvantagens
+
+  - Pode existir algum cogigo duplicado.
+  - Alterações na versão 2 podem afectar uma versão 1 que devia ser estavel.
+  - O risco é muito grande, às vezes o barato sai caro.
+  - Bloqueio technologico. A stack technologica das versões tem de ser sempre a mesma.
