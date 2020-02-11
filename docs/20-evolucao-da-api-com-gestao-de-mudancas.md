@@ -14,28 +14,31 @@ Portanto, antes de efectuar qualquer alterações na API, há que refectir sobre
 Deve ser evitado quebrar a compatibilidade dos clientes.
 Neste pontos pretende analisar uma estrategia de como evitar quebrar a compatibilidade dos clientes sempre que se adiciona uma proprety ao Modelo.
 
-  1. Vamos supor que temos originalmente, a saida que se segue:
-        ```json
-        {
-            "id": 1,
-            "name": "John Foo",
-            "tax": 12.35,
-            "enabled": true
-        }
-        ```
-  2. Agora precisamos adicionar uma nova property ao modelo anterior, por exemplo `rank` e `ratting`
-        ```json
-        {
-            "id": 1,
-            "name": "John Foo",
-            "tax": 12.35,
-            "enabled": true,
-            "rank": 5,
-            "ratting": 98
-        }
-        ```
-        - Este tipo de alterações não quebra a compatibilidade, caracteriza-se então como uma alteração: `Retrocompativel`.
-        - Os consumidores da API podem simplemenete ignorar a nova propriedade caso esta não lhe seja necessária.
+  - Vamos supor que temos originalmente, a saida que se segue:
+  ```json
+  {
+      "id": 1,
+      "name": "John Foo",
+      "tax": 12.35,
+      "enabled": true
+  }
+  ```
+
+  - Agora precisamos adicionar uma nova property ao modelo anterior, por exemplo `rank` e `ratting`
+  
+  ```
+    {
+        "id": 1,
+        "name": "John Foo",
+        "tax": 12.35,
+        "enabled": true,
+        "rank": 5,
+        "ratting": 98
+    }
+  ```
+    
+  - Este tipo de alterações não quebra a compatibilidade, caracteriza-se então como uma alteração: `Retrocompativel`.
+  - Os consumidores da API podem simplemenete ignorar a nova propriedade caso esta não lhe seja necessária.
   
 Outro cenário diferente será quando por exemplo, ao payload de request por exemplo de um POST, for adicionada uma nova propriedade.
   - Esta alteração pode Quebrar a compatibilidade ou manter-se compativel.
@@ -70,14 +73,17 @@ Consequencias:
 Solução:
   - Deve ser evitado a alteração de URLs sem que tal seja estritamente necessário.
   - Podemos manter os dois URLs ao mesmo tempo. O spring MVC permite tambem aceitar as duas URLs por exemplo: 
-    ```
-    @RestController
-    @RequestMapping(
-            path = { "/api/books", "/api/api/artifacts" },
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public class BooksResources {}
-    ```
+    
+   ```java
+   @RestController
+   @RequestMapping(
+           path = { "/api/books", "/api/api/artifacts" },
+           produces = MediaType.APPLICATION_JSON_VALUE
+   )
+   public class BooksResources {
+   }
+   ```
+        
   - A melhor forma de conseguir contornar o problema é usando `HETEOAS`, assim todos os clientes são informados automaticamente das alterações da API. No entanto para que tal seja perfeito, os clientes tambem têm de usar o `HETEOAS` dde forma disciplinada.
 
 ---
@@ -120,6 +126,9 @@ public class BookControllerV2 {
 }
 
 ``` 
+---
+
+## TIPO DE TECNICAS APPLICACIONAIS DE VERCIONAMENTO
 
 ### Tecnica 1 - Versionamento por Media Type
 
@@ -151,45 +160,47 @@ Accept: application/json
 
 ---
 
-# Versionamento atraves de infrainstrutura
+## ARQUITECTURAS DE VERSIONAMENTO
+
+### Versionamento atraves de infrainstrutura
 
 ![version-using-multiple-servers.png](diagrams/version-using-multiple-servers.png)
 
-#### Caracteristicas:
+##### Caracteristicas:
 
   - Existe um servidor load balance publico, com a responabolidade de fazer o roteamento para o servidor da versão correcta.
   - Se o path contiver V1 o request é reencaminhado para o servidor da versão 1
   - Se o path contiver V2 o request é reencaminhado para o servidor da versão 2
 
-#### Vantagens:
+##### Vantagens:
 
   - O source-code esta completamente separado. Ou seja, alterações de codigo na versão 1 não terão impacto na versão 2 e vice versa.
   - Os servidores podem ser parados e reiniciados individualmente sem impactos para a outra versão.
   - As versões podem estar desenvolvidas em linguagens diferentes, por exemplo a versão 1 em java e a version 2 em payton.
   - Facilita muito a manutenção de APIs.
 
-#### Desvantagens
+##### Desvantagens
 
   - Pode existir duplicação de codigo entre as versões.
 
 
 
-# Projecto unico com reaproveitamento de codigo.
+### Projecto unico com reaproveitamento de codigo.
 
 ![version-using-the-same-server.png](diagrams/version-using-the-same-server.png)
 
-#### Caracteristicas:
+##### Caracteristicas:
 
   - Manter uma unica aplicação, reaproveitando codigo da API.
   - O que for comum em ambas as versões será o mesmo controlador a responder, tanto para a versão 1 como para a versão 2.
   - O que for diferente será outro controlador criado para o efeito (ControladorV2).
 
-#### Vantagens:
+##### Vantagens:
 
   - O business model e infratrutura source-code é compartilhado por ambas as versões.
   - Evita-se Duplicação de código.
 
-#### Desvantagens
+##### Desvantagens
 
   - Manutenção de código mais dificil e com possiveis efeitos colaterais.
   - Alterações na versão 2 podem afectar uma versão 1 que devia ser estavel.
@@ -198,20 +209,20 @@ Accept: application/json
 
 
 
-# Projecto unico com Separação total de Versões.
+### Projecto unico com Separação total de Versões.
 
 ![version-same-server-segragation-api.png](diagrams/version-same-server-segragation-api.png)
 
-#### Caracteristicas:
+##### Caracteristicas:
 
   - O campada de API das versões é completamente desacuplada entre versões.
   - O código de suporte (backend) é o mesmo.
 
-#### Vantagens:
+##### Vantagens:
 
   - A implementações das versões da API são separadas, podem estar em modulos separados.
 
-#### Desvantagens
+##### Desvantagens
 
   - Pode existir algum cogigo duplicado.
   - Alterações na versão 2 podem afectar uma versão 1 que devia ser estavel.
