@@ -1,4 +1,4 @@
-package io.costax.versioningapis.mediatypes.api.books.entity;
+package io.costax.versioningapis.uris.domain.model;
 
 import lombok.Data;
 
@@ -7,6 +7,9 @@ public class Book {
     private Integer id;
     private String isbn;
     private String title;
+
+    // property added in the version 2
+    private String description;
 
     public Book() {
     }

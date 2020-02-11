@@ -1,4 +1,4 @@
-package io.costax.versioningapis.mediatypes.api;
+package io.costax.versioningapis.uris.api;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpHeaders;
