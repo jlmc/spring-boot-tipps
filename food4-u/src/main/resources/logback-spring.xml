@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+        Incluir/importar a configurações default do spring boot (consola) caso não se inclua isto, nada será logado na consola por defeito.
+    -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+
+    <!--
+    Apenas usar o logger da cloud quando se estiver em production,
+    se quisermos que seja sempre, não precisamos declarar/Embutir a configuração dentro tag springProfile
+    -->
+    <springProfile name="production">
+
+
+        <!--
+            Para obter uma application property: logging.loggly.token
+            Será usada para configurar o valor do TOKEN na definição do loggly
+        -->
+        <springProperty name="logglyToken" source="logging.loggly.token"/>
+
+        <!--
+            Configuração do loggly, exemplo da documentation
+        -->
+        <appender name="loggly" class="ch.qos.logback.ext.loggly.LogglyAppender">
+            <endpointUrl>https://logs-01.loggly.com/inputs/${logglyToken}/tag/logback</endpointUrl>
+            <pattern>%d{"ISO8601", UTC} %p %t %c %M - %m%n</pattern>
+        </appender>
+
+        <!-- Torna o registo do logger asyncrono, é um wrapper à volta do  loggly -->
+        <appender name="logglyAsync" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="loggly"/>
+        </appender>
+
+        <root level="info">
+            <appender-ref ref="logglyAsync"/>
+        </root>
+
+    </springProfile>
+
+</configuration>

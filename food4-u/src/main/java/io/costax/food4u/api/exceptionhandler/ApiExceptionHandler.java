@@ -9,6 +9,8 @@ import io.costax.food4u.domain.exceptions.ResourceInUseException;
 import io.costax.food4u.domain.exceptions.ResourceNotFoundException;
 import io.costax.food4u.domain.exceptions.UserWithSameEmailAlreadyExistsException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -45,12 +47,18 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
     // The clock instance allows us to have deterministic result when we have tests cases
     Clock clock = Clock.systemDefaultZone();
 
     @Autowired
     MessageSource messageSource;
 
+    /**
+     * handler all the exceptions not excepted.
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleUncaught(Exception ex, WebRequest request) {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -62,7 +70,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         // para mostrar a stacktrace na console.
         // Se não fizer isso, ficamos sem ver o stacktrace de exceptions que seriam importantes
         // especialmente na fase de desenvolvimento
-        ex.printStackTrace();
+        //ex.printStackTrace();
+        LOGGER.error(ex.getMessage(), ex);
+
 
         Problem problem = createProblemBuilder(status, problemType, detail).build();
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
