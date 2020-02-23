@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 /**
  * Enable the project to be an Authorization-Server application
@@ -54,8 +55,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
                  */
         ;
+    }
 
+    /**
+     * Configure who have access to the OAuth 2.0 Token Introspection endpoint
+     */
+    @Override
+    public void configure(final AuthorizationServerSecurityConfigurer security) throws Exception {
+        //super.configure(security);
 
+        // configure who have access to the OAuth 2.0 Token Introspection endpoint
+        // the parameter of that we put in the checkTokenAccess is a Spring security expression,
+        // and in the present example we are defining that all the authenticated clients have access. so the client-app have to perform the request with app-client-id and app-client-secret
+        // other possible options to the spring security expression could be for example: `permitAll()` in that case we client don't have to provide any thing to validate the tokens
+        security.checkTokenAccess("isAuthenticated()");
     }
 
     /**

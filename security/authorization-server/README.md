@@ -40,3 +40,42 @@ curl --location --request POST 'http://localhost:8081/oauth/token' \
 --data-urlencode 'password=pwd' \
 --data-urlencode 'username=john'
 ```
+
+
+# OAuth 2.0 Token Introspection
+
+- Token Introspection is the process that in the Resource-Server verify that a given access-token is valid in Authentication-Server, before process the client request.
+
+- A especificação OAuth 2.0 não especifica como este pedido deve ser constituido. No entanto existe uma outra especificação [OAuth 2.0 Token Introspection - https://tools.ietf.org/html/rfc7662](https://tools.ietf.org/html/rfc7662) a qual especifica de como este processo deve ser feito.
+
+- O `Spring Security OAuth`, não segue a especificação, porque a especificação é mais recente que o proprio project. Alem disso a Pivotal tem inteções de depreciar o projecto `Spring Security OAuth` em um futuro muito proximo.
+
+
+Request:
+```
+POST /oauth/check_token HTTP/1.1
+Host: localhost:8081
+Content-Type: application/x-www-form-urlencoded
+Authorization: Basic Zm9vZDR1LXdlYjp3ZWIxMjM=
+
+token=5d0570ea-a16f-4e37-ad50-c1c601e120f6
+```
+
+Response:
+```
+Status: 200
+{
+    "active": true,
+    "exp": 1582496350,
+    "user_name": "john",
+    "authorities": [
+        "ROLE_ADMIN",
+        "ROLE_CLIENT"
+    ],
+    "client_id": "food4u-web",
+    "scope": [
+        "write",
+        "read"
+    ]
+}
+```
