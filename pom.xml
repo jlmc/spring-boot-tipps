@@ -16,5 +16,6 @@
         <module>food4-u-java-client</module>
         <module>versioning</module>
         <module>security/demo-api-with-spring-security</module>
+        <module>security/authorization-server</module>
     </modules>
 </project>

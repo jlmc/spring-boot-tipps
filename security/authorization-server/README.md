@@ -79,3 +79,45 @@ Status: 200
     ]
 }
 ```
+
+# OAuth 2.0 Refresh token
+
+
+1. get Access token
+    ```
+    POST /oauth/token HTTP/1.1
+    Host: localhost:8081
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Basic Zm9vZDR1LXdlYjp3ZWIxMjM=
+    
+    grant_type=password&password=pwd&username=john
+    ```
+    
+    ```
+    {
+        "access_token": "68edf25d-6d46-4413-8a3a-981009665fca",
+        "token_type": "bearer",
+        "refresh_token": "8bde02a7-0394-4460-a7fb-f45e0ba010ad",
+        "expires_in": 21599,
+        "scope": "write read"
+    }
+    ```
+2. Refresh token
+    ```
+    POST /oauth/token HTTP/1.1
+    Host: localhost:8081
+    Content-Type: application/x-www-form-urlencoded
+    Authorization: Basic Zm9vZDR1LXdlYjp3ZWIxMjM=
+    
+    refresh_token=8bde02a7-0394-4460-a7fb-f45e0ba010ad&grant_type=refresh_token
+    ```
+   
+   ```
+   {
+       "access_token": "a8f66b5a-9a76-4f50-baf0-a79d9c8bc779",
+       "token_type": "bearer",
+       "refresh_token": "8bde02a7-0394-4460-a7fb-f45e0ba010ad",
+       "expires_in": 21599,
+       "scope": "write read"
+   }
+   ```

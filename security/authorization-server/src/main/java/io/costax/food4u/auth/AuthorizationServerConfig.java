@@ -3,6 +3,7 @@ package io.costax.food4u.auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -21,7 +22,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    UserDetailsService userDetailsService;
 
     /**
      * Configure the clients apps details
@@ -37,10 +41,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 // app-client-secret (client-key)
                 .secret(passwordEncoder.encode("web123"))
                 // specify what flows we want to use for the current client app
-                .authorizedGrantTypes("password")
+                .authorizedGrantTypes("password", "refresh_token")
                 // scopes for the current client app
                 .scopes("write", "read")
                 .accessTokenValiditySeconds(60 * 60 * 6) // 6 hours (default is 12 hours)
+                .refreshTokenValiditySeconds(12 * 60 * 60) // 12 hours
+                .and()
+                .withClient("food4u-api")
+                // app-client-secret (client-key)
+                .secret(passwordEncoder.encode("food4u-api-123"))
         // Define other clients
                 /*
 
@@ -76,7 +85,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
-        // Only the Resource Owner Password Credentials Grant flow need this configurations
-        endpoints.authenticationManager(authenticationManager);
+        endpoints
+                // Only the Resource Owner Password Credentials Grant flow need this configurations of the authenticationManager
+                .authenticationManager(authenticationManager)
+                .userDetailsService(userDetailsService)
+                .reuseRefreshTokens(false)
+        ;
     }
 }
