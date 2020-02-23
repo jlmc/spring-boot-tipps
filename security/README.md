@@ -103,3 +103,41 @@ NOTAS SOBRE A IMPLEMENTAÇÃO:
 - `.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)` tornar a API Stateless, sem sessions ou cookies.
 - `.and().csrf().disable()` disable csrf security control.
 
+
+### Utilizadores em memória
+
+```java
+
+ @Configuration
+ @EnableWebSecurity // enable the spring web security
+ public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    
+
+   @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        //super.configure(auth);
+
+        final PasswordEncoder passwordEncoder = passwordEncoder();
+        auth.inMemoryAuthentication()
+                .withUser("john")
+                    .password(passwordEncoder.encode("pwd"))
+                    .roles("ADMIN", "CLIENT")
+                .and()
+                .withUser("foo")
+                    .password(passwordEncoder.encode("pwd"))
+                    .roles("CLIENT")
+                ;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+ }
+```
+
+NOTAS:
+
+- Esta configuração é feita tambem na extenção da classe WebSecurityConfigurerAdapter
+- É mandatório definir as roles `.roles("ADMIN", "CLIENT")`, caso contrario dá erro a iniciar, de momento pode ser qualquer valor valor.
+- É mandatório usar um metodo de password encoder, por isso defini-se a bean `PasswordEncoder`
