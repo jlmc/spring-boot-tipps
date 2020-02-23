@@ -33,9 +33,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
         //super.configure(clients);
+
+        //@formatter:off
         clients
-                // the first version is in memory
-                .inMemory()
+              // the first version is in memory
+              .inMemory()
                 // client app identifier (client-id)
                 .withClient("food4u-web")
                 // app-client-secret (client-key)
@@ -46,11 +48,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .scopes("write", "read")
                 .accessTokenValiditySeconds(60 * 60 * 6) // 6 hours (default is 12 hours)
                 .refreshTokenValiditySeconds(12 * 60 * 60) // 12 hours
-                .and()
+              .and()
                 .withClient("food4u-api")
                 // app-client-secret (client-key)
                 .secret(passwordEncoder.encode("food4u-api-123"))
+              .and()
+                .withClient("food4u-batch-app")
+                .secret(passwordEncoder.encode("food4u-batch-app123"))
+                .authorizedGrantTypes("client_credentials")
+                .accessTokenValiditySeconds(6 * 24 * 60 * 60) // 6 days (default is 12 hours)
+                .scopes("read")
         // Define other clients
+
+        //@formatter:on
+
                 /*
 
                 .and()

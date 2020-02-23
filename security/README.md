@@ -157,11 +157,11 @@ NOTAS:
 - Resource server:
   - [spring-security](https://spring.io/projects/spring-security)
 
+---
 
+# Fluxos
 
-#### Fluxos
-
-##### Resource Owner Password Credentials Grant
+## Resource Owner Password Credentials Grant
 
 Forma de obter um token, a partir de um username and password.
 Este fluxo na literatura é tambem muitas vezes talbem denominado de outros nomes os quais todos significam e apontam para  mesma coisa:
@@ -201,3 +201,43 @@ Este fluxo na literatura é tambem muitas vezes talbem denominado de outros nome
 - Se a API é pública, e, entidades que podem ser desconhecidas vão usar esta API, então não devemos usar este FLOW.
 - Idealmente este fluxo deve ser usado apenas para aplicações pertencentes a uma mesma organização.
 - Este fluxo deve ser evitado, e apenas usado apenas em caso de extrema necessidade.
+
+
+
+## Client Credentials Flow
+
+- O access token gerado pelo authentication server não é uma delegação de acesso. 
+- Ele representa uma chave de acesso em nome do próprio cliente.
+- Com este flow não existe a possibilidade de usar refress_token.
+
+1. Aplicação client, requista access_token
+   ```http request
+   POST /oauth/token
+   Content-Type: application/x-www-form-unlencoded
+   Authentication: Basic clientId:clientSecret
+   
+   grant_type=client_credentials
+   ```
+2. O Authorization-Server se as informações estiverem correctas responde com o token em um json object
+    Status: 200
+    ```json
+    {
+       "access_token": "abc-bl-bla",
+       "token_type": "bearer",
+       "expires_in": 999,
+       "scope": "write read"
+    }
+   ```
+3. A aplicação client envia o access_token em todas as requisições que fizer para o Resource-Server
+5. O Resource-Server em todas as Requisitions valida com o `Authentication-Server` (existe uma nova comunicação HTTP) se o access_token recebido ainda esta válido.
+6. E em caso afirmativo, retorna então a representação do resource.
+
+
+
+
+##### Caracteristicas da Applicação Cliente
+- Aplicação sem qualquer interação com utilizador
+- Aplicação puramente backend
+- pretende realisar operações em seu nome proprio, e não em nome de uma resource owner
+- Executa por exemplo tarefas agendadas
+
