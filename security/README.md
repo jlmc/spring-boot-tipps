@@ -141,3 +141,63 @@ NOTAS:
 - Esta configuração é feita tambem na extenção da classe WebSecurityConfigurerAdapter
 - É mandatório definir as roles `.roles("ADMIN", "CLIENT")`, caso contrario dá erro a iniciar, de momento pode ser qualquer valor valor.
 - É mandatório usar um metodo de password encoder, por isso defini-se a bean `PasswordEncoder`
+
+
+## OAuth2
+
+- [Especificação do OAuth 2.0](https://tools.ietf.org/html/rfc6749)
+
+
+##### Spring solutions
+
+- [spring-security-oauth-2-0-roadmap-update](https://spring.io/blog/2019/11/14/spring-security-oauth-2-0-roadmap-update)
+
+- Authorization server:
+  - [spring-security-oauth](https://spring.io/projects/spring-security-oauth)
+- Resource server:
+  - [spring-security](https://spring.io/projects/spring-security)
+
+
+
+#### Fluxos
+
+##### Resource Owner Password Credentials Grant
+
+Forma de obter um token, a partir de um username and password.
+Este fluxo na literatura é tambem muitas vezes talbem denominado de outros nomes os quais todos significam e apontam para  mesma coisa:
+    - Password Credencials
+    - Password flow
+    - Password Grant
+    - Password Grant Type
+
+
+
+
+1. Client solicita as credenciais ao utilizador (resource owner).
+2. Com as credenciais do utilizador, o client faz um post ao authorization-server como forma de obter um token. Esse request normalmente possui as seguintes caracteristicas:
+    - O client precisa de basic authentication no authorization-server
+    - O POST é com `content-type x-www-form-undencoded`
+    - O body do pedido possui uma property: `grant_type=password` e as credenciais do utilizador, ou seja:
+        - `username=foo&password=1234&grant_type=password`
+3. Se as credenciais estiverem correctas os authorization-server retorna um access token ao client embutido em um json object, ou seja:
+    - ```json
+        {
+            "access_token": "abc-bl-bla",
+            "token_type": "bearer",
+            "expires_in": 999,
+            "scope": "write read"
+        }
+      ```
+      - o access token encontra-se na propriedade: `access_token`
+      - `token_type` igual a `bearer` significa que que possui o currente acceass_token esta mandatado para ter acesso ao recursos em nome do resource-owner.
+      - `expires_in` diz qual otempo de expiração em segundos. depois desses segundos o possuidor do token deixa de ter acesso aos recursos.
+      - `scope` diz quais o scopes de acessos, podem ser os nomes que se pretende, não existe qualquer regra.
+4. O client vai guardar o access_token, e enviar-lo ao resource-server em todas as Requisitions que lhe fizer. O client não deve guardar as credenciais do utilizador.
+5. O Resource-Server em todas as Requisitions valida com o `Authentication-Server` (existe uma nova comunicação HTTP) se o access_token recebido ainda esta válido.
+6. E em caso afirmativo, retorna então a representação do resource.
+
+##### Caracteristicas da Applicação Cliente
+- Deve ser uma applicação confiavel, não deve ser uma applicação de uma outra empresa por exemplo.
+- Se a API é pública, e, entidades que podem ser desconhecidas vão usar esta API, então não devemos usar este FLOW.
+- Idealmente este fluxo deve ser usado apenas para aplicações pertencentes a uma mesma organização.
+- Este fluxo deve ser evitado, e apenas usado apenas em caso de extrema necessidade.
