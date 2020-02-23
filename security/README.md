@@ -50,5 +50,56 @@ spring.security.user.name=test
 spring.security.user.password=test
 ```
 
+### Custom Basic configuration
 
+Podemos alterar as configurações default que o spring fornece da seguinte forma:
+
+```java
+ import org.springframework.context.annotation.Configuration;
+ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+ import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+ import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+ import org.springframework.security.config.http.SessionCreationPolicy;
+ 
+ /**
+  * Esta classe tem de extender a classe WebSecurityConfigurerAdapter, porque o objectivo é fazer override do metodo:
+  * <p>
+  * protected void configure(final HttpSecurity http) throws Exception {
+  */
+ @Configuration
+ @EnableWebSecurity // enable the spring web security
+ public class SecurityConfig extends WebSecurityConfigurerAdapter {
+ 
+     @Override
+     protected void configure(final HttpSecurity http) throws Exception {
+         //super.configure(http);
+ 
+         //@formatter:off
+         http
+             .httpBasic()
+             .and()
+             .authorizeRequests()
+                 // define all free request '**' represent any thing
+                 .antMatchers("/ping").permitAll()
+                 // authorize any authenticated request
+                 .anyRequest().authenticated()
+             // disable session manager and cookies, because a rest api should be stateless
+             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+             // disable csrf
+             .and().csrf().disable()
+         ;
+         //@formatter:on
+     }
+ }
+
+```
+
+NOTAS SOBRE A IMPLEMENTAÇÃO:
+
+- A classe é uma `@Configuration` e que faz enable `@EnableWebSecurity` que por sua vez é tambem uma configuração, ou seja, a utilização da anotação  @Configuration é facultativa.
+- É mandatorio extender a classe WebSecurityConfigurerAdapter, pois o objectivo é fazer Override do method `protected void configure(final HttpSecurity http) throws Exception`
+- `.antMatchers("/ping").permitAll()` acesso livre de qualquer autenticação, o caracter `**` representa any path extra.
+- `.anyRequest().authenticated()` todos os restantes acessos precisão de ser autenticados.
+- `.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)` tornar a API Stateless, sem sessions ou cookies.
+- `.and().csrf().disable()` disable csrf security control.
 

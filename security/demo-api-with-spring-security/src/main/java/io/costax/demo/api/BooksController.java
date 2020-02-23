@@ -4,11 +4,13 @@ package io.costax.demo.api;
 import io.costax.demo.domain.model.Book;
 import io.costax.demo.domain.repositories.BookRepository;
 import io.costax.demo.domain.repositories.BookSpecifications;
+import io.costax.demo.domain.services.AddBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,9 +22,11 @@ import java.util.List;
 public class BooksController {
 
     private final BookRepository bookRepository;
+    private final AddBookService addBookService;
 
-    public BooksController(final BookRepository bookRepository) {
+    public BooksController(final BookRepository bookRepository, final AddBookService addBookService) {
         this.bookRepository = bookRepository;
+        this.addBookService = addBookService;
     }
 
     @GetMapping
@@ -44,6 +48,13 @@ public class BooksController {
         return bookRepository.findOne(BookSpecifications.withISBN(isbn))
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public ResponseEntity<Book> createUser(@RequestBody @Valid Book book) {
+        final Book added = addBookService.add(book);
+
+        return ResponseEntity.created(ResourceUriHelper.getUri(added.getId())).body(added);
     }
 
 }
