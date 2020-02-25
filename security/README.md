@@ -165,10 +165,10 @@ NOTAS:
 
 Forma de obter um token, a partir de um username and password.
 Este fluxo na literatura é tambem muitas vezes talbem denominado de outros nomes os quais todos significam e apontam para  mesma coisa:
-    - Password Credencials
-    - Password flow
-    - Password Grant
-    - Password Grant Type
+  - Password Credencials
+  - Password flow
+  - Password Grant
+  - Password Grant Type
 
 
 
@@ -241,3 +241,64 @@ Este fluxo na literatura é tambem muitas vezes talbem denominado de outros nome
 - pretende realisar operações em seu nome proprio, e não em nome de uma resource owner
 - Executa por exemplo tarefas agendadas
 
+
+
+## Authentication Code Flow
+
+Denominado tambem como fluxo básico Oauth.
+
+![Authentication Code Flow diagram](diagramas/authentication-code-flow.png)
+
+1. **Resource Owner** (user) faz um acesso a uma aplicação **Client**, por exemplo um web site.
+
+2. A Aplicação **Client** precisa de ter acesso aos recursos do **Resource Server**, e para que isso seja possível é necessário que possua um **access_token**. No entanto, ele não não tem ainda esse **access_token**.
+    - A invês do Client pedir o **username/password** ao **Resource Owner** (utilizador), O Client solicita uma autorização ao Autorization-Server.
+    - Faz um redirecionamento, um link por exemplo, que segue o padrão apresentado a seguir
+        ```
+        REDIRECT:
+        https://AUTHORIZATION-SERVER/oauth/authorize?response_type=code&client_id=CLIENT_ID&state=ABC9876&redirect_uri=https//CLIENT-APP/XYZ
+        ```
+        - response_type: o client esta a solicitar um codigo.
+        - client_id: o client registado no Authorization-Server
+        - state: uma string qualquer, deve ser aleatória (random), e que basicamente serve para prevenir ataques CSRF.
+        - redirect_uri: O Client informa o Authorization-Server que depois da autorização ser concedida, volta (faz um redirect) para o uri. esta URI, não pode ser qualquer URI, ela precisa estar registada no Authorization-Server.
+3. O **Authorization-Server** vai solicitar ao **Resource-Owner**, para autorizar  acesso a uma determinada aplicação aos seus recursos. 
+    - Caso não esteja Autenticado, pedirá para fazer login.
+    - Quando/Após Autenticado, perguntará se pretende autorizar a aplicação **Client** aos seus recursos.
+    
+4. Se o Resource-Owner autorizar acesso, o Auhorization-Server gera um código de acesso e envia para o Client (atravês de redirect). Este codigo não é ainda o access_token.
+
+    ```
+   REDIRECT:
+   https//CLIENT-APP/XYZ?code=abcd1234&state=ABC9876
+   ```
+
+5. O Client pode então solicitar um access_token ao Authentication-Server
+
+    ```http request
+   POST /oauth/token
+   
+   Content-Type: application/x-www-form-unlencoded
+   Authentication: Basic client-id/client-secret
+   
+   code=abcd1234&grant_type=authorization_code
+   ``` 
+
+6. O Authorization-Server Para gerar o access_token precisa tambem de invalidar o code, pois o code pode apenas ser utilizado uma vez. como resposta o Authorization-Server response com o Json Object 
+
+        Status: 200
+        Content-Type: application/json
+        
+        ```json
+        {
+           "access_token": "abc-bl-bla",
+           "token_type": "bearer",
+           "expires_in": 999,
+           "scope": "write read",
+           "refress_token": "1234-abc"
+        }
+       ```
+
+
+##### Caracteristicas da Applicação Cliente
+- O client permite authentication com redes sociais (por exemplo).
