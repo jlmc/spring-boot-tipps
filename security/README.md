@@ -308,3 +308,34 @@ Denominado tambem como fluxo básico Oauth.
 
 1. No browser, fazer o pedido de authorization_code
 `http://localhost:8081/oauth/authorize?response_type=code&client_id=food4u-analytics-client-id&state=ABC&redirect_uri=http//food4u-analytics-client`
+
+
+## Authentication Implicit Grant Flow
+
+- É um fluxo semelhante, ao anterior (Authentication Code Flow).
+- É no entanto mais simple e menos segudo, porque o access_token é retornado logo no primeiro request na URL, e por isso, a sua utilização é fortemente desencorajada.
+- Não é necessária autenticação do Client no Authorization-Server, ou seja, no autorization server não é necessário definir o Client-Secret.
+- Não funciona com `refresh_token`, não se deve definir o **Client** com `refresh_token`
+- O client no **Authorization-server** deve ser definido pelo menos com um `redirect_uri`
+- Funciona seguindo o fluxo que se segue:
+
+1. **Resource-Owner** (user) conecta-se à applicação **Client**
+2. O **Client** Solicita ao **Authorization-Server** autenticação (redirect)
+    ```
+    http://AUTHENTICATION-SERVER/oauth/authirize?response_type=token&client_id=CLIENT_ID&state=ABC&redirect_uri=http://CLIENT
+   ```
+   - o valor do `response_type` é `token`
+   - o valor do `redirect_uri` tem de estar registado no **Auhorozation-Server**
+   - o valor do `client_id` tem de estar configurado no **Auhorozation-Server**
+3. O **Auhorozation-Server** reencaminha/redirecciona o **Resource-Owner** para a pagina de login/autorização
+4. Após a autorização do Resource-Owner, o Authorization Server retorna para o Client o access_token atraves de redirect
+    ```
+   http://CLIENT/#access_token=bla-bla&token_type=bearer&state=ABC&expires_in=1234&scope=read%20write
+   ```
+5. O Client com access_token mostra a informação normalmente.
+
+##### Para Testar o exemplo:
+
+1. no brower: http://authorization.server.local:8081/oauth/authirize?response_type=token&client_id=webadmin&state=ABC&redirect_uri=http://example-client-app
+2. autenticar com john/pwd
+

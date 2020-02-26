@@ -36,62 +36,50 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         //@formatter:off
         clients
-              // the first version is in memory
-              .inMemory()
+            // the first version is in memory
+            .inMemory()
                 // client app identifier (client-id)
                 .withClient("food4u-web")
-                // app-client-secret (client-key)
-                .secret(passwordEncoder.encode("web123"))
-                // specify what flows we want to use for the current client app
-                .authorizedGrantTypes("password", "refresh_token")
-                // scopes for the current client app
-                .scopes("write", "read")
-                .accessTokenValiditySeconds(60 * 60 * 6) // 6 hours (default is 12 hours)
-                .refreshTokenValiditySeconds(12 * 60 * 60) // 12 hours
-              .and()
+                    // app-client-secret (client-key)
+                    .secret(passwordEncoder.encode("web123"))
+                    // specify what flows we want to use for the current client app
+                    .authorizedGrantTypes("password", "refresh_token")
+                    // scopes for the current client app
+                    .scopes("write", "read")
+                    .accessTokenValiditySeconds(60 * 60 * 6) // 6 hours (default is 12 hours)
+                    .refreshTokenValiditySeconds(12 * 60 * 60) // 12 hours
+            .and()
                 // this client is for the access_token introspection
                 .withClient("food4u-api")
-                // app-client-secret (client-key)
-                .secret(passwordEncoder.encode("food4u-api-123"))
-              .and()
+                    // app-client-secret (client-key)
+                    .secret(passwordEncoder.encode("food4u-api-123"))
+            .and()
                 // client for the client_credentials flow
                 .withClient("food4u-batch-app")
-                .secret(passwordEncoder.encode("food4u-batch-app123"))
-                .authorizedGrantTypes("client_credentials")
-                .accessTokenValiditySeconds(6 * 24 * 60 * 60) // 6 days (default is 12 hours)
-                .scopes("read")
-              .and()
-                // Client example with authorization_code flow
-
-                // 1. generation of authorization-code
-                //      http://AUTHORIZATION-SERVER:8081/oauth/authorize?
-                //      response_type=code
-                //      &client_id=food4u-analytics-client-id
-                //      &state=ABC
-                //      &redirect_uri=http//food4u.local
-
+                    .secret(passwordEncoder.encode("food4u-batch-app123"))
+                    .authorizedGrantTypes("client_credentials")
+                    .accessTokenValiditySeconds(6 * 24 * 60 * 60) // 6 days (default is 12 hours)
+                    .scopes("read")
+            .and()
                 .withClient("food4uAnalytics")
-                .secret(passwordEncoder.encode("food4uAnalytics"))
-                .authorizedGrantTypes("authorization_code")
-                .scopes("write", "read")
-                // define the accepted redirect uri for authorization-code generation
-                .redirectUris("http://food4u.local:8000")
-        // Define other clients
-
-        //@formatter:on
-
-                /*
-
-                .and()
-                .withClient("food4u-mobile")
-                // app-client-secret
-                .secret(passwordEncoder.encode("web123"))
-                // specify what flows we want to use for the current client app
-                .authorizedGrantTypes("password")
-                // scopes for the current client app
-                .scopes("write", "read")
-
-                 */
+                    // Client example with authorization_code flow
+                    // 1. generation of authorization-code
+                    //      http://AUTHORIZATION-SERVER:8081/oauth/authorize?
+                    //      response_type=code
+                    //      &client_id=food4u-analytics-client-id
+                    //      &state=ABC
+                    //      &redirect_uri=http//food4u.local
+                    .secret(passwordEncoder.encode("food4uAnalytics"))
+                    .authorizedGrantTypes("authorization_code")
+                    .scopes("write", "read")
+                    // define the accepted redirect uri for authorization-code generation
+                    .redirectUris("http://food4u.local:8000")
+            .and()
+                .withClient("webadmin")
+                    // Authentication Implicit Grant Flow
+                    .authorizedGrantTypes("implicit")
+                    .scopes("write", "read")
+                    .redirectUris("http://food4u.local:8000") // devia usar outra
         ;
     }
 
