@@ -339,3 +339,39 @@ Denominado tambem como fluxo básico Oauth.
 1. no brower: http://authorization.server.local:8081/oauth/authirize?response_type=token&client_id=webadmin&state=ABC&redirect_uri=http://example-client-app
 2. autenticar com john/pwd
 
+---
+
+# [PKCE](https://tools.ietf.org/html/rfc7636)
+
+O Oauth2 foi construido de forma a que possa ser extendido.
+O PKCE é uma extenção do OAuth2 que tem como objectivo prover maior segurança.
+
+
+---
+
+# Qual o flux a utilizar?
+
+Para tomar esta decisão é preciso responder a algumas perguntas:
+
+- Qual o tipo do client?
+    - Public 
+        - Quando o Utilizador pode ter acesso ao source-code e ver/alterar o client-secret usado para autenticar o client.
+        - Single page application permitem que o ponto anterior aconteça, pelo que são um exemplo de client public.
+        - As aplicações nativas, mobile ou desktop tambem são client-public. pois embora sejam compiladas, o codigo é possivel de descompilar.
+        
+    - Confidencial
+        - Quando o código é completamente inacessivel ao utilizador.
+            - Uma aplicação web, que corre no server side, não deve expor qualquer informação confidencial ao utilizador.
+        - Se a comunicação com o Authorization-Server é feita no servidor e não no browser do utilizador, então Utilizador não terá acesso a qualquer detalhe do processo de autenticação.
+        
+
+- O client é Confiavel ou Não Confiável?
+    - Confiavel
+        - Aplicação própria, que nós proprios ou a nossa empresa implementou
+    - Não Confiável
+        - Aplicação terceira, usa o Authorization-Server, mas, que não podemos confir nela com 100% de fiabilidade.
+        - O objectivos dessa aplicação são desconhecidos para o Authorization-Server. Não sabemos o que essa aplicação faz com os dados.
+
+A decisão do flow a utilizar pode seguir o seguinte algoritmo de de decisão:
+
+![Qual o esquema a utilizar?](diagramas/Oauth2-authentication-flow-decision.png)
