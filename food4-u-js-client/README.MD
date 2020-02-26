@@ -12,6 +12,6 @@ python -m SimpleHTTPServer 8000
 
 ```shell script
 npm install http-server -g
-http-server -p 8000
+npx http-server -p 8000
 
 ```

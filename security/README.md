@@ -302,3 +302,9 @@ Denominado tambem como fluxo básico Oauth.
 
 ##### Caracteristicas da Applicação Cliente
 - O client permite authentication com redes sociais (por exemplo).
+
+
+##### Como usar
+
+1. No browser, fazer o pedido de authorization_code
+`http://localhost:8081/oauth/authorize?response_type=code&client_id=food4u-analytics-client-id&state=ABC&redirect_uri=http//food4u-analytics-client`
