@@ -10,6 +10,40 @@ const config = {
 
 let accessToken = "";
 
+// Support for PKCE code flow
+// --------
+function generateCodeVerifier() {
+    let codeVerifier = generateRandomString(128);
+    localStorage.setItem("codeVerifier", codeVerifier);
+
+    return codeVerifier;
+}
+
+function generateRandomString(length) {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+}
+
+function generateCodeChallenge(codeVerifier) {
+    return base64URL(CryptoJS.SHA256(codeVerifier));
+}
+
+function getCodeVerifier() {
+    return localStorage.getItem("codeVerifier");
+}
+
+function base64URL(string) {
+    return string.toString(CryptoJS.enc.Base64).replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+// --------
+
 function cunsultResource() {
     alert("Consult Resource com access token " + accessToken);
 
@@ -35,12 +69,15 @@ function cunsultResource() {
 function gerarAccessToken(code) {
     alert("Gerar access token com code " + code);
 
+    let codeVerifier = getCodeVerifier();
+
     let clientAuth = btoa(config.clientId + ":" + config.clientSecret);
 
     let params = new URLSearchParams();
     params.append("grant_type", "authorization_code");
     params.append("code", code);
     params.append("redirect_uri", config.callbackUrl);
+    params.append("code_verifier", codeVerifier);
 
     $.ajax({
         url: config.tokenUrl,
@@ -66,11 +103,18 @@ function gerarAccessToken(code) {
 }
 
 function login() {
+
+    let codeVerifier = generateCodeVerifier();
+    let codeChallenge = generateCodeChallenge(codeVerifier);
+
     // https://auth0.com/docs/protocols/oauth2/oauth-state
     let state = btoa(Math.random());
     localStorage.setItem("clientState", state);
 
-    window.location.href = `${config.authorizeUrl}?response_type=code&client_id=${config.clientId}&state=${state}&redirect_uri=${config.callbackUrl}`;
+    //window.location.href = `${config.authorizeUrl}?response_type=code&client_id=${config.clientId}&state=${state}&redirect_uri=${config.callbackUrl}&code_challenge_method=s256&code_challenge=${codeChallenge}`;
+
+    window.location.href = `${config.authorizeUrl}?response_type=code&client_id=${config.clientId}&state=${state}&redirect_uri=${config.callbackUrl}&code_challenge_method=s256&code_challenge=${codeChallenge}`;
+
 }
 
 $(document).ready(function () {

@@ -343,10 +343,25 @@ Denominado tambem como fluxo básico Oauth.
 
 # [PKCE](https://tools.ietf.org/html/rfc7636)
 
-O Oauth2 foi construido de forma a que possa ser extendido.
-O PKCE é uma extenção do OAuth2 que tem como objectivo prover maior segurança.
+- O Oauth2 foi construido de forma a que possa ser extendido.
+- O PKCE é uma extenção do OAuth2 que tem como objectivo prover maior segurança.
+- É recomenda a utilização de **PKCE** quando a aplicação cliente é um **Client** public. Quando a alicação client não consegue garantir a segurança das credenciais do cliente. Por exemplo uma aplicação Client Javascript.
+- Garante um nivel de seguraça mais elevado.
+
+```
+Code Verifier: very_long_text
+Code Challenge: [Plain = same-value-of-Code-Verifier]
+
+code_challenge_method=s256|plain
 
 
+For Plain:
+
+Code Verifier: very_long_text
+Code Challenge: very_long_text
+
+http://authorization.server.local:8081/oauth/authorize?response_type=code&client_id=food4uAnalyticsClient&state=ABC&redirect_uri=http//food4u.local&code_challenge=very_long_text&code_challenge_method=plain
+```
 ---
 
 # Qual o flux a utilizar?
