@@ -2,6 +2,7 @@ package io.costax.food4u.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.CompositeTokenGranter;
 import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 import java.util.Arrays;
 
@@ -30,6 +33,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
     @Autowired
     UserDetailsService userDetailsService;
+
+    @Autowired
+    RedisConnectionFactory connectionFactory;
 
     /**
      * Configure the clients apps details
@@ -111,9 +117,31 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
                 .reuseRefreshTokens(false)
-                // add token Granter for PKCE
+                // append token Granter for PKCE in Authentication-code-flow
                 .tokenGranter(tokenGranter(endpoints))
+                // define a token store to be able to restart the Authorization-Server
+                // without lose the tokens,
+                // be sides its allows us to share the token between multiples instance of the Authorization-Server
+                .tokenStore(tokenStore())
         ;
+    }
+
+    /**
+     * Define the token store to store and share the token
+     * between instance o the Authorization-Server.
+     *
+     * <p>
+     *     We have some options to choice the TokenStore implementation:
+     *      - InMemoryTokenStore (default)
+     *      - JdbcTokenStore
+     *      - JwkTokenStore
+     *      - RedisTokenStore
+     * </p>
+     *
+     * In this example we are configuring the redis implementation
+     */
+    private TokenStore tokenStore() {
+        return new RedisTokenStore(connectionFactory);
     }
 
     /**

@@ -37,6 +37,16 @@ services:
     networks:
       - food4u-network
 
+  token-store:
+    image: redis:5.0.7-alpine
+    container_name: token-store-demo
+    ports:
+      - '6379:6379'
+    volumes:
+      - '.volumes/token-store/conf/redis.conf:/usr/local/etc/redis/redis.conf'
+    networks:
+      - food4u-network
+
 
 networks:
   food4u-network:
