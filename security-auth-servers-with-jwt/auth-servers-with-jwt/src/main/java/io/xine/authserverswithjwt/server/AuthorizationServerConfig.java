@@ -13,6 +13,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
@@ -133,10 +136,21 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .reuseRefreshTokens(false)
                 // add the converter
                 .accessTokenConverter(jwtAccessTokenConverter())
+                // must be called after the method accessTokenConverter
+                .approvalStore(approvalStore(endpoints.getTokenStore()))
         ;
         //@formatter:on
     }
 
+    /**
+     * Permite a aprovação granular dos scopes, Necessário quando se usa o JWT
+     */
+    private ApprovalStore approvalStore(final TokenStore tokenStore) {
+        final TokenApprovalStore tokenApprovalStore = new TokenApprovalStore();
+        tokenApprovalStore.setTokenStore(tokenStore);
+
+        return tokenApprovalStore;
+    }
 
     /**
      * Configure who have access to the OAuth 2.0 Token Introspection endpoint
