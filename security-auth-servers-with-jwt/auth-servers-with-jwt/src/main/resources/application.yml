@@ -1,2 +1,10 @@
 server:
   port: 8081
+
+io:
+  xine:
+    auth-servers-with-jwt:
+      keystore:
+        path: keystores/example.jks
+        password: 654321
+        keypair-alias: example

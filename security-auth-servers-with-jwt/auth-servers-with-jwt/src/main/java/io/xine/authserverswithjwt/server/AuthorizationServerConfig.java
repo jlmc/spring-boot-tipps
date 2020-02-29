@@ -4,6 +4,7 @@ package io.xine.authserverswithjwt.server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +14,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+import java.security.KeyPair;
 
 /**
  * Enable the project to be an Authorization-Server application
@@ -20,6 +24,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
+
+    @Autowired
+    JwtKeyStoreProperties jwtKeyStoreProperties;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -34,9 +41,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 
-        // this is the signature key
-        converter.setSigningKey("12345689_12345689_12345689_12_abcdefghijklmnopqrstuvxz_12345689_12345689_12345689_12");
+        // We have two possibilities,
+        // 1. we can use a symmetric key, the authentication-server and the resource-server use the same key
+        // 2. we can use a unsymmetrical key, the authentication-server use a private key to assign the JWT
+        // and the resource-server use a public key to verify the integrity of the JWT
 
+
+        // If we use the symmetric signature key, we can use the method converter.setSigningKey(String); to define the key
+        //converter.setSigningKey("12345689_12345689_12345689_12_abcdefghijklmnopqrstuvxz_12345689_12345689_12345689_12");
+
+
+        // If we use unsymmetrical key
+        final ClassPathResource jksResource = new ClassPathResource(jwtKeyStoreProperties.getPath());
+        final String keyStorePass = jwtKeyStoreProperties.getPassword();
+        final String keyPairAlias = jwtKeyStoreProperties.getKeypairAlias(); // // inside jks can exists multiple Keypairs, we need to select only one Pair
+
+        // open the file
+        final KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(jksResource, keyStorePass.toCharArray());
+        // get the key pair with the alias
+        final KeyPair keyPair = keyStoreKeyFactory.getKeyPair(keyPairAlias);
+
+        converter.setKeyPair(keyPair);
         return converter;
     }
 
@@ -117,7 +142,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      * Configure who have access to the OAuth 2.0 Token Introspection endpoint
      */
     @Override
-    public void configure(final AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(final AuthorizationServerSecurityConfigurer security) {
         //super.configure(security);
 
         // configure who have access to the OAuth 2.0 Token Introspection endpoint
@@ -125,7 +150,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         // and in the present example we are defining that all the authenticated clients have access. so the client-app have to perform the request with app-client-id and app-client-secret
         // other possible options to the spring security expression could be for example: `permitAll()` in that case we client don't have to provide any thing to validate the tokens
         //security.checkTokenAccess("isAuthenticated()");
-        security.checkTokenAccess("permitAll()");
+        security.checkTokenAccess("permitAll()")
+                .tokenKeyAccess("permitAll()")
+        //.allowFormAuthenticationForClients()
+        ;
     }
 }
 
