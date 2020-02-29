@@ -13,24 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /*
-    @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        //super.configure(auth);
-
-        final PasswordEncoder passwordEncoder = passwordEncoder();
-        auth.inMemoryAuthentication()
-                .withUser("john")
-                .password(passwordEncoder.encode("pwd"))
-                .roles("ADMIN", "CLIENT")
-                .and()
-                .withUser("foo")
-                .password(passwordEncoder.encode("pwd"))
-                .roles("CLIENT")
-        ;
-    }
-     */
-
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -44,10 +26,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-
-   /* @Bean
-    @Override
-    protected UserDetailsService userDetailsService() {
-        return super.userDetailsService();
-    }*/
 }

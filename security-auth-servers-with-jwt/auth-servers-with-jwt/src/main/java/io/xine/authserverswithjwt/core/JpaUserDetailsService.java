@@ -2,11 +2,13 @@ package io.xine.authserverswithjwt.core;
 
 import io.xine.authserverswithjwt.domain.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Qualifier("X")
 @Service
 public class JpaUserDetailsService implements UserDetailsService {
 

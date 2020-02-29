@@ -1,7 +1,9 @@
 package io.xine.authserverswithjwt.server;
 
 
+import io.xine.authserverswithjwt.core.JwtCustomClaimsTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -15,11 +17,13 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
 import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import java.security.KeyPair;
+import java.util.Arrays;
 
 /**
  * Enable the project to be an Authorization-Server application
@@ -38,6 +42,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     AuthenticationManager authenticationManager;
 
     @Autowired
+    @Qualifier("X")
     UserDetailsService userDetailsService;
 
     @Bean
@@ -128,6 +133,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+
+        final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        tokenEnhancerChain.setTokenEnhancers(
+                Arrays.asList(new JwtCustomClaimsTokenEnhancer(), jwtAccessTokenConverter()));
+
+
         //@formatter:off
         endpoints
                 // Only the Resource Owner Password Credentials Grant flow need this configurations of the authenticationManager
@@ -136,6 +147,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .reuseRefreshTokens(false)
                 // add the converter
                 .accessTokenConverter(jwtAccessTokenConverter())
+                // add custom jwt token chain
+                .tokenEnhancer(tokenEnhancerChain)
                 // must be called after the method accessTokenConverter
                 .approvalStore(approvalStore(endpoints.getTokenStore()))
         ;
