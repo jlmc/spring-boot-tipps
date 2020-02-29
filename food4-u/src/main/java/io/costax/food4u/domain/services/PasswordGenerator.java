@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class PasswordGenerator {
 
     String generate() {
-        return "dummy";
+        return "pwd";
     }
 }

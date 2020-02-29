@@ -35,3 +35,7 @@ build/
 
 ### Project Enviroment
 .volumes/
+
+###
+node_modules
+package-lock.json

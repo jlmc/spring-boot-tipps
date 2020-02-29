@@ -1,5 +1,6 @@
 package io.costax.demo.api;
 
+import io.costax.demo.api.model.PasswordInputRepresentation;
 import io.costax.demo.domain.model.User;
 import io.costax.demo.domain.repositories.UserRepository;
 import io.costax.demo.domain.services.AddUserService;
@@ -44,5 +45,13 @@ public class UsersController {
     @GetMapping
     public List<User> list() {
         return userRepository.getUsersWithPermissions();
+    }
+
+    @PutMapping(path = "/{id}/password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePassword(
+            @PathVariable("id") Integer id,
+            @RequestBody @Valid PasswordInputRepresentation passwordInputRepresentation) {
+        addUserService.changePassword(id, passwordInputRepresentation.getCurrentPassword(), passwordInputRepresentation.getNewPassword());
     }
 }
