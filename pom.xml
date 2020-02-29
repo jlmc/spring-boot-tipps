@@ -17,7 +17,6 @@
         <module>versioning</module>
 
         <module>security</module>
-
-        <module>security/demo-api-with-spring-security</module>
+        <module>security-auth-servers-with-jwt</module>
     </modules>
 </project>
