@@ -15,5 +15,6 @@
 
     <modules>
         <module>auth-servers-with-jwt</module>
+        <module>demo-api</module>
     </modules>
 </project>
