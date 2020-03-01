@@ -12,7 +12,7 @@ public @interface CheckSecurity {
 
     @interface Users {
 
-        @PreAuthorize("hasAnyAuthority('MANAGER_USERS')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAnyAuthority('MANAGER_USERS')")
         @Target({ElementType.METHOD})
         @Retention(RetentionPolicy.RUNTIME)
         @Inherited
@@ -23,14 +23,14 @@ public @interface CheckSecurity {
 
     @interface Books {
 
-        @PreAuthorize("hasAuthority('SEE_BOOKS')")
+        @PreAuthorize("hasAuthority('SCOPE_READ') and hasAuthority('SEE_BOOKS')")
         @Target({ElementType.METHOD})
         @Retention(RetentionPolicy.RUNTIME)
         @Inherited
         @Documented
         @interface CanSee {}
 
-        @PreAuthorize("hasAuthority('EDIT_BOOKS')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('EDIT_BOOKS')")
         @Target({ElementType.METHOD})
         @Retention(RetentionPolicy.RUNTIME)
         @Inherited
@@ -40,7 +40,7 @@ public @interface CheckSecurity {
 
     @interface Orders {
 
-        @PreAuthorize("hasAuthority('CREATE_ORDER')")
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('CREATE_ORDER')")
         @Target({ElementType.METHOD})
         @Retention(RetentionPolicy.RUNTIME)
         @Inherited
