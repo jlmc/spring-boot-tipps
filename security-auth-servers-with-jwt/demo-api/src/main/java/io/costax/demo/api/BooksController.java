@@ -51,7 +51,7 @@ public class BooksController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> createUser(@RequestBody @Valid Book book) {
+    public ResponseEntity<Book> createBook(@RequestBody @Valid Book book) {
         final Book added = addBookService.add(book);
 
         return ResponseEntity.created(ResourceUriHelper.getUri(added.getId())).body(added);
