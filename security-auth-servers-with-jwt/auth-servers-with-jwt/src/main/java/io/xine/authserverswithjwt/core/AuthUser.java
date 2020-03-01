@@ -1,10 +1,9 @@
 package io.xine.authserverswithjwt.core;
 
-import io.xine.authserverswithjwt.domain.User;
+import io.xine.authserverswithjwt.domain.model.User;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
-import java.util.Collections;
 
 public class AuthUser extends org.springframework.security.core.userdetails.User {
 
@@ -17,8 +16,8 @@ public class AuthUser extends org.springframework.security.core.userdetails.User
         super(username, password, authorities);
     }
 
-    public static AuthUser of(User user) {
-        final AuthUser authUser = new AuthUser(user.getEmail(), user.getPw(), Collections.emptyList());
+    public static AuthUser of(User user, final Collection<? extends GrantedAuthority> authorities) {
+        final AuthUser authUser = new AuthUser(user.getEmail(), user.getPw(), authorities);
         authUser.setFullName(user.getName());
         authUser.setUserId(user.getId());
         return authUser;
