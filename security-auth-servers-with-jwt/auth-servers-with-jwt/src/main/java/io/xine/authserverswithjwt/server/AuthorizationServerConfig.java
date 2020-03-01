@@ -89,7 +89,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     // specify what flows we want to use for the current client app
                     .authorizedGrantTypes("password", "refresh_token")
                     // scopes for the current client app
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
                     .accessTokenValiditySeconds(60 * 60 * 6) // 6 hours (default is 12 hours)
                     .refreshTokenValiditySeconds(12 * 60 * 60) // 12 hours
                 .and()
@@ -103,7 +103,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     .secret(passwordEncoder.encode("food4u-batch-app123"))
                     .authorizedGrantTypes("client_credentials")
                     .accessTokenValiditySeconds(6 * 24 * 60 * 60) // 6 days (default is 12 hours)
-                    .scopes("read")
+                    .scopes("READ")
                 .and()
                     .withClient("food4uAnalytics")
                     // Client example with authorization_code flow
@@ -115,14 +115,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                     //      &redirect_uri=http//food4u.local
                     .secret(passwordEncoder.encode("food4uAnalytics"))
                     .authorizedGrantTypes("authorization_code")
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
                     // define the accepted redirect uri for authorization-code generation
                     .redirectUris("http://food4u.local:8000")
                 .and()
                     .withClient("webadmin")
                     // Authentication Implicit Grant Flow
                     .authorizedGrantTypes("implicit")
-                    .scopes("write", "read")
+                    .scopes("WRITE", "READ")
                     .redirectUris("http://food4u.local:8000") // devia usar outra
         ;
         //@formatter:on

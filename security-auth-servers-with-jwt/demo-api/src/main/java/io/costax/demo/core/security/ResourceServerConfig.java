@@ -5,11 +5,16 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
-import java.util.Collections;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Esta classe tem de extender a classe WebSecurityConfigurerAdapter, porque o objectivo é fazer override do metodo:
@@ -55,18 +60,30 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
         //@formatter:on
     }
 
+    /**
+     * Enable the load of the JWT "authorities",
+     * only using this we can have access to that information and can use it in the system.
+     * <p>
+     * The default beaver it use the "scopes" as Authorities.
+     */
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         var jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            var authorities = jwt.getClaimAsStringList("authorities");
 
-            if (authorities == null) {
-                authorities = Collections.emptyList();
-            }
+            List<String> authorities = jwt.getClaimAsStringList("authorities");
 
-            return authorities.stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toUnmodifiableSet());
+            // Convert the Claim authorities in to GrantedAuthority
+            final Stream<SimpleGrantedAuthority> grantedAuthorities = Optional.ofNullable(authorities)
+                    .stream()
+                    .flatMap(Collection::stream)
+                    .map(SimpleGrantedAuthority::new);
+                    //.collect(Collectors.toUnmodifiableSet());
+
+            // Converter the Claim scopes in to GrantedAuthority, this is the default converter
+            final JwtGrantedAuthoritiesConverter scopesGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+            final Stream<GrantedAuthority> grantedScopes = scopesGrantedAuthoritiesConverter.convert(jwt).stream();
+
+            return Stream.concat(grantedScopes, grantedAuthorities).collect(Collectors.toUnmodifiableSet());
         });
 
         return jwtAuthenticationConverter;

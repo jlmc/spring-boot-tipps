@@ -25,6 +25,8 @@ public class PingController {
     @CheckSecurity.IsAuthenticated
     @GetMapping
     public String ping() {
+        System.out.println(securityHelper.getAuthorities());
+
         return String.format("Ping - %s - %s ", securityHelper.getUserId(), System.currentTimeMillis());
     }
 
