@@ -23,11 +23,11 @@ public class SecurityHelper {
                 .getAuthentication();
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         final Authentication authentication = getAuthentication();
 
         final Jwt jwt = (Jwt) authentication.getPrincipal();
-        final Integer userId = jwt.getClaim("user_id");
+        final Long userId = jwt.getClaim("user_id");
 
         return userId;
     }

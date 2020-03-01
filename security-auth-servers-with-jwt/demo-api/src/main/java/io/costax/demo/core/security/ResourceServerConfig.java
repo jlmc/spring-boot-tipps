@@ -1,7 +1,7 @@
 package io.costax.demo.core.security;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -18,13 +18,20 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableWebSecurity // enable the spring web security
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
-        //super.configure(http);
+
+        http
+                .csrf().disable()
+                .cors().and()
+                .oauth2ResourceServer().jwt()
+                .jwtAuthenticationConverter(jwtAuthenticationConverter());
 
         //@formatter:off
+        /*
         http
             .authorizeRequests()
                 // define all free request '**' represent any thing
@@ -36,12 +43,15 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
                     // authorize any authenticated request
                     .anyRequest().authenticated()
                 .and()
+                .csrf().disable()
                 .cors()
                 .and()
                 .oauth2ResourceServer()
                     .jwt()
                     .jwtAuthenticationConverter(jwtAuthenticationConverter())
         ;
+
+         */
         //@formatter:on
     }
 

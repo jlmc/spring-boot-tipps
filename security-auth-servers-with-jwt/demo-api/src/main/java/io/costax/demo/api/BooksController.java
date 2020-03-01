@@ -8,6 +8,7 @@ import io.costax.demo.domain.services.AddBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -50,6 +51,7 @@ public class BooksController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PreAuthorize("hasAnyAuthority('EDIT_BOOKS')")
     @PostMapping
     public ResponseEntity<Book> createBook(@RequestBody @Valid Book book) {
         final Book added = addBookService.add(book);

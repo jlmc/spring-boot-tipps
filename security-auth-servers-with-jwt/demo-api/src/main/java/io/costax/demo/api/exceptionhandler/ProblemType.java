@@ -9,14 +9,16 @@ enum ProblemType {
     MESSAGE_NOT_READABLE("/message-not-readable", "Incomprehensible Message"),
     URI_PARAMETER_INVALID("/uri-parameter-invalid", "URI invalid parameter"),
     INVALID_DATA("/invalid-data", "Invalid data"),
-    INTERNAL_SERVER_ERROR("/internal-server-error", "System Internal Error");
+    INTERNAL_SERVER_ERROR("/internal-server-error", "System Internal Error"),
+    ACCESS_DENIED("/access_denied", "Access Denied");
 
     private String title;
     private String uri;
 
     ProblemType(String path, String title) {
         // rename the base uri...
-        this.uri = "https://dummy.io" + path;
+        // https://www.iana.org/domains/reserved
+        this.uri = "https://exemple.com" + path;
         this.title = title;
     }
 
