@@ -60,4 +60,12 @@ public class BooksController {
         return ResponseEntity.created(ResourceUriHelper.getUri(added.getId())).body(added);
     }
 
+    @CheckSecurity.Books.CanCreateOrEditOrIsMaster
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Book> updateBook(@PathVariable("id") Integer bookId, @RequestBody @Valid Book book) {
+        final Book added = addBookService.update(bookId, book);
+
+        return ResponseEntity.ok(added);
+    }
+
 }

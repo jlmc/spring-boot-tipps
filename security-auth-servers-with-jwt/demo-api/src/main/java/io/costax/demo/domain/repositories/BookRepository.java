@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecificationExecutor<Book> {
 
     boolean existsByIsbnIgnoreCase(String isbn);
+
+    boolean existsAuthor(Integer bookId, Integer author);
 }

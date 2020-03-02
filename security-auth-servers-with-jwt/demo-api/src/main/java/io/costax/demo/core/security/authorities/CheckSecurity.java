@@ -19,6 +19,12 @@ public @interface CheckSecurity {
         @Documented
         @interface CanManage {}
 
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (hasAnyAuthority('MANAGER_USERS') or @securityHelper.isAuthor())")
+        @Target({ElementType.METHOD})
+        @Retention(RetentionPolicy.RUNTIME)
+        @Inherited
+        @Documented
+        @interface CanManageOrIsMaster {}
     }
 
     @interface Books {
@@ -36,6 +42,14 @@ public @interface CheckSecurity {
         @Inherited
         @Documented
         @interface CanCreateOrEdit {}
+
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and (@securityHelper.isAuthor(#bookId) or hasAnyAuthority('MANAGER_USERS'))")
+        @Target({ElementType.METHOD})
+        @Retention(RetentionPolicy.RUNTIME)
+        @Inherited
+        @Documented
+        @interface CanCreateOrEditOrIsMaster {}
     }
 
     @interface Orders {
