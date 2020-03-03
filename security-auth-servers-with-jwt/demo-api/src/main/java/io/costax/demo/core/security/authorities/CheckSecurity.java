@@ -1,5 +1,6 @@
 package io.costax.demo.core.security.authorities;
 
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.lang.annotation.*;
@@ -60,6 +61,14 @@ public @interface CheckSecurity {
         @Inherited
         @Documented
         @interface CanCreate {}
+
+        @PreAuthorize("hasAuthority('SCOPE_WRITE') and hasAuthority('CREATE_ORDER')")
+        @PostAuthorize("")
+        @Target({ElementType.METHOD})
+        @Retention(RetentionPolicy.RUNTIME)
+        @Inherited
+        @Documented
+        @interface CanCreateAndIdOwner{}
     }
 
 

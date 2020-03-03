@@ -31,13 +31,13 @@ public class SecurityHelper {
                 .getAuthentication();
     }
 
-    public Long getUserId() {
+    public Integer getUserId() {
         final Authentication authentication = getAuthentication();
 
         final Jwt jwt = (Jwt) authentication.getPrincipal();
         final Long userId = jwt.getClaim("user_id");
 
-        return userId;
+        return Optional.ofNullable(userId).map(Long::intValue).orElse(null);
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -45,7 +45,7 @@ public class SecurityHelper {
     }
 
     public boolean isAuthor(Integer bookId) {
-        final Integer userId = Optional.ofNullable(getUserId()).map(Long::intValue).orElse(null);
+        final Integer userId = getUserId();
 
         if (userId == null) return false;
 
