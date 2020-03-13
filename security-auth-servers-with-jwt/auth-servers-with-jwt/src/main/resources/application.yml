@@ -11,16 +11,21 @@ io:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:authtestdb
+    # url: jdbc:h2:mem:authtestdb
+    url: jdbc:h2:./security-auth-servers-with-jwt/auth-servers-with-jwt/db/authtestdb
     driver-class-name: org.h2.Driver
     username: sa
     password: password
+    initialization-mode: always
     hikari:
       maximum-pool-size: 2
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    generate-ddl: false
     hibernate:
-      ddl-auto: create
+        ## In a JPA-based app, you can choose to let Hibernate create the schema or use schema.sql,
+        ## but you cannot do both. Make sure to disable spring.jpa.hibernate.ddl-auto if you use schema.sql.
+      ddl-auto: none
     open-in-view: false
     show-sql: false
     properties:
@@ -33,3 +38,5 @@ logging:
     org:
       hibernate:
         SQL: DEBUG
+      # springframework.jdbc.core.JdbcTemplate: DEBUG # log only sql statement
+      springframework.jdbc.core: TRACE # log sql statement and parameters

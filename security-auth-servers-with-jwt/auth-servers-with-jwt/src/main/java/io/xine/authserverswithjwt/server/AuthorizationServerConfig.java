@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import javax.sql.DataSource;
 import java.security.KeyPair;
 import java.util.Arrays;
 
@@ -44,6 +45,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     @Qualifier("X")
     UserDetailsService userDetailsService;
+
+    @Autowired
+    private DataSource datasource;
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
@@ -74,8 +78,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
-     * Configure the clients apps details
+     * Configure the clients apps details In The database
      */
+    @Override
+    public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.jdbc(this.datasource);
+    }
+
+    /*
+     * Configure the clients apps details In memory
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
         //@formatter:off
@@ -127,6 +138,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         ;
         //@formatter:on
     }
+     */
 
     /**
      * Only the Resource Owner Password Credentials Grant flow need this configurations
