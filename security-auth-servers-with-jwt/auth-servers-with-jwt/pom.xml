@@ -14,7 +14,7 @@
     <name>auth-servers-with-jwt</name>
 
     <properties>
-        <java.version>13</java.version>
+        <java.version>14</java.version>
         <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
         <spring-security-jwt.version>1.0.11.RELEASE</spring-security-jwt.version>
     </properties>
@@ -102,10 +102,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>13</release>
                     <compilerArgs>--enable-preview</compilerArgs>
-                    <source>13</source>
-                    <target>13</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
             <plugin>

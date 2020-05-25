@@ -13,7 +13,7 @@
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
-        <java.version>13</java.version>
+        <java.version>14</java.version>
         <oauth2-oidc-sdk.version>6.21.2</oauth2-oidc-sdk.version>
     </properties>
 
@@ -99,10 +99,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <release>13</release>
+                    <release>14</release>
                     <compilerArgs>--enable-preview</compilerArgs>
-                    <source>13</source>
-                    <target>13</target>
+                    <source>14</source>
+                    <target>14</target>
                 </configuration>
             </plugin>
             <plugin>

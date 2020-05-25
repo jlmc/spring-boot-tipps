@@ -18,5 +18,7 @@
 
         <module>security</module>
         <module>security-auth-servers-with-jwt</module>
+
+        <module>how-to-use-multiple-datasources</module>
     </modules>
 </project>
