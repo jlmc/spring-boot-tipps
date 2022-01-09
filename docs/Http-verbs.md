@@ -14,10 +14,10 @@ Idempotência: É a propriedade que algumas operações têm de poderem ser apli
 - Quando o metodo não gerá qualquer efeito colateral e não modifica qualquer recuso é chamado de `Método Segudo` / `Safe Method` 
  
  
-### NOT Idempotence Methods 
+### NOT Idempotence Methods
  
 - Um bom exemplo pode ser, imaginemos que temos um recuso maça, no qual se vai dando dentadas, sucessivas, o recurso maça é alterado em cada dentada, ou seja, cada dentada provoca um efeito colateral.
- 
+
 
 ### Safe Methods 
 
