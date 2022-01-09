@@ -1,5 +1,6 @@
 package io.github.jlmc.aop.domain.service;
 
+import io.github.jlmc.aop.core.log.LogExecutionTime;
 import io.github.jlmc.aop.domain.model.Todo;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class TodoService {
         this.idGenerator = idGenerator;
     }
 
+    @LogExecutionTime
     public List<Todo> all() {
         return todos.values()
                     .stream()
@@ -27,6 +29,7 @@ public class TodoService {
                     .collect(Collectors.toList());
     }
 
+    @LogExecutionTime
     public Todo add(Todo input) {
         Todo newOne = Todo.of(idGenerator.generate(), input.getTitle());
 
