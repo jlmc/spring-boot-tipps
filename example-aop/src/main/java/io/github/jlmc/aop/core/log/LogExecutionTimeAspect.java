@@ -45,6 +45,12 @@ public class LogExecutionTimeAspect {
 
             Parameter[] parameters = method.getParameters();
 
+            for (Parameter parameter : parameters) {
+                Class<?> parameterType = parameter.getType();
+                Object[] args = pjp.getArgs();
+
+            }
+
         }
 
 

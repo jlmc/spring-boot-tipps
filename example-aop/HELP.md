@@ -26,3 +26,8 @@ The following guides illustrate how to use some features concretely:
 ```
 curl -i -XPOST localhost:8080/todos -H"content-type: application/json"  -d '{"id":null,"title":"tr"}'
 ```
+
+
+```
+curl -i -XDELETE localhost:8080/todos/1 -H"content-type: application/json" 
+```

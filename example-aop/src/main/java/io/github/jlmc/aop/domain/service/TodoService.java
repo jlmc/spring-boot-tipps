@@ -10,8 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+//@org.springframework.context.annotation.Scope(value = org.springframework.beans.factory.config.ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Service
 public class TodoService {
+
+    static int count = 0;
 
     private final IdGenerator idGenerator;
 
@@ -19,6 +22,7 @@ public class TodoService {
 
     public TodoService(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
+        count++;
     }
 
     @LogExecutionTime
