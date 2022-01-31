@@ -20,5 +20,7 @@
         <module>security-auth-servers-with-jwt</module>
 
         <module>how-to-use-multiple-datasources</module>
+
+        <module>example-aop</module>
     </modules>
 </project>
