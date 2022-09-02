@@ -13,16 +13,17 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.github.jlmc.demo.kafka.infrastructure.kafka.KafkaConfiguration.ORDER;
+
 @Configuration
-public class KafkaConsumerConfiguration {
+public class OrderKafkaConsumerConfiguration {
 
     @Bean
-    public ConsumerFactory<String, OrderBookedEvent> consumerFactory() {
+    public ConsumerFactory<String, OrderBookedEvent> orderConsumerFactory() {
         // Creating a map of string-object type
         Map<String, Object> config = new HashMap<>();
 
-        // Adding the Configuration
-        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092");
+        config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, ORDER);
         config.put(ConsumerConfig.GROUP_ID_CONFIG, "group_id");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
@@ -36,12 +37,13 @@ public class KafkaConsumerConfiguration {
 
     // Creating a Listener
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, OrderBookedEvent> bookListener() {
+    public ConcurrentKafkaListenerContainerFactory<String, OrderBookedEvent> orderFactory() {
         ConcurrentKafkaListenerContainerFactory<String, OrderBookedEvent> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
 
-        factory.setConsumerFactory(consumerFactory());
+        factory.setConsumerFactory(orderConsumerFactory());
 
         return factory;
     }
+
 }

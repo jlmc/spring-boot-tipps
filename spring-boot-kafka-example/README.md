@@ -25,3 +25,9 @@ kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic topic1 --from-b
 
 kafka-console-consumer --zookeeper zoo1:2181 --topic topic1 --from-beginning --property print.key=true --property key.separator=,
 ```
+
+
+
+kafka-topics --zookeeper platform-zoo:2181  --list
+
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic topic1 --from-beginning --property print.key=true --property key.separator=

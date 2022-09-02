@@ -3,7 +3,6 @@ package io.github.jlmc.demo.kafka.infrastructure.kafka;
 import io.github.jlmc.demo.kafka.shareddomain.events.OrderBookedEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -14,16 +13,19 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
-public class KafkaProducerConfiguration {
+import static io.github.jlmc.demo.kafka.infrastructure.kafka.KafkaConfiguration.ORDER;
 
-    @Value("${kafka.server.address}")
-    private String kafkaAddress;
+@Configuration
+public class OrderKafkaProducerConfiguration {
+
+    //@Value("${kafka.server.orders.address}")
+
+
 
     @Bean
     public ProducerFactory producerFactory() {
         Map<String, Object> config = new HashMap<>();
-        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaAddress);
+        config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, ORDER);
         config.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         config.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);

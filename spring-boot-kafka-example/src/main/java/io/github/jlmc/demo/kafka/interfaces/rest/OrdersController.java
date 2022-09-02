@@ -1,7 +1,6 @@
 package io.github.jlmc.demo.kafka.interfaces.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jlmc.demo.kafka.interfaces.rest.dtos.incoming.OrderRequest;
 import io.github.jlmc.demo.kafka.interfaces.rest.dtos.outgoing.OrderResponse;
 import io.github.jlmc.demo.kafka.shareddomain.events.OrderBookedEvent;
@@ -24,10 +23,7 @@ import java.util.UUID;
 public class OrdersController {
 
     @Autowired
-    private KafkaTemplate<Object, OrderBookedEvent> template;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    private KafkaTemplate<String, OrderBookedEvent> kafkaTemplate;
 
     @GetMapping
     public String hello() {
@@ -39,9 +35,9 @@ public class OrdersController {
         OrderResponse order = new OrderResponse(UUID.randomUUID().toString(), orderRequest.address(), orderRequest.item());
 
         OrderBookedEvent event = OrderBookedEvent.of(order.id(), order.address(), orderRequest.item());
-        String s = objectMapper.writeValueAsString(event);
+        //String s = objectMapper.writeValueAsString(event);
 
-        this.template.send("topic1", event.getId(), event);
+        kafkaTemplate.send("ORDERS_1", event.getId(), event);
 
         return ResponseEntity.ok(order);
     }
