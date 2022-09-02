@@ -1,0 +1,40 @@
+spring:
+  profiles:
+    active: dev
+
+  # disable the spring resource handler, for static resources
+  mvc:
+    # allowing to handle an exception when the request url do not match in any mapped route
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      # Necessary to allowing to handle an exception when the request url do not match in any mapped route
+      # this only works when we don't have any static resource for example some web site
+      add-mappings: false
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    # ignore null properties in the serialization, similar to @JsonInclude(JsonInclude.Include.NON_NULL)
+    default-property-inclusion: non_null
+    deserialization:
+      # Throw an exception if an unknown propriety arrives in the request body, the default value is false
+      fail-on-unknown-properties: true
+      # throw an exception if a property annotated with @JsonIgnore arrives in the request body, the default value is false
+      fail-on-ignored-properties: true
+
+## Logging
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        web: DEBUG
+#    org:
+#      hibernate: INFO
+#      hibernate.SQL: DEBUG
+#      hibernate.type.descriptor.sql: TRACE
+#      hibernate.stat: DEBUG
+#      hibernate.cache: DEBUG
+#      hibernate.engine.transaction.internal.TransactionImpl: DEBUG
+#      hibernate.engine.jdbc.batch: DEBUG
+# structured.logging.enabled: true
