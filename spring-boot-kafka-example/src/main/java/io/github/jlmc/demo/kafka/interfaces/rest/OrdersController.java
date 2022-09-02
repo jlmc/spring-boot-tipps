@@ -24,7 +24,7 @@ import java.util.UUID;
 public class OrdersController {
 
     @Autowired
-    private KafkaTemplate<Object, Object> template;
+    private KafkaTemplate<Object, OrderBookedEvent> template;
 
     @Autowired
     private ObjectMapper objectMapper;
