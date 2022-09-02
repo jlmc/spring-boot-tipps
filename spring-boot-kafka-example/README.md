@@ -10,3 +10,18 @@ curl -v -L -X POST 'localhost:8080/orders' \
 }' \
  | jq .
 ```
+
+
+## kafka terminal commands
+
+```
+docker exec -it kafka1 /bin/bash
+
+kafka-topics --zookeeper zoo1:2181  --list
+kafka-topics --zookeeper zoo1:2181 --delete --topic topic1
+
+
+kafka-console-consumer --bootstrap-server 127.0.0.1:9092 --topic topic1 --from-beginning --property print.key=true --property key.separator=
+
+kafka-console-consumer --zookeeper zoo1:2181 --topic topic1 --from-beginning --property print.key=true --property key.separator=,
+```
