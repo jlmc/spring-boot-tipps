@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: example-kafka
+  profiles:
+    active: dev
+
+
+
+
+  kafka:
+    #bootstrap-servers: "localhost:6162"
+
+    #producer:
+    #  bootstrap-servers: "localhost:6162"
+
+    # bootstrap-servers: "127.0.0.1:5152,127.0.0.1:6162"
+
+   # producer:
+   #   value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      # bootstrap-servers: "localhost:6162"
+      auto-offset-reset: earliest
+      #value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      #value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    #  value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    #  properties:
+    #    "key.deserializer": org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    #    "value.deserializer": org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+    #    # "spring.deserializer.key.delegate.class": org.springframework.kafka.support.serializer.JsonDeserializer
+    #    "spring.deserializer.key.delegate.class": org.apache.kafka.common.serialization.StringDeserializer
+    #    #"spring.deserializer.value.delegate.class": org.springframework.kafka.support.serializer.JsonDeserializer
+    #    "spring.deserializer.value.delegate.class": org.springframework.kafka.support.converter.StringJsonMessageConverter
+    #    "spring.json.trusted.packages": "*"
+    #    "spring.json.key.default.type": java.lang.String
+    #    "spring.json.value.default.type": java.lang.Object
+
+
+
+
+
+
+
+  # disable the spring resource handler, for static resources
+  mvc:
+    # allowing to handle an exception when the request url do not match in any mapped route
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      # Necessary to allowing to handle an exception when the request url do not match in any mapped route
+      # this only works when we don't have any static resource for example some web site
+      add-mappings: false
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    # ignore null properties in the serialization, similar to @JsonInclude(JsonInclude.Include.NON_NULL)
+    default-property-inclusion: non_null
+    deserialization:
+      # Throw an exception if an unknown propriety arrives in the request body, the default value is false
+      fail-on-unknown-properties: true
+      # throw an exception if a property annotated with @JsonIgnore arrives in the request body, the default value is false
+      fail-on-ignored-properties: true
+
+## Logging
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        web: DEBUG
+        kafka: DEBUG
+
+#    org:
+#      hibernate: INFO
+#      hibernate.SQL: DEBUG
+#      hibernate.type.descriptor.sql: TRACE
+#      hibernate.stat: DEBUG
+#      hibernate.cache: DEBUG
+#      hibernate.engine.transaction.internal.TransactionImpl: DEBUG
+#      hibernate.engine.jdbc.batch: DEBUG
+# structured.logging.enabled: true

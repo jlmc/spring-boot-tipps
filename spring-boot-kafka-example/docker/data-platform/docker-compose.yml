@@ -1,0 +1,63 @@
+version: '3.8'
+
+# https://github.com/simplesteph/kafka-stack-docker-compose/blob/master/zk-single-kafka-single.yml
+
+### https://github.com/spotify/docker-kafka
+
+services:
+  #  broker:
+  #    image: apache-kafka/broker:2.5.0
+  #    container_name: kafka-broker
+  #    hostname: kafka-broker
+  #    ports:
+  #      - 9092:9092
+
+  #
+
+  platform-zoo:
+    image: zookeeper:3.4.9
+    container_name: platform-zoo
+    hostname: platform-zoo
+    ports:
+      - "6161:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=platform-zoo:2888:3888
+    volumes:
+      - ./.volume/platform-zoo/data:/data
+      - ./.volume/platform-zoo/datalog:/datalog
+    networks:
+      - platform-network
+
+
+  platform-kafka:
+    # image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:6.0.1
+    hostname: platform-kafka
+    container_name: platform-kafka
+    ports:
+      - "6162:6162"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://platform-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:6162
+     
+      #KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://billing-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: "platform-zoo:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    volumes:
+      - ./.volume/platform-kafka/data:/var/lib/kafka/data
+    depends_on:
+      - platform-zoo
+    networks:
+      - platform-network
+
+
+networks:
+  platform-network:
+    driver: bridge

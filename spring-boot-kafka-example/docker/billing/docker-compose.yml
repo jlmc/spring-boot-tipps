@@ -1,0 +1,53 @@
+version: '3.8'
+
+# https://github.com/simplesteph/kafka-stack-docker-compose/blob/master/zk-single-kafka-single.yml
+### https://github.com/spotify/docker-kafka
+
+services:
+
+  billing-zoo:
+    image: zookeeper:3.4.9
+    container_name: billing-zoo
+    hostname: billing-zoo
+    ports:
+      - "5151:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=billing-zoo:2888:3888
+    volumes:
+      - ./.volume/billing-zoo/data:/data
+      - ./.volume/billing-zoo/datalog:/datalog
+    networks:
+      - billing-network
+
+
+  billing-kafka:
+    # image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:6.0.1
+    hostname: billing-kafka
+    container_name: billing-kafka
+    ports:
+      - "5152:5152"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://billing-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:5152
+
+      #KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://billing-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: "billing-zoo:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ./.volume/billing-kafka/data:/var/lib/kafka/data
+    depends_on:
+      - billing-zoo
+    networks:
+      - billing-network
+
+
+networks:
+  billing-network:
+    driver: bridge
