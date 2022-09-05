@@ -11,4 +11,5 @@ public class OrderBookedEvent {
     private String id;
     private String address;
     private String item;
+    private String system;
 }

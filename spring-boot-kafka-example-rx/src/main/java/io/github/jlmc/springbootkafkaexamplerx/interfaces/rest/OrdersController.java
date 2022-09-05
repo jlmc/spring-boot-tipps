@@ -1,11 +1,11 @@
 package io.github.jlmc.springbootkafkaexamplerx.interfaces.rest;
 
+import io.github.jlmc.springbootkafkaexamplerx.application.commandservices.OrderBookingCommandService;
+import io.github.jlmc.springbootkafkaexamplerx.domain.model.aggregates.OrderId;
+import io.github.jlmc.springbootkafkaexamplerx.domain.model.commands.OrderBookingCommand;
 import io.github.jlmc.springbootkafkaexamplerx.interfaces.rest.dtos.OrderRequest;
 import io.github.jlmc.springbootkafkaexamplerx.interfaces.rest.dtos.OrderResponse;
-import io.github.jlmc.springbootkafkaexamplerx.sharewddomain.OrderBookedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping(path = "/orders")
 public class OrdersController {
 
-    @Autowired
-    private KafkaTemplate<String, OrderBookedEvent> orderBookedEvents;
+    //@Autowired
+    //private KafkaTemplate<String, OrderBookedEvent> orderBookedEvents;
+
+    private final OrderBookingCommandService orderBookingCommandService;
+
+    public OrdersController(OrderBookingCommandService orderBookingCommandService) {
+        this.orderBookingCommandService = orderBookingCommandService;
+    }
 
     @GetMapping
     public Mono<String> hello() {
@@ -30,14 +34,15 @@ public class OrdersController {
 
     @PostMapping
     public ResponseEntity<Mono<OrderResponse>> bookOrder(@RequestBody @Validated OrderRequest orderRequest) {
-        OrderResponse order = new OrderResponse(UUID.randomUUID().toString(), orderRequest.address(), orderRequest.item());
 
-        OrderBookedEvent event = OrderBookedEvent.of(order.id(), order.address(), orderRequest.item());
-        //String s = objectMapper.writeValueAsString(event);
+        Mono<OrderId> orderId = orderBookingCommandService.booking(new OrderBookingCommand(orderRequest.address(), orderRequest.item()));
 
-        orderBookedEvents.send("ORDERS_1", event.getId(), event);
+        var body =
+                orderId.map((OrderId it) ->
+                        new OrderResponse(it.getId(), orderRequest.address(), orderRequest.item())
+                ).flatMap(Mono::just);
 
-        return ResponseEntity.ok(Mono.just(order));
+        return ResponseEntity.ok(body);
     }
 
     /*
