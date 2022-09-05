@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: example-kafka
+  profiles:
+    active: dev
+
+
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    # ignore null properties in the serialization, similar to @JsonInclude(JsonInclude.Include.NON_NULL)
+    default-property-inclusion: non_null
+    deserialization:
+      # Throw an exception if an unknown propriety arrives in the request body, the default value is false
+      fail-on-unknown-properties: true
+      # throw an exception if a property annotated with @JsonIgnore arrives in the request body, the default value is false
+      fail-on-ignored-properties: true
+
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
