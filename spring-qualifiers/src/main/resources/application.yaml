@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: spring-qualifiers
+  profiles:
+    active: default, dev
+
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/admin
+      auto-index-creation: true
+
+
+  # JACKSON configurations
+  jackson:
+    # default name strategy
+    # PropertyNamingStrategy[*LOWER_CAMEL_CASE*, SNAKE_CASE, UPPER_CAMEL_CASE, LOWER_CASE, KEBAB_CASE, LOWER_DOT_CASE]
+    #spring.jackson.property-naming-strategy=LOWER_CAMEL_CASE
+    property-naming-strategy: LOWER_CAMEL_CASE
+    # ignore null properties in the serialization, similar to @JsonInclude(JsonInclude.Include.NON_NULL)
+    default-property-inclusion: non_null
+    deserialization:
+      # Throw an exception if an unknown propriety arrives in the request body, the default value is false
+      fail-on-unknown-properties: true
+      # throw an exception if a property annotated with @JsonIgnore arrives in the request body, the default value is false
+      fail-on-ignored-properties: true
+    serialization:
+      write-bigdecimal-as-plain: true
+
+
+  # http://localhost:15672/#/queues/%2F/audit.logging
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    # virtual-host: jcosta
+
+
+## Actuator
+### $ curl localhost:8082/actuator/health -d {} -H "Content-Type: application/json"
+management:
+  security:
+    enabled: false
+  endpoints:
+    health:
+      probes:
+        enabled: true
+      livenessState:
+        enabled: true
+      readinessState:
+        enabled: true
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+
