@@ -19,5 +19,6 @@
         <module>kafka</module>
         <module>security</module>
         <module>spring-data</module>
+        <module>spring-boot-tipps-reactive</module>
     </modules>
 </project>
