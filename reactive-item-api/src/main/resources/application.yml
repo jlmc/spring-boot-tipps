@@ -1,0 +1,45 @@
+spring:
+  profiles:
+    active: dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  data:
+    mongodb:
+      auto-index-creation: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+#  profiles: dev
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/admin
+      #host: localhost
+      #port: 27017
+      #database: local
+      #username: admin
+      #password: admin
+      auto-index-creation: true
+---
+spring:
+  profiles: nonprod
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: local
+      auto-index-creation: true
+---
+spring:
+  profiles: prod
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: local
+      auto-index-creation: true
