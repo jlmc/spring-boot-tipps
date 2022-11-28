@@ -2,25 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.costax</groupId>
-    <artifactId>spring-boot-rest-notes</artifactId>
+    <groupId>io.github.jlmc</groupId>
+    <artifactId>spring-boot-tipps</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
     <modules>
-        <module>examples-api</module>
-        <module>jackson-serialization-demos</module>
-        <module>spring-email-demos</module>
-        <module>food4-u</module>
-        <module>amazon-s3-mock-service</module>
-        <module>food4-u-java-client</module>
-        <module>versioning</module>
-
+        <module>web</module>
+        <module>qualifiers</module>
+        <module>aop</module>
+        <module>jackson</module>
+        <module>kafka</module>
         <module>security</module>
-        <module>security-auth-servers-with-jwt</module>
-
-        <module>how-to-use-multiple-datasources</module>
-
-        <module>example-aop</module>
+        <module>spring-data</module>
     </modules>
 </project>

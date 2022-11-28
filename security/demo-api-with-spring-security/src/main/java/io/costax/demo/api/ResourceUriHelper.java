@@ -1,6 +1,5 @@
 package io.costax.demo.api;
 
-import lombok.experimental.UtilityClass;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -9,8 +8,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 
-@UtilityClass
-public class ResourceUriHelper {
+public final class ResourceUriHelper {
+
+    private ResourceUriHelper() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     public static void addUriInResponseHeader(Object resourceId) {
         URI uri = getUri(resourceId);

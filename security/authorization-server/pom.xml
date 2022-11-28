@@ -8,14 +8,17 @@
         <version>2.2.4.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>io.costax</groupId>
+
+    <groupId>io.github.jlmc</groupId>
     <artifactId>authorization-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>authorization-server</name>
     <description>Authorization Server Project with Spring Boot</description>
 
     <properties>
-        <java.version>14</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <spring-security-oauth2.version>2.3.7.RELEASE</spring-security-oauth2.version>
     </properties>
 
@@ -65,14 +68,7 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
     </dependencies>
-
 
     <build>
         <plugins>
@@ -80,31 +76,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>--enable-preview</compilerArgs>
-                    <source>14</source>
-                    <target>14</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- run the integration tests -->
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <configuration>
-                    <argLine>--enable-preview</argLine>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
-
-
 </project>

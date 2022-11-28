@@ -1,7 +1,6 @@
 package io.costax.demo.api.exceptionhandler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
@@ -70,7 +69,6 @@ import java.util.List;
  * @see <a href="https://tools.ietf.org/html/rfc7807">RFC 7807 (Problem Details for HTTP APIs)</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Getter
 //@Builder
 public class Problem {
     private Integer status;
@@ -106,7 +104,30 @@ public class Problem {
                 .timestamp(instant);
     }
 
-    @Getter
+    public Integer getStatus() {
+        return this.status;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getDetail() {
+        return this.detail;
+    }
+
+    public Instant getTimestamp() {
+        return this.timestamp;
+    }
+
+    public List<Error> getErrors() {
+        return this.errors;
+    }
+
     protected static class Error {
         private String name;
         private String userMessage;
@@ -118,6 +139,14 @@ public class Problem {
 
         public static Error of(final String name, final String userMessage) {
             return new Error(name, userMessage);
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String getUserMessage() {
+            return this.userMessage;
         }
     }
 
