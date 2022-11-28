@@ -1,0 +1,14 @@
+pnia:
+  prefixes:
+    #file-path: /Users/joao.morgado/Documents/junks/projects/spring/reactor-demo/pnia/src/main/resources/prefixes.txt
+    file-path: /prefixes.txt
+    path-type: classpath
+
+spring:
+  profiles:
+    active: dev
+  cache:
+    type: caffeine
+    caffeine:
+      # see com.github.benmanes.caffeine.cache.Caffeine
+      spec: "maximumSize=500,expireAfterAccess=60s"

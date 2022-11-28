@@ -1,0 +1,268 @@
+{
+  "info": {
+    "_postman_id": "74cc9c53-36a9-49f1-a6f1-c3af08e68715",
+    "name": "reactive",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Items with retrieve",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/retrieve",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "retrieve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Items with exchange",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/exchange",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "exchange"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get by ID Items with retrive",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/retrieve/60baa8422e418466b87f57ce",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "retrieve",
+            "60baa8422e418466b87f57ce"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post Item",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": null,\n    \"description\": \"Mac pro 2020\",\n    \"price\": 3500.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/items",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "items"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post Item with retrive",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": null,\n    \"description\": \"Mac pro 2020\",\n    \"price\": 3500.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/create-retrieve",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "create-retrieve"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Post Item with exchange",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": null,\n    \"description\": \"Mac pro 2020\",\n    \"price\": 3500.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/create",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Put Item with retrive",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": \"60bab47fdb731f0b8a52abb4\",\n    \"description\": \"Mac pro 2020 13\",\n    \"price\": 3600.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/update/60bab47fdb731f0b8a52abb4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "update",
+            "60bab47fdb731f0b8a52abb4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Put Item with exchange",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": \"60bab47fdb731f0b8a52abb4\",\n    \"description\": \"Mac pro 2020 13\",\n    \"price\": 3600.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/update-exchange/60bab47fdb731f0b8a52abb4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "update-exchange",
+            "60bab47fdb731f0b8a52abb4"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Item with exchange Copy",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"id\": \"60bab47fdb731f0b8a52abb4\",\n    \"description\": \"Mac pro 2020 13\",\n    \"price\": 3600.0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/cli/update-exchange/60bab47fdb731f0b8a52abb4",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "cli",
+            "update-exchange",
+            "60bab47fdb731f0b8a52abb4"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

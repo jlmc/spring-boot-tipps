@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+
+  web:
+    container_name: pnia
+    build: .
+
+    environment:
+      - "PNIA_PREFIXES_FILE_PATH=/app/prefixes.txt"
+      - "PNIA_PREFIXES_PATH_TYPE=system"
+    ports:
+      - "8080:8080"
+    entrypoint: "java -jar /app/pnia-0.0.1-SNAPSHOT.jar"
+    networks:
+      - pnia-network
+
+networks:
+  pnia-network:
+    driver: bridge
