@@ -36,3 +36,31 @@
 
 
 
+## Kafka Topic and Partitions
+
+### Topic
+
+![img.png](docs/kafka-topic-1.png)
+
+- It is an Entity in kafka with a name. We can think a topic like a table in a database.
+- lives in general inside the kafka broker.
+- topic clients uses the topic name to produce and consume messages.
+  - The behavior of kafka consumer is to pull continuously for new messages.
+  - The kafka produce in general produces a message into the topic, if something outside invokes a producer. but even here the producer use the topic name to push a message.
+  - One quick thing to retain out here is that even though the record is read by the consumer the message still resides inside the kafka, has the defined retention time
+
+### Partitions
+
+![kafka-partitions-1.png](docs/kafka-partitions-1.png)
+
+- Is **where the messages lives inside the topic**.
+- Each topic will be created with one or more partitions. it is pretty common practice to have more than one partition.
+
+- each partition is an ordered, immutable sequence of records. that means once a record is produced, it cannot be changed at all.
+
+- Each record as a sequential number associated, that number is called `offset`, the offset is generated when a record is published to the topic.
+  - The offset play a very important role when it comes to consumers.
+
+- Each partition is independent of each other and that is why we see that the offset in both partitions stars with zero and it continues to grow independently.
+- Ordering is guarantted only at Partition level. If we have a use case where we would like to publish and read the records in a certain order, then we have to make sure to publish the records to the same partition.
+- All records are persisted in a commit log in the file system where the kafka is installed. very simmilar to a database transactions.
