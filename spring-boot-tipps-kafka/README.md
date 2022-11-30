@@ -64,3 +64,9 @@
 - Each partition is independent of each other and that is why we see that the offset in both partitions stars with zero and it continues to grow independently.
 - Ordering is guarantted only at Partition level. If we have a use case where we would like to publish and read the records in a certain order, then we have to make sure to publish the records to the same partition.
 - All records are persisted in a commit log in the file system where the kafka is installed. very simmilar to a database transactions.
+
+
+### Setup kafka
+
+- [setup v.2.x.x](docs/setup-under-3v.md)
+- [setup v.3.x.x](docs/setup.md)
