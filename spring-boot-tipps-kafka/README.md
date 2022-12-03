@@ -66,7 +66,17 @@
 - All records are persisted in a commit log in the file system where the kafka is installed. very simmilar to a database transactions.
 
 
-### Setup kafka
+## Setup kafka
 
 - [setup v.2.x.x](docs/setup-under-3v.md)
 - [setup v.3.x.x](docs/setup.md)
+
+## Sending Message With Key
+
+The kafka message is composed with to things, the value and a key. The value is mandatory and the key is optional.
+
+- We can publish message without key, but by doing that, we no guaranty of the consume order.  
+  - we know that the order is only guaranteed if the messages are delivery to the same topic partition, therefore if we really want to guaranty the consumed the order we must push the messages to the same topic partition. is exactly for this use case that the key is designed for.
+  - Kafka guarantee that messages with the same key are delivery to the same topic partition.
+
+![img.png](docs/kafka-message-key.png)
