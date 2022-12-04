@@ -40,7 +40,7 @@
 
 ### Topic
 
-![img.png](docs/kafka-topic-1.png)
+![img.png](docs/imgs/kafka-topic-1.png)
 
 - It is an Entity in kafka with a name. We can think a topic like a table in a database.
 - lives in general inside the kafka broker.
@@ -51,7 +51,7 @@
 
 ### Partitions
 
-![kafka-partitions-1.png](docs/kafka-partitions-1.png)
+![kafka-partitions-1.png](docs/imgs/kafka-partitions-1.png)
 
 - Is **where the messages lives inside the topic**.
 - Each topic will be created with one or more partitions. it is pretty common practice to have more than one partition.
@@ -79,12 +79,12 @@ The kafka message is composed with to things, the value and a key. The value is 
   - we know that the order is only guaranteed if the messages are delivery to the same topic partition, therefore if we really want to guaranty the consumed the order we must push the messages to the same topic partition. is exactly for this use case that the key is designed for.
   - Kafka guarantee that messages with the same key are delivery to the same topic partition.
 
-![img.png](docs/kafka-message-key.png)
+![img.png](docs/imgs/kafka-message-key.png)
 
 
 ## Topic offset
 
-![kafka offset](docs/kafka-offset.png)
+![kafka offset](docs/imgs/kafka-offset.png)
 
 Any message that the is produced into the topic will have a unique ID call offset in the previous this ID is being represented by red color.
 Consumer have 3 options when it comes to reading the messages from the topic.
@@ -130,7 +130,7 @@ Consumer have 3 options when it comes to reading the messages from the topic.
 - `group.id` is mandatory
 - `group.id` plays a major role when it comes to scalable message consumption
 
-![topic consumer group id](docs/topic-consumer-group-id.png)
+![topic consumer group id](docs/imgs/topic-consumer-group-id.png)
 
 - Lets say we have a topic named `test-topic`and it has 4 partitions.
 - We have a consumer with `group-id` equals to `group1`.
@@ -142,28 +142,28 @@ Consumer have 3 options when it comes to reading the messages from the topic.
 
 This is where the consumer groups comes, and may heps us.
 
-![multiple consumers](docs/topic-consumer-multiple-group-id.png)
+![multiple consumers](docs/imgs/topic-consumer-multiple-group-id.png)
 
 - Now lets say we spend another instance of consumer, but make sure ypu are using the same group 1.
 - The partition are split between the 2 instance off  the consumer. The partition zero and one is taken care by the first instance and the partition two and three are taken care by the second instance.
 - Basically what this means is that we have a scale out message consumption. This helps process the records a little faster than it was before.
 - we can even make it much better by spending up with more consumer instances.
 
-![4 partions 4 consumers](docs/topic-consumers-4-partition-4-consumers.png)
+![4 partitions 4 consumers](docs/imgs/topic-consumers-4-partition-4-consumers.png)
 
 - The consumer groups are fundamentally the basic for scaling events consumption.
 
 
 Now Lets say we have 5 consumer instances, but only 4 partitions are available for a given topic.
 
-![4 consumers](docs/topic-consumer-4-consumers.png)
+![4 consumers](docs/imgs/topic-consumer-4-consumers.png)
 
 - In this case one of the consumers instance will be IDLE.
 
 #### two different application consuming the same topic
 A different common use case, is to have two different applications consuming from the same kafka topic
 
-![2 apps](docs/topic-consumer-group-two-apps.png)
+![2 apps](docs/imgs/topic-consumer-group-two-apps.png)
 
 This is a pretty common scenario in a enterprise. Each consumer app will have their own processing logic. Each app can have different number of instances based on it requirements.
 
@@ -190,5 +190,45 @@ This is a pretty common scenario in a enterprise. Each consumer app will have th
 
 ```
 kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic --group app1
-
 ```
+
+## Commit log & Retention Policy
+
+One of the key qualities of kafka is the concept of retaining the records for a certain period of time. But how does it work?
+
+Let's try to understand using a sample example diagram:
+
+![Commit log & Retention Policy](docs/imgs/commit-log-and-retention-policy-example.png)
+
+#### Commit log
+
+1. when the produce sends a message, it first reaches the topic.
+2. And then, the very thing that happens is that the record gets written to a file system in the machine.
+   - The file system is where the kafka broker is installed. In this example it is our local machine. 
+   - The records are always written into the file system as bytes to file system.
+   - The file system where the records are written is configured in the property `log.dirs` in the kafka `server.properties` file.
+3. kafka creates files with extension of `.log`, as we can see in the example diagram, we have numerous zeros followed by the `.log`.
+   - Each topic partition will have it own log, means that if we have a topic with 4 partitions, then we will also have 4 log files written in the file system.
+   - Just after the messages are written into the log file, that is when the records that are produced, are committed.
+   - 👆That is way these log files are also called was *`partition commit logs`*
+4. When the consumer who is continuously pulling for new records can only see there are records that are committed into the file system.
+
+```shell
+$ ls -la /var/lib/kafka/data
+
+rwxr-xr-x  2 appuser appuser 4096 Dec  3 20:52 test-topic-0
+drwxr-xr-x  2 appuser appuser 4096 Dec  3 20:52 test-topic-1
+drwxr-xr-x  2 appuser appuser 4096 Dec  3 20:52 test-topic-2
+drwxr-xr-x  2 appuser appuser 4096 Dec  3 20:52 test-topic-3
+
+
+$ ls /var/lib/kafka/data/test-topic-0
+
+00000000000000000000.log
+```
+
+#### Retention Policy
+
+1. Retention policy is one of the key properties that is going to determine how long the message is going to be retained.
+2. Retention policy is Configured using the property *`log.retention.hours`* in `server.properties file.
+3. The default retention period is `168 hours` (7 days).
