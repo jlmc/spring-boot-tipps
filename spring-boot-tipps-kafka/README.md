@@ -80,3 +80,115 @@ The kafka message is composed with to things, the value and a key. The value is 
   - Kafka guarantee that messages with the same key are delivery to the same topic partition.
 
 ![img.png](docs/kafka-message-key.png)
+
+
+## Topic offset
+
+![kafka offset](docs/kafka-offset.png)
+
+Any message that the is produced into the topic will have a unique ID call offset in the previous this ID is being represented by red color.
+Consumer have 3 options when it comes to reading the messages from the topic.
+
+- from-beginning: Since ever
+- latest: Read the messages that is going to came after the consumers spam up.
+- specific offset: Read the messages of the topic by passing a specific offset value from the consumer.
+
+👆If you are building a consumer then you have all these there options. The first 2 options can be explored using the console.
+
+- The offset of each consumer is stored in the special internal topic `__consumer_offsets`
+
+- Consumer offsets behaves like a bookmark for the consumer to star reading the messages from the point it left off.
+
+
+1. create a topic with the name 
+    ```
+    kafka-topics --zookeeper platform-zoo:2181 --create --topic test-topic --replication-factor 1 --partitions 4
+    ```
+2. producer 
+    - Without Key
+    ```
+    kafka-console-producer --broker-list localhost:9092 --topic test-topic
+    ```
+    - With Key
+    ```
+    kafka-console-producer --broker-list localhost:9092 --topic test-topic --property "key.separator=-" --property "parse.key=true"
+    ```
+
+3. create consumer
+   - Without Key
+    ```
+    kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic --from-beginning
+    ```
+    - With keys
+    ```
+    kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic --from-beginning -property "key.separator= - " --property "print.key=true"
+    ```
+
+
+## Consumer Group
+
+- `group.id` is mandatory
+- `group.id` plays a major role when it comes to scalable message consumption
+
+![topic consumer group id](docs/topic-consumer-group-id.png)
+
+- Lets say we have a topic named `test-topic`and it has 4 partitions.
+- We have a consumer with `group-id` equals to `group1`.
+  - we have a single consumer pulling all the 4 partitions in the topic and processing them.
+  - The pull and processing is always a single thread, so a single thread is going to pull from all the partitions.
+
+- Imagine that, a producer is producing messages with faster rate than a the consumer processing rate.
+  - Consequently, we are introducing a lag in the consumer and you might end up not processing the events in real time.
+
+This is where the consumer groups comes, and may heps us.
+
+![multiple consumers](docs/topic-consumer-multiple-group-id.png)
+
+- Now lets say we spend another instance of consumer, but make sure ypu are using the same group 1.
+- The partition are split between the 2 instance off  the consumer. The partition zero and one is taken care by the first instance and the partition two and three are taken care by the second instance.
+- Basically what this means is that we have a scale out message consumption. This helps process the records a little faster than it was before.
+- we can even make it much better by spending up with more consumer instances.
+
+![4 partions 4 consumers](docs/topic-consumers-4-partition-4-consumers.png)
+
+- The consumer groups are fundamentally the basic for scaling events consumption.
+
+
+Now Lets say we have 5 consumer instances, but only 4 partitions are available for a given topic.
+
+![4 consumers](docs/topic-consumer-4-consumers.png)
+
+- In this case one of the consumers instance will be IDLE.
+
+#### two different application consuming the same topic
+A different common use case, is to have two different applications consuming from the same kafka topic
+
+![2 apps](docs/topic-consumer-group-two-apps.png)
+
+This is a pretty common scenario in a enterprise. Each consumer app will have their own processing logic. Each app can have different number of instances based on it requirements.
+
+- In this example:
+
+- App 1:
+  - have 4 instance with `groupid=group1`,
+  - means that one instance for each topic partition
+
+- App 2:
+  - have 2 instance with `groupid=group2`
+  - means that one instance will consumer partition 0 and 1, and the instance 2 will consume from partition 2 and 3.
+
+- The teams have to make sure that the apps do not use the same group id.
+- This way the group id should be unique by each application.
+
+#### Summary
+- Consumer Groups are used for scalable message consumption. 
+- Each different application will have a unique consumer group  
+- Who manages the consumer group?
+  - Kafka Broker manages the consumer-groups
+  - Kafka Broker acts as a Group Co-ordinator
+
+
+```
+kafka-console-consumer --bootstrap-server localhost:9092 --topic test-topic --group app1
+
+```
