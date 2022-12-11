@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/intellij+all,java,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij+all,java,maven
 
+
 ### Intellij+all ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -139,3 +140,5 @@ buildNumber.properties
 .DS_Store
 ./.idea
 .DS_Store/**
+.idea/**
+**/.idea/**

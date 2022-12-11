@@ -1,0 +1,12 @@
+{
+  "items": [
+    {
+      "productId": "mac-pro-1",
+      "qty": 1
+    },
+    {
+      "productId": "iphone-1",
+      "qty": 1
+    }
+  ]
+}
