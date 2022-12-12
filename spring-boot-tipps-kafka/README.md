@@ -232,3 +232,72 @@ $ ls /var/lib/kafka/data/test-topic-0
 1. Retention policy is one of the key properties that is going to determine how long the message is going to be retained.
 2. Retention policy is Configured using the property *`log.retention.hours`* in `server.properties file.
 3. The default retention period is `168 hours` (7 days).
+
+---
+
+# Spring boot Kafka Template
+
+- Produce records in to kafka topic
+  - Similar to JdbcTemplate for databases
+
+## How KafkaTemplate Works?
+
+- [spring for kafka](https://docs.spring.io/spring-kafka/reference/html/)
+- [spring for kafka](https://docs.spring.io/spring-kafka/reference/html/#reference)
+- [4.1.3. Sending Messages](https://docs.spring.io/spring-kafka/reference/html/#sending-messages)
+
+
+![img.png](docs/imgs/kafka-template-1.png) 
+
+- kafka template is going to send the messages to a kafka topic. but being the scenes it does more interesting things during this process. It passes by some different layers before the message is sent to kafka.
+
+
+![img.png](docs/imgs/kafka-template-2.png) 
+
+1. The very first layers is the **`Serializer`**, any record sent to the kafka needs to be serialized to bytes.
+    - There are 2 different types of serializations techniques that are applied to any record
+      - key.serializer
+      - value.serializer
+    - This configurations is mandatory for any producer, the client needs to provider the key and value serializer types
+    - The kafka client Java library comes with some predefined serializers
+2. The second layer is **`Partitioner`**
+   - This layers is responsible to determine for witch partition the message is going to into the topic.
+   - The kafka producer api comes with a default partition logic `DefaultPartitioner`, in most case that is enough handler the partitioning logic. 
+   - `org.apache.kafka.clients.producer.Partitioner`
+   - `org.apache.kafka.clients.producer.internals.DefaultPartitioner`
+   - `org.apache.kafka.clients.producer.RoundRobinPartitioner`
+3. The third layer is the **`RecordAccumulator`**
+   - Any record that is sent from the `kafkaTemplate` won't get sent to the topic immediately.
+   - The `RecordAccumulator` buffers the records, 
+   - The records are sent to the kafka topic once the buffers full.
+   - The reason for this approach is to limit the number of Threads from the application to the kafka cluster, and this eventually avoids the overhead of bombarding the cluster but numerous request, which also helps improving the overall performance of the system.
+   - The `RecordsBatch` represented in the previous image, is a representation of the topic partition combination, if we have a topic with 3 partitions, then we will have 3 `RecordBatch`.
+   - Each `RecordsBatch` has a `batch.size`, it value is represented by number of bytes.
+   - It also has a overall buffer memory, which is represented by the property `buffer.memory`, it value is also represented has number of bytes.
+   - What scenarios, the messages are send to the topic?
+     - Once the RecordsBatch is full, then the message will be sent to the topic.
+     - The producer api is not going to wait for so long to send the message to the topic. There is also another handy property called `linger.ms`, which will be used in the case to publish, it values represents numeric value (millisecond), it the batch is not full and the records accumulated, meet the linger.ms value, then the records are sent to kafka topic.
+
+
+
+## Configuring KafkaTemplate
+
+*Mandatory Values*
+```
+bootstrap-servers: localhost:9092,localhost:9093,localhost:9094 
+key-serializer: org.apache.kafka.common.serialization.IntegerSerializer 
+value-serializer: org.apache.kafka.common.serialization.StringSerializer
+```
+
+*KafkaTemplate AutoConfiguration*
+```yml
+spring:
+  profiles: local 
+  kafka:
+    producer:
+       bootstrap-servers: localhost:9092,localhost:9093,localhost:9094 
+       key-serializer: org.apache.kafka.common.serialization.IntegerSerializer 
+       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+```
+
+- `org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration`

@@ -1,6 +1,8 @@
 spring:
   application:
     name: orders-api
+  profiles:
+    active: local
 
   jackson:
     constructor-detector: default
@@ -24,8 +26,41 @@ spring:
       # this only works when we don't have any static resource for example some website
       add-mappings: false
 
+---
+spring:
+  profiles: local
+  kafka:
+    producer:
+      bootstrap-servers:
+        - localhost:9092
+      # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 logging:
   level:
     root: info
     org.springframework: debug
     io.github.jlmc: debug
+
+---
+spring:
+  profiles: dev
+  kafka:
+    producer:
+      bootstrap-servers: kafka-dev1:9092,kafka-dev2:9092,kafka-dev3:9092
+      # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+---
+spring:
+  profiles: prod
+
+  kafka:
+    producer:
+      bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
+      # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
