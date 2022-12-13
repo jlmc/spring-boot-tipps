@@ -31,19 +31,6 @@ public class OrderEventProducer {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static OrderEvent toOrderEvent(Order newOrder) {
-        OrderEvent event = OrderEvent.builder()
-                                     .orderId(newOrder.getId())
-                                     .instant(newOrder.getCreated())
-                                     .type(OrderEvent.Type.CREATED)
-                                     .items(newOrder.getOrderItems()
-                                                    .stream()
-                                                    .map(it -> OrderEvent.Item.of(it.getProduct().getId(), it.getQty()))
-                                                    .toList())
-                                     .build();
-        return event;
-    }
-
     public void sendCreateOrderEvent(Order newOrder) {
         OrderEvent event = toOrderEvent(newOrder);
 
@@ -61,7 +48,6 @@ public class OrderEventProducer {
             onError(key, value, e);
             throw new RuntimeException(e);
         }
-
     }
 
     public void sendCreateOrderEventAsync(Order newOrder) {
@@ -132,5 +118,18 @@ public class OrderEventProducer {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static OrderEvent toOrderEvent(Order newOrder) {
+        OrderEvent event = OrderEvent.builder()
+                                     .orderId(newOrder.getId())
+                                     .instant(newOrder.getCreated())
+                                     .type(OrderEvent.Type.CREATED)
+                                     .items(newOrder.getOrderItems()
+                                                    .stream()
+                                                    .map(it -> OrderEvent.Item.of(it.getProduct().getId(), it.getQty()))
+                                                    .toList())
+                                     .build();
+        return event;
     }
 }

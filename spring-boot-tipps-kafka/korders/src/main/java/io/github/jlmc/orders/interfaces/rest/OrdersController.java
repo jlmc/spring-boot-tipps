@@ -2,7 +2,6 @@ package io.github.jlmc.orders.interfaces.rest;
 
 import io.github.jlmc.orders.application.internal.commandservices.CreateOrderCommandService;
 import io.github.jlmc.orders.application.internal.commandservices.UpdateOrderCommandService;
-import io.github.jlmc.orders.application.internal.outboundservices.acl.OrderIdGeneratorService;
 import io.github.jlmc.orders.application.internal.queryservices.OrderQueryService;
 import io.github.jlmc.orders.domain.model.aggregates.Order;
 import io.github.jlmc.orders.interfaces.rest.domain.OrderRequest;
