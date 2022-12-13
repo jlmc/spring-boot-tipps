@@ -301,3 +301,12 @@ spring:
 ```
 
 - `org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration`
+
+# KafkaAdmin
+
+- Create topics programmatically, allow us to create topic from our code, this is not recommended for productions environments.
+-part of **`SpringKafka`**
+- How to create topic from code?
+  - we need to create two beans
+    1. Create a Bean of type `KafkaAdmin` in SpringConfiguration
+    2. Create a bean of type `NewTopic` in SpringConfiguration
