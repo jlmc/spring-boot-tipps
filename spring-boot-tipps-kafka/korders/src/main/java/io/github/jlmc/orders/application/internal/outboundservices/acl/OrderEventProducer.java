@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jlmc.orders.domain.model.aggregates.Order;
 import io.github.jlmc.orders.shareddomain.events.OrderEvent;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.Header;
+import org.apache.kafka.common.header.internals.RecordHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -92,13 +96,25 @@ public class OrderEventProducer {
         String value = toJson(event);
 
         String topic = "orders-events";
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, null, key, value, null);
+
+
+        ProducerRecord<String, String> producerRecord = toProducerRecord(key, value, topic);
 
         //kafkaTemplate.send(topic, key, value);
         kafkaTemplate.send(producerRecord)
                      .orTimeout(1L, TimeUnit.SECONDS)
                      .thenAcceptAsync(s -> onComplete(key, value, s))
                      .exceptionallyAsync(t -> onError(key, value, t));
+    }
+
+    private static ProducerRecord<String, String> toProducerRecord(String key, String value, String topic) {
+
+        List<Header> headers = List.of(
+                new RecordHeader("event-source", "orders-app".getBytes(StandardCharsets.UTF_8))
+        );
+
+        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, null, key, value, headers);
+        return producerRecord;
     }
 
     private Void onError(String key, String value, Throwable throwable) {
