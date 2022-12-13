@@ -11,11 +11,11 @@ curl -v -L -X GET localhost:8080/v1/orders/1234
 -H 'Content-Type: application/json' \
 --data-raw '{
     "items": [ {
-      "productId" : "mac-pro-1",
+      "productId" : "1",
       "qty" : 1
      }, 
      {
-      "productId" : "iphone-1",
+      "productId" : "2",
       "qty" : 2
      } 
     ]

@@ -32,6 +32,8 @@ spring:
     activate:
       on-profile: local
   kafka:
+    template:
+      default-topic: orders-events
     producer:
       bootstrap-servers: localhost:9092
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
@@ -53,6 +55,8 @@ spring:
     activate:
       on-profile: dev
   kafka:
+    template:
+      default-topic: orders-events
     producer:
       bootstrap-servers: kafka-dev1:9092,kafka-dev2:9092,kafka-dev3:9092
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
@@ -68,6 +72,8 @@ spring:
       on-profile: prod
 
   kafka:
+    template:
+      default-topic: orders-events
     producer:
       bootstrap-servers: kafka1:9092,kafka2:9092,kafka3:9092
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
