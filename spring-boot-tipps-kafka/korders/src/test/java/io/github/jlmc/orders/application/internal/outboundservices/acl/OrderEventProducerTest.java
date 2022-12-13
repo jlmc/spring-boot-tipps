@@ -60,6 +60,41 @@ class OrderEventProducerTest {
                      .atZone(ZoneId.of("UTC"))
                      .toInstant();
 
+
+    @Test
+    void sendUpdateOrderEvent_approach_1_success() throws JsonProcessingException {
+        Order order = Order.builder()
+                           .id("1")
+                           .created(instant)
+                           .orderItems(List.of(
+                                           OrderItem.of(Product.of("2", "iphone-xs"), 2),
+                                           OrderItem.of(Product.of("3", "macbook pro"), 1)
+                                   )
+                           )
+                           .build();
+
+
+        when(kafkaTemplate.sendDefault(Mockito.eq(order.getId()), isA(String.class)))
+                .thenAnswer((Answer<CompletableFuture<SendResult<String, String>>>) invocationOnMock -> {
+                            String key = invocationOnMock.getArgument(0);
+                            String value = invocationOnMock.getArgument(1);
+                            ProducerRecord<String, String> producerRecord = new ProducerRecord<>(ORDER_EVENTS_TOPIC, null, key, value);
+                            RecordMetadata recordMetadata = new RecordMetadata(new TopicPartition(ORDER_EVENTS_TOPIC, 1), 0L, 1, instant.toEpochMilli(), 100, 100);
+
+                            return CompletableFuture.supplyAsync(() -> new SendResult<>(producerRecord, recordMetadata));
+                        }
+                );
+
+        orderEventProducer.sendUpdateOrderEvent(order);
+
+        verify(kafkaTemplate).sendDefault(keyCaptor.capture(), valueCaptor.capture());
+        OrderEvent event = objectMapper.readValue(valueCaptor.getValue(), OrderEvent.class);
+        assertNotNull(event);
+        assertEquals(order.getId(), event.getOrderId());
+        assertEquals(keyCaptor.getValue(), event.getOrderId());
+        assertEquals(OrderEvent.Type.UPDATED, event.getType());
+    }
+
     @Test
     void sendCreateOrderEvent_approach_1_success() throws JsonProcessingException {
         Order order = Order.builder()
@@ -91,6 +126,7 @@ class OrderEventProducerTest {
         assertNotNull(event);
         assertEquals(order.getId(), event.getOrderId());
         assertEquals(keyCaptor.getValue(), event.getOrderId());
+        assertEquals(OrderEvent.Type.CREATED, event.getType());
     }
 
     @Test

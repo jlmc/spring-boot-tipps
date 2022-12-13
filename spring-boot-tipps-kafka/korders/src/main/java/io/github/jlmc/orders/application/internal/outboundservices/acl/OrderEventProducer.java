@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class OrderEventProducer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventProducer.class);
+    private static final String ORDERS_EVENTS_TOPIC = "orders-events";
 
     @Autowired
     KafkaTemplate<String, String> kafkaTemplate;
@@ -31,11 +32,28 @@ public class OrderEventProducer {
     @Autowired
     ObjectMapper objectMapper;
 
-    public void sendCreateOrderEvent(Order newOrder) {
-        OrderEvent event = toOrderEvent(newOrder);
+    private static ProducerRecord<String, String> toProducerRecord(String key, String value, String topic) {
 
+        List<Header> headers = List.of(
+                new RecordHeader("event-source", "orders-app".getBytes(StandardCharsets.UTF_8))
+        );
+
+        return new ProducerRecord<>(topic, null, key, value, headers);
+    }
+
+    public void sendUpdateOrderEvent(Order updatedOrder) {
+        var value = toOrderEvent(updatedOrder, OrderEvent.Type.UPDATED);
+        var key = updatedOrder.getId();
+        sendEventToDefaultTopicSync(key, value);
+    }
+
+    public void sendCreateOrderEvent(Order newOrder) {
+        var value = toOrderEvent(newOrder, OrderEvent.Type.CREATED);
         String key = newOrder.getId();
-        String value = toJson(event);
+        sendEventToDefaultTopicSync(key, value);
+    }
+
+    private void sendEventToDefaultTopicSync(String key, String value) {
         CompletableFuture<SendResult<String, String>> listenableFuture =
                 kafkaTemplate.sendDefault(key, value)
                              .orTimeout(1L, TimeUnit.SECONDS);
@@ -51,9 +69,8 @@ public class OrderEventProducer {
     }
 
     public void sendCreateOrderEventAsync(Order newOrder) {
-        OrderEvent event = toOrderEvent(newOrder);
+        var value = toOrderEvent(newOrder, OrderEvent.Type.CREATED);
         String key = newOrder.getId();
-        String value = toJson(event);
         CompletableFuture<SendResult<String, String>> listenableFuture =
                 kafkaTemplate.sendDefault(key, value);
 
@@ -72,35 +89,19 @@ public class OrderEventProducer {
             return v;
         });
          */
-
-
     }
 
     public void sendCreateOrderEventAsync2(Order newOrder) {
-        OrderEvent event = toOrderEvent(newOrder);
+        var value = toOrderEvent(newOrder, OrderEvent.Type.CREATED);
         String key = newOrder.getId();
-        String value = toJson(event);
 
-        String topic = "orders-events";
-
-
-        ProducerRecord<String, String> producerRecord = toProducerRecord(key, value, topic);
+        ProducerRecord<String, String> producerRecord = toProducerRecord(key, value, ORDERS_EVENTS_TOPIC);
 
         //kafkaTemplate.send(topic, key, value);
         kafkaTemplate.send(producerRecord)
                      .orTimeout(1L, TimeUnit.SECONDS)
                      .thenAcceptAsync(s -> onComplete(key, value, s))
                      .exceptionallyAsync(t -> onError(key, value, t));
-    }
-
-    private static ProducerRecord<String, String> toProducerRecord(String key, String value, String topic) {
-
-        List<Header> headers = List.of(
-                new RecordHeader("event-source", "orders-app".getBytes(StandardCharsets.UTF_8))
-        );
-
-        ProducerRecord<String, String> producerRecord = new ProducerRecord<>(topic, null, key, value, headers);
-        return producerRecord;
     }
 
     private Void onError(String key, String value, Throwable throwable) {
@@ -120,16 +121,20 @@ public class OrderEventProducer {
         }
     }
 
-    private static OrderEvent toOrderEvent(Order newOrder) {
+    private String toOrderEvent(Order newOrder, OrderEvent.Type type) {
         OrderEvent event = OrderEvent.builder()
                                      .orderId(newOrder.getId())
                                      .instant(newOrder.getCreated())
-                                     .type(OrderEvent.Type.CREATED)
+                                     .type(type)
                                      .items(newOrder.getOrderItems()
                                                     .stream()
                                                     .map(it -> OrderEvent.Item.of(it.getProduct().getId(), it.getQty()))
                                                     .toList())
                                      .build();
-        return event;
+
+
+        return toJson(event);
     }
+
+
 }

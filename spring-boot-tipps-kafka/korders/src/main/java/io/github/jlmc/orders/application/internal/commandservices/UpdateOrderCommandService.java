@@ -1,5 +1,6 @@
 package io.github.jlmc.orders.application.internal.commandservices;
 
+import io.github.jlmc.orders.application.internal.outboundservices.acl.OrderEventProducer;
 import io.github.jlmc.orders.domain.model.aggregates.Order;
 import io.github.jlmc.orders.domain.model.commands.UpdateOrderCommand;
 import io.github.jlmc.orders.domain.model.exceptions.OrderNotFoundException;
@@ -18,6 +19,7 @@ public class UpdateOrderCommandService {
 
     private OrderRepository orderRepository;
     private ProductResolver productResolver;
+    private OrderEventProducer orderEventProducer;
 
     public Order execute(UpdateOrderCommand command) {
         Order exestingOrder =
@@ -30,13 +32,14 @@ public class UpdateOrderCommandService {
                        .map(item -> OrderItem.of(productResolver.productOf(item.id()), item.qty()))
                        .toList();
 
-        Order updateOrder =
-                Order.builder()
-                     .id(exestingOrder.getId())
-                     .created(exestingOrder.getCreated())
-                     .orderItems(orderItems)
-                     .build();
+        Order updatedOrder = orderRepository.save(Order.builder()
+                                                       .id(exestingOrder.getId())
+                                                       .created(exestingOrder.getCreated())
+                                                       .orderItems(orderItems)
+                                                       .build());
 
-        return orderRepository.save(updateOrder);
+        orderEventProducer.sendUpdateOrderEvent(updatedOrder);
+
+        return updatedOrder;
     }
 }
