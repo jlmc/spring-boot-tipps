@@ -310,3 +310,25 @@ spring:
   - we need to create two beans
     1. Create a Bean of type `KafkaAdmin` in SpringConfiguration
     2. Create a bean of type `NewTopic` in SpringConfiguration
+
+
+# Kafka Producer Important Configurations
+
+- `acks`
+  - key configurations for reliable data delivery
+  - The possible values are 0, 1 and all
+    - `0` - guarantees message is written to a leader (default)
+    - `1` -  The produces doesn't care about whether the message was successful delivery. This value is not recommend.
+    - `all` - guarantees messages is written to a leader and to all the replicas. We should use this configuration when data is very critical, this allows leads to a big problem,
+
+- `retries`
+  - Retries rate config takes care of retrying in case of any failure producing the message to kafka.
+  - Integer value [0-2147483647]
+  - In Spring kafka, the default value is `	retries = 2147483647`
+
+
+- `retry.backoff.ms`
+  - Integer value represented in milliseconds
+  - Default value is 100ms
+
+- all the configurations: https://kafka.apache.org/documentation/#producerconfigs

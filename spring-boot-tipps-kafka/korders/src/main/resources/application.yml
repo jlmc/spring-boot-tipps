@@ -39,6 +39,10 @@ spring:
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        acks: all
+        enable.idempotence: true
+        retries: 5
     admin:
       properties:
         bootstrap-servers: localhost:9092
@@ -62,7 +66,10 @@ spring:
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
+      properties:
+        acks: all
+        enable.idempotence: true
+        retries: 5
 
 
 ---
@@ -79,4 +86,7 @@ spring:
       # key-serializer: org.apache.kafka.common.serialization.IntegerSerializer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
+      properties:
+        acks: all
+        enable.idempotence: true
+        retries: 5
