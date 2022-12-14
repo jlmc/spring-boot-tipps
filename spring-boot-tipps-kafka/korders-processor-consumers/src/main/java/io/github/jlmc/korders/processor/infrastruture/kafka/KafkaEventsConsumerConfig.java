@@ -54,7 +54,7 @@ public class KafkaEventsConsumerConfig {
      * This kafkaListenerContainerFactoryConcurrentConsumerThreads Bean
      * is an example how you can create concurrent instances of the message listener
      */
-    @org.springframework.context.annotation.Bean("kafkaListenerContainerFactoryConcurrentConsumerThreads")
+    //@org.springframework.context.annotation.Bean("kafkaListenerContainerFactoryConcurrentConsumerThreads")
     public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactoryConcurrentConsumerThreads(
             ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
