@@ -332,3 +332,165 @@ spring:
   - Default value is 100ms
 
 - all the configurations: https://kafka.apache.org/documentation/#producerconfigs
+
+---
+
+# Kafka consumer
+
+## Spring Kafka Consumer
+
+In spring exists differents ways to consume messages from a kafka topic 
+
+- `MessageListenerContainer`
+  - It is a interface and it has 2 implementations:
+    - `KafkaMessageListenerContainer`
+    - `ConcurrentMessageListenerContainer`
+
+- `@kafkaLister` annotation
+  - It uses behind the scenes the `ConcurrentMessageListenerContainer`
+
+
+##### KafkaMessageListenerContainer
+
+- take cares of pulling the records from the kafka topic and it also takes care of committing the offsets after the messages ares processed.
+- polls the records
+- commits the offsets
+- single threaded, this class is a single thread, which means the pool call is handled by a single thread.
+
+##### ConcurrentMessageListenerContainer
+
+- Represents multiple `kafkaMessageListenerContainer`.
+- This represents multiple kafka message listener container.
+- We should think of this as multiple instances of kafka message listener container.
+- The Implementations is going to work as similar approach to the kafka message listener container.
+- One advantage with this one is that you can spin up a multiple instances of kafka message listener container. So that we can pull from the kafka topic simultaneously use multiple threads.
+
+
+##### @kafkaListener
+
+- This is the easiest way to build a kafka consumer in spring
+- all we got to do, is add our configurations and annotated a method
+
+1. Create a listener
+    ```java
+    @KafkaListener( topics = {"${spring.kafka.topic}"} )
+    public void onMessage(ConsumeRecord<Integer, String> consumerRecord) {
+        System.out.println("On Message: %s".format(consumerRecord));
+    }
+    ```
+2. Enabled kafka consumer feature
+    ```java
+    @Configuration
+    @EnableKafka
+    public class KafkaEventsConsumerConfig {
+    }
+    ```
+
+3. consumer applications connfigurations
+```
+bootstrap.servers: kafka1:9092,kafka2:9092,kafka3:9092,
+key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+group-id: your-app
+```
+
+[Spring consumer documentation](https://docs.spring.io/spring-kafka/reference/html/#receiving-messages)
+
+
+# How to spring boot KafkaAutoConfiguration works
+
+```java
+package org.springframework.boot.autoconfigure.kafka;
+
+@AutoConfiguration
+@ConditionalOnClass(KafkaTemplate.class)
+@EnableConfigurationProperties(KafkaProperties.class)
+@Import({ KafkaAnnotationDrivenConfiguration.class, KafkaStreamsAnnotationDrivenConfiguration.class })
+public class KafkaAutoConfiguration {
+
+```
+
+The class is responsible to auto configure all the resources related to kafka consumers and producers. 
+it dependent of the class `org.springframework.boot.autoconfigure.kafka.KafkaProperties`
+
+```java
+package org.springframework.boot.autoconfigure.kafka;
+
+@ConfigurationProperties(prefix = "spring.kafka")
+public class KafkaProperties {
+```
+👆 All the properties related to kafka that we put in the applications.properties will be bound to the class.
+
+The next class is the `KafkaAnnotationDrivenConfiguration`
+```
+package org.springframework.boot.autoconfigure.kafka;
+
+/**
+ * Configuration for Kafka annotation-driven support.
+ *
+ * @author Gary Russell
+ * @author Eddú Meléndez
+ */
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(EnableKafka.class)
+class KafkaAnnotationDrivenConfiguration {
+```
+
+👆This class is responsible for configure tha kafka consumers for us. we can see that this component only runs if the EnableKafka annotation is present in the spring context class path.
+But what really this class does?
+If we scroll down in the class, we can find that it defines three different beans.
+
+1. kafkaListenerContainerFactory
+2. kafkaListenerContainerFactoryConfigurer
+
+The bean of the type `kafkaListenerContainerFactory` is the key for every things works, because this is the bean which are kafka listeners uses to connect to the broker. we can see that in the KafkaListener annotation documentation:
+
+```java
+@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.ANNOTATION_TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+@MessageMapping
+@Documented
+@Repeatable(KafkaListeners.class)
+public @interface KafkaListener {
+
+	/**
+	 * The bean name of the {@link org.springframework.kafka.config.KafkaListenerContainerFactory}
+	 * to use to create the message listener container responsible to serve this endpoint.
+	 * <p>
+	 * If not specified, the default container factory is used, if any. If a SpEL
+	 * expression is provided ({@code #{...}}), the expression can either evaluate to a
+	 * container factory instance or a bean name.
+	 * @return the container factory bean name.
+	 */
+	String containerFactory() default "";
+```
+
+By default all the KafkaListener will use `KafkaListenerContainerFactory` if none other is passed. 
+
+
+## KafkaListenerContainerFactory
+
+This bean is a `ConcurrentKafkaListenerContainerFactory` and needs:
+
+- **`ConcurrentKafkaListenerContainerFactoryConfigurer`**
+  - it has information about all the different configurations that can be provider for the kafka listener. 
+  - what are that configurations:
+    - errorHandler
+    - recordInterceptor
+- **`ConsumerFactory`**
+  - This bean is defined in `KafkaAutoConfiguration`, in the `DefaultKafkaConsumerFactory<?, ?> kafkaConsumerFactory` method
+
+
+# Consumer Groups & Rebalanced
+
+## Consumer Groups
+- Consumer groups are the foundation for a scalable message consumption.
+- Consumer groups are formed when you have multiple instances of the same application with the same group id.
+
+## Rebalanced
+- Changing the partition ownership from one consumer to another.
+
+
+## Committing Offsets
+
+[spring docs](https://docs.spring.io/spring-kafka/reference/html/#committing-offsets)
