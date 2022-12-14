@@ -13,6 +13,6 @@
 
     <modules>
         <module>korders</module>
-        <module>korders-events-consumer</module>
+        <module>korders-processor-consumers</module>
     </modules>
 </project>

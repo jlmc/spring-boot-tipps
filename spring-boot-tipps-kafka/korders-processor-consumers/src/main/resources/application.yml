@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: korders-processor-consumers
+  profiles:
+    active: local
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+      #enable-auto-commit: on
+
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092, kafka2:9092, kafka3:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers

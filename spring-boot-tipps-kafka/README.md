@@ -89,9 +89,9 @@ The kafka message is composed with to things, the value and a key. The value is 
 Any message that the is produced into the topic will have a unique ID call offset in the previous this ID is being represented by red color.
 Consumer have 3 options when it comes to reading the messages from the topic.
 
-- from-beginning: Since ever
-- latest: Read the messages that is going to came after the consumers spam up.
-- specific offset: Read the messages of the topic by passing a specific offset value from the consumer.
+- `from-beginning`: Since ever
+- `latest`: Read the messages that is going to came after the consumers spam up.
+- `specific offset`: Read the messages of the topic by passing a specific offset value from the consumer.
 
 👆If you are building a consumer then you have all these there options. The first 2 options can be explored using the console.
 
