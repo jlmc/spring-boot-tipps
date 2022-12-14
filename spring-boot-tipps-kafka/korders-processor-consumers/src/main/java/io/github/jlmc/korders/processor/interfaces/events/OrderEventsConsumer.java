@@ -17,8 +17,12 @@ public class OrderEventsConsumer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventsConsumer.class);
 
-    @KafkaListener(topics = { TopicNames.ORDER_EVENTS_TOPIC })
+    @KafkaListener(
+            topics = { TopicNames.ORDER_EVENTS_TOPIC },
+            //containerFactory = "kafkaListenerContainerFactory"
+            containerFactory = "kafkaListenerContainerFactoryConcurrentConsumerThreads"
+    )
     public void onMessage(ConsumerRecord<String, String> consumerRecord) {
-        LOGGER.info("On Message " + consumerRecord);
+        LOGGER.info("On Message < " + Thread.currentThread().getName() + "> " + consumerRecord);
     }
 }

@@ -494,3 +494,54 @@ This bean is a `ConcurrentKafkaListenerContainerFactory` and needs:
 ## Committing Offsets
 
 [spring docs](https://docs.spring.io/spring-kafka/reference/html/#committing-offsets)
+
+## Concurrent Consumers
+
+In this section, we will see how spin up multiple instances of the message listener in the same applications itself.
+ 
+- Because the `@kafkaListener` use the `ConcurrentKafkaListenerContainerFactory`, this component can spin up multiple instances of the same kafka message listener container.
+- If your application is not running in a cloud, in those kind of scenarios this options is really handy.
+- If you are running in a cloud environment or if you are using kubernetes, then this option is not necessary.
+
+- What we need to do is to define the number of concurrency threads in the concurrentKafkaListenerContainerFactory
+
+```java
+package io.github.jlmc.korders.processor.infrastruture.kafka;
+
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
+
+@Configuration
+@EnableKafka
+public class KafkaEventsConsumerConfig {
+
+    @Bean("kafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
+            ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
+            ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
+            KafkaProperties properties
+    ) {
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
+        configurer.configure(factory, kafkaConsumerFactory
+                .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties())));
+
+
+        // set the number of threads 
+        factory.setConcurrency(3);
+
+        return factory;
+    }
+}
+```
+
+**This strategy is high recommended if you are running your applications in a cloud environment.** 
