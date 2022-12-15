@@ -70,13 +70,20 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: korders-processor-consumers
+    # only for tests cases 👇
+    template:
+      default-topic: orders-events
+    producer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 
 logging:
   level:
     root: INFO
     org:
-      #      hibernate: ERROR
+      # hibernate: ERROR
       hibernate: INFO
       hibernate.SQL: DEBUG
       hibernate.type.descriptor.sql: TRACE
@@ -84,6 +91,9 @@ logging:
       hibernate.cache: DEBUG
       hibernate.engine.transaction.internal.TransactionImpl: DEBUG
       hibernate.engine.jdbc.batch: DEBUG
+      # hibernate 6
+      hibernate.SQL_SLOW: info
+      hibernate.orm.jdbc.bind: trace
 
 
 ---

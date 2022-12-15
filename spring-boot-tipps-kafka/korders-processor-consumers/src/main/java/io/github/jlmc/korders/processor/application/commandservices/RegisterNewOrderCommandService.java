@@ -45,7 +45,7 @@ public class RegisterNewOrderCommandService {
     }
 
     private Optional<Order> update(RegisterNewOrderCommand command) {
-        Optional<Order> orderOptional = orderRepository.findById(command.orderId());
+        Optional<Order> orderOptional = orderRepository.findOrderByIdFetchItems(command.orderId());
         if (orderOptional.isEmpty()) return Optional.empty();
 
         Order order = orderOptional.orElseThrow();

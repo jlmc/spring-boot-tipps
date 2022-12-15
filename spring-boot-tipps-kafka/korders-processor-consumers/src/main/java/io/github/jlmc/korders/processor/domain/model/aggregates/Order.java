@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.Persistable;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -22,11 +23,10 @@ import static jakarta.persistence.CascadeType.*;
 @Builder
 @AllArgsConstructor
 @Table(name = "orders")
-public class Order {
-
+public class Order implements Persistable {
     @Id
-
     private String id;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Status status = Status.NEW;
@@ -39,7 +39,7 @@ public class Order {
     private Instant updatedAt;
 
     @Version
-    private int version;
+    private Integer version;
 
     @Builder.Default
     @OneToMany(
@@ -70,6 +70,11 @@ public class Order {
         this.items.clear();
         this.items.addAll(items);
         return this;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.insertedAt == null || version == null;
     }
 
     public enum Status {
