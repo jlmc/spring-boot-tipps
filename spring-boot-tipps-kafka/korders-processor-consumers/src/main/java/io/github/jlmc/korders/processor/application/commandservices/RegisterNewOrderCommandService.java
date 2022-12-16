@@ -71,6 +71,10 @@ public class RegisterNewOrderCommandService {
     }
 
     private ProductDetailsItem getProductDetailsItem(String productId, Integer qty) {
+        if (productId == null || "UNKNOWN".equalsIgnoreCase(productId)) {
+            throw new IllegalArgumentException("invalid product id");
+        }
+
         return new ProductDetailsItem(productId, BigDecimal.TEN, new BigDecimal(23), "Fake product", qty);
     }
 

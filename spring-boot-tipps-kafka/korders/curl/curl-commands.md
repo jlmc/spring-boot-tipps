@@ -30,6 +30,21 @@ curl -v -L -X POST localhost:8080/v1/orders \
   | jq .
 ```
 
+# CREATE NEW ORDER with UNKNOWN PRODUCT
+
+```shell
+ curl -v -L -X POST 'localhost:8080/v1/orders' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "items": [ {
+      "productId" : "UNKNOWN",
+      "qty" : 1
+     } 
+    ]
+}' \
+ | jq .
+```
+
 
 # UPDATE AN EXISTING NEW ORDER
 

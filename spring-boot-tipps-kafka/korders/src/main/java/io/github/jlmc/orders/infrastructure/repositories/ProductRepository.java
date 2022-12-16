@@ -19,7 +19,8 @@ public class ProductRepository {
     public void populates() {
         Stream.of(
                 Product.of("1", "I-Phone"),
-                Product.of("2", "MacBook-Pro 2020")
+                Product.of("2", "MacBook-Pro 2020"),
+                Product.of("UNKNOWN", "UNKNOWN")
         ).forEach(products::add);
     }
 

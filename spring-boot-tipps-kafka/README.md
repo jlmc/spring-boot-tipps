@@ -545,3 +545,8 @@ public class KafkaEventsConsumerConfig {
 ```
 
 **This strategy is high recommended if you are running your applications in a cloud environment.** 
+
+
+# Test containers
+
+https://www.youtube.com/watch?v=Wpz6b8ZEgcU&t=1454s
