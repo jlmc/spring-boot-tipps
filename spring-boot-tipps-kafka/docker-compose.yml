@@ -1,0 +1,67 @@
+version: '3.8'
+
+# https://github.com/simplesteph/kafka-stack-docker-compose/blob/master/zk-single-kafka-single.yml
+### https://github.com/spotify/docker-kafka
+### https://levelup.gitconnected.com/running-kafka-on-docker-container-1a15b8d0b77c
+
+services:
+  platform-zoo:
+    image: zookeeper:3.4.9
+    container_name: platform-zoo
+    hostname: platform-zoo
+    ports:
+      - "6161:2181"
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_PORT: 2181
+      ZOO_SERVERS: server.1=platform-zoo:2888:3888
+#    volumes:
+#      - ./.volume/platform-zoo/data:/data
+#      - ./.volume/platform-zoo/datalog:/datalog
+    networks:
+      - platform-network
+
+
+  platform-kafka:
+    # image: confluentinc/cp-kafka:5.5.1
+    image: confluentinc/cp-kafka:6.0.1
+    hostname: platform-kafka
+    container_name: platform-kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://platform-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      #KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://billing-kafka:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_ZOOKEEPER_CONNECT: "platform-zoo:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#    volumes:
+#      - ./.volume/platform-kafka/data:/var/lib/kafka/data
+    depends_on:
+      - platform-zoo
+    networks:
+      - platform-network
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:master
+    hostname: kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8085:8080"
+    depends_on:
+      - platform-kafka
+      - platform-zoo
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: platform-kafka:19092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: platform-zoo:2181
+    networks:
+      - platform-network
+
+networks:
+  platform-network:
+    driver: bridge
