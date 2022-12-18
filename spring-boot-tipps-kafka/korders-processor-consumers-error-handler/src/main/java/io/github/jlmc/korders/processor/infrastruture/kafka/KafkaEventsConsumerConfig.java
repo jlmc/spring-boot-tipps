@@ -1,5 +1,6 @@
 package io.github.jlmc.korders.processor.infrastruture.kafka;
 
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -11,6 +12,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.kafka.listener.RetryListener;
 import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
@@ -30,9 +32,16 @@ public class KafkaEventsConsumerConfig {
     public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
         BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
 
-        DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(backOff);
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(backOff);
 
-        return defaultErrorHandler;
+        // Add a RetryListener to monitor each Retry attempt
+        errorHandler.setRetryListeners(customRetryListener());
+
+        return errorHandler;
+    }
+
+    public RetryListener customRetryListener() {
+        return new CustomRetryListener();
     }
 
     @org.springframework.context.annotation.Bean("kafkaListenerContainerFactory")
