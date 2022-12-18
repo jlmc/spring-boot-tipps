@@ -8,7 +8,13 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.FixedBackOff;
+
+import java.time.Duration;
 
 /**
  * This class is required in order to enable the kafka consumer.
@@ -19,43 +25,18 @@ import org.springframework.kafka.listener.ContainerProperties;
 //@EnableKafkaStreams
 public class KafkaEventsConsumerConfig {
 
+    public static final int  CUSTOM_MAX_FAILURES = 3;
 
-    /**
-     * Alternative to the default kafkaListenerContainerFactory.
-     * This configurations be enabled only when we want to use
-     * commit the offset MANUAL
-     *
-     * @see org.springframework.boot.autoconfigure.kafka.KafkaAnnotationDrivenConfiguration#kafkaListenerContainerFactory
-     * @see org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
-     */
-    /*
-    @ConditionalOnProperty(
-            prefix = "xxy",
-            name = "commit.offset",
-            havingValue = "MANUAL",
-            matchIfMissing = false
-    )
-    @org.springframework.context.annotation.Bean("kafkaListenerContainerFactoryManualAckMode")
-    */
-    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactoryManualAckMode(
-            ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
-            ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
-            KafkaProperties properties
-    ) {
-        ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
-                defaultConcurrentKafkaListenerContainerFactory(configurer, kafkaConsumerFactory, properties);
+    public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
+        BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
 
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(backOff);
 
-        return factory;
+        return defaultErrorHandler;
     }
 
-    /**
-     * This kafkaListenerContainerFactoryConcurrentConsumerThreads Bean
-     * is an example how you can create concurrent instances of the message listener
-     */
-    //@org.springframework.context.annotation.Bean("kafkaListenerContainerFactoryConcurrentConsumerThreads")
-    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactoryConcurrentConsumerThreads(
+    @org.springframework.context.annotation.Bean("kafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
             ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
             ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
             KafkaProperties properties
@@ -64,6 +45,8 @@ public class KafkaEventsConsumerConfig {
                 defaultConcurrentKafkaListenerContainerFactory(configurer, kafkaConsumerFactory, properties);
 
         factory.setConcurrency(3);
+
+        factory.setCommonErrorHandler(errorHandler());
 
         return factory;
     }

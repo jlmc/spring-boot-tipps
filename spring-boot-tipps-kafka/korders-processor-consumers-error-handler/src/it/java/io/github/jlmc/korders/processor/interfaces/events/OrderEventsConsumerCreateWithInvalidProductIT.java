@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static io.github.jlmc.korders.processor.infrastruture.kafka.KafkaEventsConsumerConfig.CUSTOM_MAX_FAILURES;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.*;
@@ -99,8 +100,8 @@ public class OrderEventsConsumerCreateWithInvalidProductIT {
         latch.await(10L, TimeUnit.SECONDS);
 
         //then
-        verify(orderEventsConsumerSpy, times(10)).onMessage(isA(ConsumerRecord.class));
-        verify(registerNewOrderCommandServiceSpy, times(10)).execute(isA(RegisterNewOrderCommand.class));
+        verify(orderEventsConsumerSpy, times(CUSTOM_MAX_FAILURES)).onMessage(isA(ConsumerRecord.class));
+        verify(registerNewOrderCommandServiceSpy, times(CUSTOM_MAX_FAILURES)).execute(isA(RegisterNewOrderCommand.class));
 
         assertFalse(orderRepository.existsById(orderId));
     }
