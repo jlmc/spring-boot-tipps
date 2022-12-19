@@ -671,3 +671,7 @@ exponentialBackoff.setInitialInterval(Duration.ofSeconds(2L).toMillis());
 //DefaultErrorHandler errorHandler = new DefaultErrorHandler(fixedBackOff);
 DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
 ```
+
+## Kafka consumers recovery types
+
+[Kafka consumers recovery types](Kafka-consumers-recovery-types.md)
