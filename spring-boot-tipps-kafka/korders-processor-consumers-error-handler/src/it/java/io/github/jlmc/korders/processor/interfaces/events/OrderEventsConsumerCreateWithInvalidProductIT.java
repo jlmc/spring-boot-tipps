@@ -97,7 +97,7 @@ public class OrderEventsConsumerCreateWithInvalidProductIT {
 
         // when
         CountDownLatch latch = new CountDownLatch(1);
-        latch.await(10L, TimeUnit.SECONDS);
+        latch.await(8L, TimeUnit.SECONDS);
 
         //then
         verify(orderEventsConsumerSpy, times(CUSTOM_MAX_FAILURES)).onMessage(isA(ConsumerRecord.class));

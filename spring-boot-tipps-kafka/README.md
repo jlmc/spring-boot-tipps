@@ -654,3 +654,20 @@ public class KafkaEventsConsumerConfig {
         return errorHandler;
     }
 ```
+
+## kafka consumer, Retry failed Records with ExponentialBackOff
+
+- Let's say we intend to have exponential growth time between the retries process executions.
+we can achieve that by instead of using `ExponentialBackOffWithMaxRetries`  instead of `FixedBackOff`.
+
+```java
+//BackOff fixedBackOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+
+var exponentialBackoff = new ExponentialBackOffWithMaxRetries(CUSTOM_MAX_FAILURES -1);
+exponentialBackoff.setInitialInterval(Duration.ofSeconds(1L).toMillis());
+exponentialBackoff.setMultiplier(2.0);
+exponentialBackoff.setInitialInterval(Duration.ofSeconds(2L).toMillis());
+        
+//DefaultErrorHandler errorHandler = new DefaultErrorHandler(fixedBackOff);
+DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
+```
