@@ -564,7 +564,7 @@ starting with spring boot 2.6.x this is the error handler that we need to use to
 
 - We need to provide a implementation of `CommonErrorHandler`.
 - The most used implementation is `org.springframework.kafka.listener.DefaultErrorHandler`, which the default Construct documents,
-> Construct an instance with the default recoverer which simply logs the record after 10 (maxFailures) have occurred for a topic/partition/offset, with the default back off (9 retries, no delay).
+> Construct an instance with the default recovered which simply logs the record after 10 (maxFailures) have occurred for a topic/partition/offset, with the default back off (9 retries, no delay).
 - 👆THIS IS THE DEFAULT BEHAVIOR
 
 Let's say our requirements are:
@@ -634,4 +634,23 @@ public class KafkaEventsConsumerConfig {
     }
 }
 
+```
+
+## kafka consumer, Retry SpecificExceptions using Custom RetryPolicy
+
+```java
+    public static List<Class<? extends Exception>> EXCEPTION_TO_IGNORE = List.of(IllegalProductException.class);
+    public static List<Class<? extends Exception>> EXCEPTION_TO_RETRY = List.of(IllegalArgumentException.class);
+
+    public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
+        BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(backOff);
+
+        // subscribe the exceptions that must be ignored by the retry mechanism
+        EXCEPTION_TO_IGNORE.forEach(errorHandler::addNotRetryableExceptions);
+        EXCEPTION_TO_RETRY.forEach(errorHandler::addRetryableExceptions);
+
+        return errorHandler;
+    }
 ```

@@ -1,5 +1,6 @@
 package io.github.jlmc.korders.processor.infrastruture.kafka;
 
+import io.github.jlmc.korders.processor.domain.model.exceptions.IllegalProductException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
@@ -17,6 +18,7 @@ import org.springframework.util.backoff.BackOff;
 import org.springframework.util.backoff.FixedBackOff;
 
 import java.time.Duration;
+import java.util.List;
 
 /**
  * This class is required in order to enable the kafka consumer.
@@ -29,6 +31,12 @@ public class KafkaEventsConsumerConfig {
 
     public static final int  CUSTOM_MAX_FAILURES = 3;
 
+    public static List<Class<? extends Exception>> EXCEPTION_TO_IGNORE = List.of(IllegalProductException.class);
+    public static List<Class<? extends Exception>> EXCEPTION_TO_RETRY = List.of(IllegalArgumentException.class);
+
+    /**
+     * org.springframework.kafka.listener.DefaultErrorHandler
+     */
     public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
         BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
 
@@ -36,6 +44,10 @@ public class KafkaEventsConsumerConfig {
 
         // Add a RetryListener to monitor each Retry attempt
         errorHandler.setRetryListeners(customRetryListener());
+
+        // subscribe the exceptions that must be ignored by the retry mechanism
+        EXCEPTION_TO_IGNORE.forEach(errorHandler::addNotRetryableExceptions);
+        EXCEPTION_TO_RETRY.forEach(errorHandler::addRetryableExceptions);
 
         return errorHandler;
     }

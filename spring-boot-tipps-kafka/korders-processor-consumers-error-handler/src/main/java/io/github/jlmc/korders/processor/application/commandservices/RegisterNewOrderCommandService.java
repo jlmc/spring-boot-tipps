@@ -4,6 +4,7 @@ import io.github.jlmc.korders.processor.domain.model.aggregates.Order;
 import io.github.jlmc.korders.processor.domain.model.commands.RegisterNewOrderCommand;
 import io.github.jlmc.korders.processor.domain.model.entities.OrderItem;
 import io.github.jlmc.korders.processor.domain.model.valueobjects.Product;
+import io.github.jlmc.korders.processor.domain.model.exceptions.IllegalProductException;
 import io.github.jlmc.korders.processor.infrastruture.repositories.OrderRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -73,6 +74,10 @@ public class RegisterNewOrderCommandService {
     private ProductDetailsItem getProductDetailsItem(String productId, Integer qty) {
         if (productId == null || "UNKNOWN".equalsIgnoreCase(productId)) {
             throw new IllegalArgumentException("invalid product id");
+        }
+
+        if ("9999_9999".equals(productId)) {
+            throw new IllegalProductException("Product <" + productId + "> is not supported");
         }
 
         return new ProductDetailsItem(productId, BigDecimal.TEN, new BigDecimal(23), "Fake product", qty);
