@@ -1,8 +1,8 @@
 package io.github.jlmc.korders.processor.infrastruture.kafka;
 
 import io.github.jlmc.korders.processor.domain.model.exceptions.IllegalProductException;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.listener.CommonErrorHandler;
-import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.listener.RetryListener;
 import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries;
@@ -34,6 +33,9 @@ public class KafkaEventsConsumerConfig {
 
     public static List<Class<? extends Exception>> EXCEPTION_TO_IGNORE = List.of(IllegalProductException.class);
     public static List<Class<? extends Exception>> EXCEPTION_TO_RETRY = List.of(IllegalArgumentException.class);
+
+    @Autowired
+    DeadLetterPublishingRecoverer deadLetterPublishingRecoverer;
 
     /**
      * org.springframework.kafka.listener.DefaultErrorHandler
@@ -62,7 +64,12 @@ public class KafkaEventsConsumerConfig {
         exponentialBackoff.setInitialInterval(Duration.ofSeconds(2L).toMillis());
 
         //DefaultErrorHandler errorHandler = new DefaultErrorHandler(fixedBackOff);
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
+        //DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
+        DefaultErrorHandler errorHandler =
+                new DefaultErrorHandler(
+                        // 72. Recovery : Publish the message to the Retry Topic
+                        deadLetterPublishingRecoverer,
+                        exponentialBackoff);
 
         // Add a RetryListener to monitor each Retry attempt
         errorHandler.setRetryListeners(customRetryListener());

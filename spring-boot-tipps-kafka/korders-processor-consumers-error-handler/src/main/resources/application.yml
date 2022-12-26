@@ -1,3 +1,9 @@
+x:
+  topics:
+    retry: 'orders-events.RETRY'
+    dtl: 'orders-events.DTL'
+
+
 spring:
   application:
     name: korders-processor-consumers
@@ -12,7 +18,9 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       group-id: korders-processor-consumers
       #enable-auto-commit: on
-
+    admin:
+      properties:
+        bootstrap-servers: localhost:9092
 
   datasource:
     # localhost:8081/h2-console

@@ -16,3 +16,8 @@ Option 1 : Publish the failed message to Retry topic
 
 
 Option 2 : Save the failed message in a DB and retry with a scheduler.
+
+
+#### Option 1:
+
+- [https://docs.spring.io/spring-kafka/reference/html/#dead-letters](https://docs.spring.io/spring-kafka/reference/html/#dead-letters)

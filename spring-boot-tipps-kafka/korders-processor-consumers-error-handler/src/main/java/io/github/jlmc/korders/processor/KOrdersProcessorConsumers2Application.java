@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KOrdersProcessorConsumersApplication {
+public class KOrdersProcessorConsumers2Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(KOrdersProcessorConsumersApplication.class, args);
+        SpringApplication.run(KOrdersProcessorConsumers2Application.class, args);
     }
 
 }
