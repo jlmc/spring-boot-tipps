@@ -16,16 +16,16 @@ public class DeadLetterPublishingRecovererConfiguration {
 
     @Bean
     public DeadLetterPublishingRecoverer deadLetterPublishingRecoverer(
-            KafkaTemplate kafkaTemplate
+            KafkaTemplate<?, ?> kafkaTemplate
     ) {
-
-        var deadLetterPublishingRecovererDestinantionResolver =
+        DeadLetterPublishingRecovererDestinantionResolver deadLetterPublishingRecovererDestinantionResolver =
                 new DeadLetterPublishingRecovererDestinantionResolver(retryTopic, dtlTopic);
+
         DeadLetterPublishingRecoverer deadLetterPublishingRecoverer =
-                new DeadLetterPublishingRecoverer(
-                    kafkaTemplate,
-                        deadLetterPublishingRecovererDestinantionResolver
-                );
+                new DeadLetterPublishingRecoverer(kafkaTemplate, deadLetterPublishingRecovererDestinantionResolver);
+
+        // apply some custom headers
+        deadLetterPublishingRecoverer.setHeadersFunction(deadLetterPublishingRecovererDestinantionResolver::applyHeaders);
 
         return deadLetterPublishingRecoverer;
     }

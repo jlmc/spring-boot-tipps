@@ -20,10 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
@@ -38,6 +36,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static io.github.jlmc.korders.processor.interfaces.events.Setups.startupListenerContainers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.isA;
@@ -48,7 +47,8 @@ import static org.mockito.Mockito.*;
 @EmbeddedKafka(topics = {"orders-events"}, partitions = 3)
 @TestPropertySource(properties = {
         "spring.kafka.producer.bootstrap-servers=${spring.embedded.kafka.brokers}",
-        "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}"
+        "spring.kafka.consumer.bootstrap-servers=${spring.embedded.kafka.brokers}",
+        "retryListener.startup=false"
 })
 public class OrderEventsConsumerUpdateIT {
 
@@ -82,10 +82,7 @@ public class OrderEventsConsumerUpdateIT {
 
     @BeforeEach
     void setUp() {
-        // for now we only have one consumer
-        for (MessageListenerContainer listenerContainer : endpointRegistry.getListenerContainers()) {
-            ContainerTestUtils.waitForAssignment(listenerContainer, embeddedKafkaBroker.getPartitionsPerTopic());
-        }
+        startupListenerContainers(endpointRegistry, embeddedKafkaBroker);
     }
 
     @Test
