@@ -1,0 +1,131 @@
+x:
+  topics:
+    retry: 'orders-events.RETRY'
+    dtl: 'orders-events.DTL'
+
+
+spring:
+  application:
+    name: korders-processor-consumers
+  profiles:
+    active: local
+
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+      #enable-auto-commit: on
+    admin:
+      properties:
+        bootstrap-servers: localhost:9092
+
+  datasource:
+    # localhost:8081/h2-console
+    url: jdbc:h2:mem:testdb
+    # url: jdbc:h2:./data/korders
+    driver-class-name: org.h2.Driver
+    username: sa
+    # password: demo
+    # The hikari is the default connection pool used by the spring boot
+    hikari:
+      maximum-pool-size: 10 # Max connections of the pool, by default the value is 10
+      minimum-idle: 5 # Min connection of the pool, by default the value is to the 'maximum-pool-size'
+      idle-timeout: 10000  # How long extra connections between [maximum-pool-size, minimum-idle] will be kept in the pool. Value is in milliseconds and minimum acceptable value is 10 seconds (10,000 milliseconds)
+      auto-commit: false # This property controls the default auto-commit behavior of connections returned from the pool. It is a boolean value. Default: true
+
+  jpa:
+    database: h2
+    open-in-view: false
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    # Auto If we want to auto generate the database schema automatically then we should enable the two following configuration properties
+    # spring.jpa.generate-ddl=true
+    # spring.jpa.hibernate.ddl-auto= update # validate | update | create | create-drop
+    #generate-ddl: false
+    #hibernate:
+    #  ddl-auto: none # none | validate | update | create | create-drop,
+    properties:
+      hibernate:
+        format_sql: true
+        generate_statistics: true
+        dialect: org.hibernate.dialect.H2Dialect
+        connection:
+          provider_disables_autocommit: true # this is a way to improve the performance of the application, # this way the hibernate knows that the connections are already autocommit = false (default value for this property is false)
+  h2:
+    console:
+      enabled: true
+
+
+
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+    # only for tests cases 👇
+    template:
+      default-topic: orders-events
+    producer:
+      bootstrap-servers: localhost:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
+logging:
+  level:
+    root: INFO
+    org:
+      # hibernate: ERROR
+      hibernate: INFO
+      hibernate.SQL: DEBUG
+      hibernate.type.descriptor.sql: TRACE
+      hibernate.stat: DEBUG
+      hibernate.cache: DEBUG
+      hibernate.engine.transaction.internal.TransactionImpl: DEBUG
+      hibernate.engine.jdbc.batch: DEBUG
+      # hibernate 6
+      hibernate.SQL_SLOW: info
+      hibernate.orm.jdbc.bind: trace
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:9092, kafka2:9092, kafka3:9092
+      #key-deserializer: org.apache.kafka.common.serialization.IntegerDeserializer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: korders-processor-consumers

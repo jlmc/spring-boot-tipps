@@ -45,6 +45,19 @@ curl -v -L -X POST localhost:8080/v1/orders \
  | jq .
 ```
 
+```shell
+ curl -v -L -X POST 'localhost:8080/v1/orders' \
+-H 'Content-Type: application/json' \
+--data-raw '{
+    "items": [ {
+      "productId" : "9999_9999",
+      "qty" : 1
+     } 
+    ]
+}' \
+ | jq .
+```
+
 
 # UPDATE AN EXISTING NEW ORDER
 

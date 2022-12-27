@@ -550,3 +550,128 @@ public class KafkaEventsConsumerConfig {
 # Test containers
 
 https://www.youtube.com/watch?v=Wpz6b8ZEgcU&t=1454s
+
+
+---
+
+# Consumer Error Handling
+
+```
+ConcurrentKafkaListenerContainerFactory#setCommonErrorHandler(CommonErrorHandler commonErrorHandler)
+```
+
+starting with spring boot 2.6.x this is the error handler that we need to use to customize the error handling behavior.
+
+- We need to provide a implementation of `CommonErrorHandler`.
+- The most used implementation is `org.springframework.kafka.listener.DefaultErrorHandler`, which the default Construct documents,
+> Construct an instance with the default recovered which simply logs the record after 10 (maxFailures) have occurred for a topic/partition/offset, with the default back off (9 retries, no delay).
+- 👆THIS IS THE DEFAULT BEHAVIOR
+
+Let's say our requirements are:
+
+- have a backup of 1 second between each retry.
+- The number of retries should be 3.
+
+```java
+package io.github.jlmc.korders.processor.infrastruture.kafka;
+
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
+import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
+import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.FixedBackOff;
+
+import java.time.Duration;
+
+/**
+ * This class is required in order to enable the kafka consumer.
+ * It is necessary to use @EnableKafka
+ */
+@Configuration
+@EnableKafka
+public class KafkaEventsConsumerConfig {
+
+    public static final int  CUSTOM_MAX_FAILURES = 3;
+
+    public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
+        BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+
+        DefaultErrorHandler defaultErrorHandler = new DefaultErrorHandler(backOff);
+
+        return defaultErrorHandler;
+    }
+
+    @org.springframework.context.annotation.Bean("kafkaListenerContainerFactory")
+    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
+            ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
+            ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory,
+            KafkaProperties properties
+    ) {
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
+                defaultConcurrentKafkaListenerContainerFactory(configurer, kafkaConsumerFactory, properties);
+
+        factory.setConcurrency(3);
+
+        factory.setCommonErrorHandler(errorHandler());
+
+        return factory;
+    }
+
+    private static ConcurrentKafkaListenerContainerFactory<Object, Object> defaultConcurrentKafkaListenerContainerFactory(ConcurrentKafkaListenerContainerFactoryConfigurer configurer, ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory, KafkaProperties properties) {
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
+        configurer.configure(factory, kafkaConsumerFactory
+                .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties())));
+        return factory;
+    }
+}
+
+```
+
+## kafka consumer, Retry SpecificExceptions using Custom RetryPolicy
+
+```java
+    public static List<Class<? extends Exception>> EXCEPTION_TO_IGNORE = List.of(IllegalProductException.class);
+    public static List<Class<? extends Exception>> EXCEPTION_TO_RETRY = List.of(IllegalArgumentException.class);
+
+    public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
+        BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(backOff);
+
+        // subscribe the exceptions that must be ignored by the retry mechanism
+        EXCEPTION_TO_IGNORE.forEach(errorHandler::addNotRetryableExceptions);
+        EXCEPTION_TO_RETRY.forEach(errorHandler::addRetryableExceptions);
+
+        return errorHandler;
+    }
+```
+
+## kafka consumer, Retry failed Records with ExponentialBackOff
+
+- Let's say we intend to have exponential growth time between the retries process executions.
+we can achieve that by instead of using `ExponentialBackOffWithMaxRetries`  instead of `FixedBackOff`.
+
+```java
+//BackOff fixedBackOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+
+var exponentialBackoff = new ExponentialBackOffWithMaxRetries(CUSTOM_MAX_FAILURES -1);
+exponentialBackoff.setInitialInterval(Duration.ofSeconds(1L).toMillis());
+exponentialBackoff.setMultiplier(2.0);
+exponentialBackoff.setInitialInterval(Duration.ofSeconds(2L).toMillis());
+        
+//DefaultErrorHandler errorHandler = new DefaultErrorHandler(fixedBackOff);
+DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
+```
+
+## Kafka consumers recovery types
+
+[Kafka consumers recovery types](Kafka-consumers-recovery-types.md)

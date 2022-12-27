@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@EqualsAndHashCode(of = "id")
 @Builder
 public class OrderRepresentation extends RepresentationModel<OrderRepresentation> {
     private String id;

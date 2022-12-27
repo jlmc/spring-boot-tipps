@@ -14,5 +14,6 @@
     <modules>
         <module>korders</module>
         <module>korders-processor-consumers</module>
+        <module>korders-processor-consumers-error-handler</module>
     </modules>
 </project>

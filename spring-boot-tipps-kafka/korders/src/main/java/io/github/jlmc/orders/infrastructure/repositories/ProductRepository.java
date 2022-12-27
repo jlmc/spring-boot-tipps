@@ -20,7 +20,8 @@ public class ProductRepository {
         Stream.of(
                 Product.of("1", "I-Phone"),
                 Product.of("2", "MacBook-Pro 2020"),
-                Product.of("UNKNOWN", "UNKNOWN")
+                Product.of("UNKNOWN", "UNKNOWN"),
+                Product.of("9999_9999", "9999_9999")
         ).forEach(products::add);
     }
 

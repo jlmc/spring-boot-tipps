@@ -18,5 +18,6 @@ import java.util.List;
 public class Order {
     private String id;
     private Instant created;
+    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
 }
