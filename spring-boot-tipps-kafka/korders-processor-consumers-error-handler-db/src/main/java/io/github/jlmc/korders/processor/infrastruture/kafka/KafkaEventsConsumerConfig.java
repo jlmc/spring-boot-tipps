@@ -1,5 +1,6 @@
 package io.github.jlmc.korders.processor.infrastruture.kafka;
 
+import io.github.jlmc.korders.processor.application.commandservices.FailedRecordWriterService;
 import io.github.jlmc.korders.processor.domain.model.exceptions.IllegalProductException;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.listener.RetryListener;
 import org.springframework.kafka.support.ExponentialBackOffWithMaxRetries;
@@ -29,47 +29,39 @@ import java.util.List;
 //@EnableKafkaStreams
 public class KafkaEventsConsumerConfig {
 
-    public static final int  CUSTOM_MAX_FAILURES = 3;
+    public static final int CUSTOM_MAX_FAILURES = 3;
 
     public static List<Class<? extends Exception>> EXCEPTION_TO_IGNORE = List.of(IllegalProductException.class);
     public static List<Class<? extends Exception>> EXCEPTION_TO_RETRY = List.of(IllegalArgumentException.class);
 
     @Autowired
-    DeadLetterPublishingRecoverer deadLetterPublishingRecoverer;
+    FailedRecordWriterService failedRecordWriterService;
 
-    /**
-     * org.springframework.kafka.listener.DefaultErrorHandler
-     */
-    public org.springframework.kafka.listener.DefaultErrorHandler errorHandler() {
-        BackOff backOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+    private static ConcurrentKafkaListenerContainerFactory<Object, Object> defaultConcurrentKafkaListenerContainerFactory(ConcurrentKafkaListenerContainerFactoryConfigurer configurer, ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory, KafkaProperties properties) {
+        ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
 
-        DefaultErrorHandler errorHandler = new DefaultErrorHandler(backOff);
-
-        // Add a RetryListener to monitor each Retry attempt
-        errorHandler.setRetryListeners(customRetryListener());
-
-        // subscribe the exceptions that must be ignored by the retry mechanism
-        EXCEPTION_TO_IGNORE.forEach(errorHandler::addNotRetryableExceptions);
-        EXCEPTION_TO_RETRY.forEach(errorHandler::addRetryableExceptions);
-
-        return errorHandler;
+        configurer.configure(factory, kafkaConsumerFactory
+                .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties())));
+        return factory;
     }
 
     public org.springframework.kafka.listener.DefaultErrorHandler errorHandlerExponentialBackOff() {
-        //BackOff fixedBackOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
+        BackOff fixedBackOff = new FixedBackOff(Duration.ofSeconds(1).toMillis(), CUSTOM_MAX_FAILURES - 1);
 
+        /*
         var exponentialBackoff = new ExponentialBackOffWithMaxRetries(CUSTOM_MAX_FAILURES -1);
         exponentialBackoff.setInitialInterval(Duration.ofSeconds(1L).toMillis());
         exponentialBackoff.setMultiplier(2.0);
         exponentialBackoff.setInitialInterval(Duration.ofSeconds(2L).toMillis());
+         */
 
         //DefaultErrorHandler errorHandler = new DefaultErrorHandler(fixedBackOff);
         //DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
         DefaultErrorHandler errorHandler =
                 new DefaultErrorHandler(
-                        // 72. Recovery : Publish the message to the Retry Topic
-                        deadLetterPublishingRecoverer,
-                        exponentialBackoff);
+                        new DatabaseConsumerRecordRecoverer(failedRecordWriterService),
+                        fixedBackOff
+                );
 
         // Add a RetryListener to monitor each Retry attempt
         errorHandler.setRetryListeners(customRetryListener());
@@ -94,18 +86,11 @@ public class KafkaEventsConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
                 defaultConcurrentKafkaListenerContainerFactory(configurer, kafkaConsumerFactory, properties);
 
-        factory.setConcurrency(3);
+        //factory.setConcurrency(3);
+        //factory.setConcurrency(1);
 
         factory.setCommonErrorHandler(errorHandlerExponentialBackOff());
 
-        return factory;
-    }
-
-    private static ConcurrentKafkaListenerContainerFactory<Object, Object> defaultConcurrentKafkaListenerContainerFactory(ConcurrentKafkaListenerContainerFactoryConfigurer configurer, ObjectProvider<ConsumerFactory<Object, Object>> kafkaConsumerFactory, KafkaProperties properties) {
-        ConcurrentKafkaListenerContainerFactory<Object, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
-
-        configurer.configure(factory, kafkaConsumerFactory
-                .getIfAvailable(() -> new DefaultKafkaConsumerFactory<>(properties.buildConsumerProperties())));
         return factory;
     }
 }
