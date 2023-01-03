@@ -41,8 +41,11 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
       properties:
         acks: all
-        enable.idempotence: true
+        # Allowing retries while setting enable.idempotence to false and max.in.flight.requests.per.connection to 1 will potentially change the ordering of records because if two batches are sent to a single partition, and the first fails and is retried but the second succeeds, then the records in the second batch may appear first.
         retries: 5
+        # The amount of time to wait before attempting to retry a failed request to a given topic partition. This avoids repeatedly sending requests in a tight loop under some failure scenarios.
+        retry.backoff.ms: 1000
+        enable.idempotence: true
     admin:
       properties:
         bootstrap-servers: localhost:9092
