@@ -2,17 +2,21 @@ package io.github.jlmc.korders.processor.domain.model.aggregates;
 
 import jakarta.persistence.Convert;
 import jakarta.persistence.Converts;
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
+import org.hibernate.annotations.EmbeddableInstantiatorRegistration;
+
+import static io.github.jlmc.korders.processor.domain.model.aggregates.FailureRecord.Status.TO_RETRY;
 
 
 @Entity
 @Getter
+@EmbeddableInstantiatorRegistration( embeddableClass = FailureRecordCause.class, instantiator = FailureRecordCauseEmbeddableInstantiator.class )
+
 public class FailureRecord {
 
     @Id
@@ -25,15 +29,19 @@ public class FailureRecord {
     private Long topicOffsetValue;
 
     @Embedded
-    @Converts({
-            @Convert(attributeName = "message", converter = FailureRecordCauseConverter.class),
-    })
+    /*@Converts({
+            @Convert(
+                    attributeName = "message",
+                    converter = FailureRecordCauseConverter.class
+            ),
+    })*/
     private FailureRecordCause exceptionCause;
 
+    private Status status = TO_RETRY;
 
-    public FailureRecord() {
+
+    protected FailureRecord() {
     }
-
 
     private FailureRecord(String fromTopic, String recordKey, String errorRecord, Integer topicPartition, Long topicOffsetValue) {
         this.fromTopic = fromTopic;
@@ -56,6 +64,8 @@ public class FailureRecord {
                 caused.getMessage()
         );
 
+        failureRecord.status = TO_RETRY;
+
         return failureRecord;
     }
 
@@ -66,5 +76,11 @@ public class FailureRecord {
                 ", recordKey='" + recordKey + '\'' +
                 ", errorRecord='" + errorRecord + '\'' +
                 '}';
+    }
+
+    public enum Status {
+        TO_RETRY,
+        FAILED,
+        SUCCESSFUL,
     }
 }

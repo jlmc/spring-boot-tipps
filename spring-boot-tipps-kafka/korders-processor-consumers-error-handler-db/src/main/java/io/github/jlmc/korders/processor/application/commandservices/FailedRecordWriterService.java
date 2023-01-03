@@ -19,7 +19,7 @@ public class FailedRecordWriterService {
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE, readOnly = false)
-    public void add(ConsumerRecord<String, String> consumerRecord, Throwable caused, String status) {
+    public void add(ConsumerRecord<String, String> consumerRecord, Throwable caused) {
 
         var failureRecord =
                 createFailureRecord(

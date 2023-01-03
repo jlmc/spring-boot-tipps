@@ -4,6 +4,14 @@ spring:
   profiles:
     active: local
 
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 15
+        queue-capacity: 100
+      thread-name-prefix: async-thread-
+
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
