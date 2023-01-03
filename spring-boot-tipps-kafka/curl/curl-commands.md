@@ -26,7 +26,7 @@ curl -v -L -X GET localhost:8080/v1/orders/1234
 ```shell
 curl -v -L -X POST localhost:8080/v1/orders \
  -H "Content-Type: application/json" \
- -d @../src/test/resources/request-payloads/create-order-request-payload.json \
+ -d @korders/src/test/resources/request-payloads/create-order-request-payload.json \
   | jq .
 ```
 
@@ -81,6 +81,6 @@ curl -v -L -X POST localhost:8080/v1/orders \
 ```shell
 curl -v -L -X PUT localhost:8080/v1/orders/5126e996 \
  -H "Content-Type: application/json" \
- -d @../src/test/resources/request-payloads/create-order-request-payload.json \
+ -d @korders/src/test/resources/request-payloads/create-order-request-payload.json \
   | jq .
 ```
