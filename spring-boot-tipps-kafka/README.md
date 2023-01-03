@@ -675,3 +675,7 @@ DefaultErrorHandler errorHandler = new DefaultErrorHandler(exponentialBackoff);
 ## Kafka consumers recovery types
 
 [Kafka consumers recovery types](Kafka-consumers-recovery-types.md)
+
+## Recovery Save the failed message to the DB
+
+[Recovery Save the failed message to the DB](kafka-consumer-recovery-failed-message-from-db.md)
