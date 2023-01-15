@@ -1,30 +1,36 @@
 package io.github.jlmc.sbvalidation.movies.entity;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.util.Assert;
 
-import java.time.Year;
 import java.util.Objects;
 
 public class Movie {
 
     private String id;
+    @NotBlank
     private String title;
     private String director;
-    private Year year;
 
+    @Min(1900)
+    private int year;
+
+    @Valid
     private Details details = null;
 
     public Movie() {
     }
 
-    private Movie(String title, String director, Year year) {
+    private Movie(String title, String director, int year) {
         this.title = title;
         this.director = director;
         this.year = year;
     }
 
-    public static Movie createMovie(String title, String director, Year year) {
+    public static Movie createMovie(String title, String director, int year) {
         Assert.hasLength(title, "title argument is required; it must not be null");
         Assert.hasLength(director, "director argument is required; it must not be null");
 

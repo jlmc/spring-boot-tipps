@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-import java.time.Year;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -28,7 +27,7 @@ public class MoviesCommandLineRunner implements CommandLineRunner {
                     Movie.createMovie(
                                  "Gladiator",
                                  "Ridley Scott",
-                                 Year.of(2000))
+                                 2000)
                          .setDetails(new Details("""
                                  Gladiator is a 2000 epic historical drama film directed by Ridley Scott and written by David Franzoni, 
                                  John Logan, and William Nicholson. 
@@ -46,9 +45,9 @@ public class MoviesCommandLineRunner implements CommandLineRunner {
                                          "Richard Harris",
                                          "Tommy Flanagan")
                          )),
-                    Movie.createMovie("Joker", "Duke", Year.of(2019)),
+                    Movie.createMovie("Joker", "Duke", 2019),
                     Movie.createMovie(
-                            "Rambo - last blood", "Duke", Year.of(2020))
+                            "Rambo - last blood", "Duke", 2020)
             ))
               .subscribe(moviesRepository::add);
     }

@@ -1,0 +1,22 @@
+{
+  "id": "1",
+  "title": "Gladiator",
+  "director": "Ridley Scott",
+  "year": 2000,
+  "details": {
+    "summary": "Gladiator is a 2000 epic historical drama film directed by Ridley Scott and written by David Franzoni,\nJohn Logan, and William Nicholson.\nThe film was co-produced and released by DreamWorks Pictures and Universal Pictures.\n",
+    "main_actor": "Russell Crowe",
+    "actors": [
+      "Russell Crowe",
+      "Joaquin Phoenix",
+      "Connie Nielsen",
+      "Ralf Möller",
+      "Oliver Reed",
+      "Djimon Hounsou",
+      "Derek Jacobi",
+      "John Shrapnel",
+      "Richard Harris",
+      "Tommy Flanagan"
+    ]
+  }
+}
