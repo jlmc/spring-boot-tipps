@@ -218,7 +218,7 @@ public class ConstraintViolationExceptionAdvice {
         String jsonProperty = getJsonPropertyName(objectMapper, beanClass, leafNode.getName());
 
         if (jsonProperty != null) {
-            new Problem.Field(jsonProperty,
+            return new Problem.Field(jsonProperty,
                     "%s %s %s".formatted(
                             REQUEST_ENTITY_PROPERTY.name(),
                             jsonProperty,

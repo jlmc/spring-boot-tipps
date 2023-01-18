@@ -14,9 +14,10 @@ For further reference, please consider the following sections:
 * [Spring Reactive Web](https://docs.spring.io/spring-boot/docs/3.0.1/reference/htmlsingle/#web.reactive)
 * [Validation](https://docs.spring.io/spring-boot/docs/3.0.1/reference/htmlsingle/#io.validation)
 
+* [developing-auto-configuration](https://docs.spring.io/spring-boot/docs/3.0.1/reference/htmlsingle/#features.developing-auto-configuration)
+
 ### Guides
 The following guides illustrate how to use some features concretely:
 
 * [Building a Reactive RESTful Web Service](https://spring.io/guides/gs/reactive-rest-service/)
 * [Validation](https://spring.io/guides/gs/validating-form-input/)
-

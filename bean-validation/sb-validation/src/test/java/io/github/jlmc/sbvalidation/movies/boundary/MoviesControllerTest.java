@@ -136,4 +136,31 @@ class MoviesControllerTest {
                          );
         }
     }
+
+    @Nested
+    class PostMovie {
+
+
+        @Test
+        void createBook() {
+            String requestPayload = Resources.classPathResourceContent("request/create-movie-request-invalid-payload.json");
+
+            webTestClient.post()
+                         .uri(MoviesConstants.MOVIES)
+                         .contentType(MediaType.APPLICATION_JSON)
+                         .bodyValue(
+                                 requestPayload
+                         )
+                         //.body(Mono.just(item), Item.class)
+                         .exchange()
+                         .expectStatus().isBadRequest()
+                         .expectBody()
+                         .json("""
+                                 {}
+                                 """);
+//                         .jsonPath("$.id").isNotEmpty()
+//                         .jsonPath("$.description").isEqualTo(item.getDescription())
+//                         .jsonPath("$.price").isEqualTo(item.getPrice());
+        }
+    }
 }
