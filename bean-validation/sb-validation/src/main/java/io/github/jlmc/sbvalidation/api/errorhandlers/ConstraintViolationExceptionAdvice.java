@@ -24,7 +24,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.time.Clock;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,7 +50,6 @@ public class ConstraintViolationExceptionAdvice {
                                            ServerHttpRequest request) {
 
         Problem problem = Problem.createProblem(
-                Instant.now(clock),
                 request.getPath().value(),
                 400,
                 "Bad request",

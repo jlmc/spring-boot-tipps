@@ -22,3 +22,10 @@ curl -v -L -X POST localhost:8080/movies \
 -d @payloads/create-movie-request-payload.json \
 | jq .
 ```
+
+```sh
+curl -v -L -X POST localhost:8080/movies \
+-H "Content-Type: application/json" \
+-d @payloads/create-movie-request-invalid-payload.json \
+| jq .
+```

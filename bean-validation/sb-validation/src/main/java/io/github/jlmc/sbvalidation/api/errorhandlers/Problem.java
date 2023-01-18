@@ -1,28 +1,24 @@
 package io.github.jlmc.sbvalidation.api.errorhandlers;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Problem {
-    private String x = "X";
-    private Instant timestamp;
     private String path;
     private int status = 500;
     private String error;
     private String message;
     private List<Field> fields = null;
 
-    private Problem(Instant timestamp, String path, int status, String error, String message) {
-        this.timestamp = timestamp;
+    private Problem(String path, int status, String error, String message) {
         this.path = path;
         this.status = status;
         this.error = error;
         this.message = message;
     }
 
-    public static Problem createProblem(Instant timestamp, String path, int status, String error, String message) {
-        return new Problem(timestamp, path, status, error, message);
+    public static Problem createProblem(String path, int status, String error, String message) {
+        return new Problem( path, status, error, message);
     }
 
     public Problem addFieldError(String field, String message) {
@@ -44,5 +40,57 @@ public class Problem {
             this.field = field;
             this.message = message;
         }
+
+        public String getField() {
+            return field;
+        }
+
+        public void setField(String field) {
+            this.field = field;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
+        }
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<Field> getFields() {
+        return fields;
     }
 }
