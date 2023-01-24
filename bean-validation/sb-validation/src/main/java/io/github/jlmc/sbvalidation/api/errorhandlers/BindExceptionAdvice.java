@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.time.Clock;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -66,11 +67,7 @@ public class BindExceptionAdvice {
         logger.debug("Converting the field error [{}]", objectError);
 
         try {
-            if (objectError instanceof FieldError o) {
-                return mapFieldError(o);
-            } else {
-                return defaultViolationMapper(objectError);
-            }
+            return mapObjectError(objectError);
         } catch (Exception e) {
             logger.warn(
                     "It was not possible to map the validation violation field, " +
@@ -81,20 +78,18 @@ public class BindExceptionAdvice {
         }
     }
 
-    private Problem.Field mapFieldError(FieldError fieldError) {
-        String fullInterpolatedJsonPathField = getInterpolatedFullJsonPath(fieldError);
-        String interpolatedFieldName = getInterpolatedJsonPropertyName(fieldError);
-
+    private Problem.Field mapObjectError(ObjectError objectError) {
+        String fullInterpolatedJsonPathField = getInterpolatedFullJsonPath(objectError);
         return new Problem.Field(
                 fullInterpolatedJsonPathField,
-                "The '%s' %s".formatted(interpolatedFieldName, errorMessage(fieldError))
+                errorMessage(objectError)
         );
     }
 
-    private String getInterpolatedFullJsonPath(FieldError fieldError) {
+    private String getInterpolatedFullJsonPath(ObjectError objectError) {
         var constrainViolation =
-                Optional.ofNullable(unwrapConstrainViolation(fieldError))
-                        .orElseThrow(() -> new IllegalArgumentException("No constrainViolation found in ObjectError: [{" + fieldError + "}]"));
+                Optional.ofNullable(unwrapConstrainViolation(objectError))
+                        .orElseThrow(() -> new IllegalArgumentException("No constrainViolation found in ObjectError: [{" + objectError + "}]"));
 
 
         var propertyPath = constrainViolation.getPropertyPath();
@@ -105,13 +100,13 @@ public class BindExceptionAdvice {
         int i = 0;
         for (Path.Node node : propertyPath) {
 
-            if (node.getName().equals("")) continue;
+            if (node.getName() == null || Objects.equals("", node.getName())) continue;
 
             if (node.getIndex() != null) {
                 jsonPathBuilder.append("[").append(node.getIndex()).append("]");
             }
 
-            if (Collection.class.isAssignableFrom(currentClass) &&  node instanceof NodeImpl nodeImpl) {
+            if (Collection.class.isAssignableFrom(currentClass) && node instanceof NodeImpl nodeImpl) {
                 currentClass = nodeImpl.getParent().getValue().getClass();
             }
 
@@ -133,16 +128,17 @@ public class BindExceptionAdvice {
     private String getInterpolatedJsonPropertyName(ObjectError objectError) {
         var constrainViolation =
                 Optional.ofNullable(unwrapConstrainViolation(objectError))
-                                         .orElseThrow(() -> new IllegalArgumentException("No constrainViolation found in ObjectError: [{" + objectError + "}]"));
+                        .orElseThrow(() -> new IllegalArgumentException("No constrainViolation found in ObjectError: [{" + objectError + "}]"));
 
         var leafBean = constrainViolation.getLeafBean();
-        var name = getLeafNode(constrainViolation.getPropertyPath()).map(Path.Node::getName).orElseThrow();
+        Path.Node leafNode = getLeafNode(constrainViolation.getPropertyPath()).orElseThrow();
 
-       if (leafBean != null) {
-           return getInterpolatedJacksonName(leafBean.getClass(), name);
-       } else {
-           return null;
-       }
+        if (leafBean != null && leafNode.getKind() == ElementKind.PARAMETER) {
+            var name = leafNode.getName();
+            return getInterpolatedJacksonName(leafBean.getClass(), name);
+        } else {
+            return null;
+        }
     }
 
     private String getInterpolatedJacksonName(Class<?> beanClass, String nodeName) {
@@ -169,7 +165,7 @@ public class BindExceptionAdvice {
         }
     }
 
-    private Class<?> getFieldType(Class<?> currentClass, Path.Node node){
+    private Class<?> getFieldType(Class<?> currentClass, Path.Node node) {
         return Optional.ofNullable(ReflectionUtils.findField(currentClass, node.getName()))
                        .map(Field::getType).
                        orElse(null);

@@ -21,3 +21,5 @@ The following guides illustrate how to use some features concretely:
 
 * [Building a Reactive RESTful Web Service](https://spring.io/guides/gs/reactive-rest-service/)
 * [Validation](https://spring.io/guides/gs/validating-form-input/)
+
+* https://kotlinlang.org/docs/annotations.html#ability-to-not-generate-jvm-1-8-annotation-targets

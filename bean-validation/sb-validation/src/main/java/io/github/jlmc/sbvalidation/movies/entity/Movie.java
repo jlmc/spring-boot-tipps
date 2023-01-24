@@ -1,6 +1,8 @@
 package io.github.jlmc.sbvalidation.movies.entity;
 
 
+import io.github.jlmc.sbvalidation.validation.CrossCheck;
+import io.github.jlmc.sbvalidation.validation.ValidableEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +10,8 @@ import org.springframework.util.Assert;
 
 import java.util.Objects;
 
-public class Movie {
+@CrossCheck(message = "invalid movie")
+public class Movie implements ValidableEntity {
 
     private String id;
     @NotBlank
@@ -97,5 +100,10 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    @Override
+    public boolean isValid() {
+        return !"XYZ".equals(title);
     }
 }
