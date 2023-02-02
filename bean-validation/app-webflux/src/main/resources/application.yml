@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: app-mvc
+  profiles:
+    active: local
+
+  jackson:
+    constructor-detector: default
+    # property-naming-strategy: LOWER_CAMEL_CASE
+    property-naming-strategy: SNAKE_CASE
+    # ignore null properties in the serialization, similar to @JsonInclude(JsonInclude.Include.NON_NULL)
+    default-property-inclusion: non_null
+    deserialization:
+      # Throw an exception if an unknown propriety arrives in the request body, the default value is false
+      fail-on-unknown-properties: true
+      # throw an exception if a property annotated with @JsonIgnore arrives in the request body, the default value is false
+      fail-on-ignored-properties: true
+    serialization:
+      fail-on-empty-beans: true
+      fail-on-self-references: true
+      indent-output: true
+
+  #mvc:
+  #  throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      # this only works when we don't have any static resource for example some website
+      add-mappings: false
