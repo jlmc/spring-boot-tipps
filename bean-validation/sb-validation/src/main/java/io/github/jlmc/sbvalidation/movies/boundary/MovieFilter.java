@@ -1,7 +1,6 @@
 package io.github.jlmc.sbvalidation.movies.boundary;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 
 @Valid
