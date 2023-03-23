@@ -1,0 +1,108 @@
+[
+    {
+        "name": "locations-directory",
+        "host": "locations-directory:8080",
+        "routes": [
+            {
+                "name": "get-locations-directory-locations",
+                "path": "/locations-directory/locations",
+                "critical": true,
+                "downstream": {
+                    "strip_prefix": false,
+                    "path": "/",
+                    "protocol": "HTTP"
+                },
+                "methods": [
+                    "OPTIONS",
+                    "GET"
+                ],
+                "authentication": {
+                    "type": "JWT",
+                    "scopes": [
+                        "locations-directory:read"
+                    ]
+                }
+            },
+            {
+                "name": "createLocations",
+                "path": "/locations-directory/locations",
+                "critical": true,
+                "downstream": {
+                    "strip_prefix": false,
+                    "path": "/",
+                    "protocol": "HTTP"
+                },
+                "methods": [
+                    "OPTIONS",
+                    "POST"
+                ],
+                "authentication": {
+                    "type": "JWT",
+                    "scopes": [
+                        "locations-directory:write"
+                    ]
+                }
+            },
+            {
+                "name": "get-locations-directory-location-by-id",
+                "path": "/locations-directory/locations/*",
+                "critical": true,
+                "downstream": {
+                    "strip_prefix": false,
+                    "path": "/",
+                    "protocol": "HTTP"
+                },
+                "methods": [
+                    "OPTIONS",
+                    "GET"
+                ],
+                "authentication": {
+                    "type": "JWT",
+                    "scopes": [
+                        "locations-directory:read"
+                    ]
+                }
+            },
+            {
+                "name": "delete-locations-directory-location-by-id",
+                "path": "/locations-directory/locations/*",
+                "critical": true,
+                "downstream": {
+                    "strip_prefix": false,
+                    "path": "/",
+                    "protocol": "HTTP"
+                },
+                "methods": [
+                    "OPTIONS",
+                    "DELETE"
+                ],
+                "authentication": {
+                    "type": "JWT",
+                    "scopes": [
+                        "locations-directory:write"
+                    ]
+                }
+            },
+            {
+                "name": "update-locations-directory-location-by-id",
+                "path": "/locations-directory/locations/*",
+                "critical": true,
+                "downstream": {
+                    "strip_prefix": false,
+                    "path": "/",
+                    "protocol": "HTTP"
+                },
+                "methods": [
+                    "OPTIONS",
+                    "PUT"
+                ],
+                "authentication": {
+                    "type": "JWT",
+                    "scopes": [
+                        "locations-directory:write"
+                    ]
+                }
+            }
+        ]
+    }
+]
