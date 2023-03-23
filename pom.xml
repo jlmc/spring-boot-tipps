@@ -21,5 +21,6 @@
         <module>spring-data</module>
         <module>spring-boot-tipps-reactive</module>
         <module>bean-validation</module>
+        <module>spring-boot-tipps-kafka</module>
     </modules>
 </project>
