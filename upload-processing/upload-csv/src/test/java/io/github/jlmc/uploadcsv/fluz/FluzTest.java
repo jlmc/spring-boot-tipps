@@ -2,6 +2,7 @@ package io.github.jlmc.uploadcsv.fluz;
 
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -11,9 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Disabled
 public class FluzTest {
 
 

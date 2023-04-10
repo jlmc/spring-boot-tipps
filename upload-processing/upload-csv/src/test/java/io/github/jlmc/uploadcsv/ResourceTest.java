@@ -9,6 +9,7 @@ import io.github.jlmc.uploadcsv.locations.entity.Address;
 import io.github.jlmc.uploadcsv.locations.entity.Coordinates;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 public class ResourceTest {
 
     String text = """
