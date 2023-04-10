@@ -1,14 +1,14 @@
 package io.github.jlmc.uploadcsv.configurations.mongo;
 
-import org.springframework.data.convert.ReadingConverter;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.convert.ReadingConverter;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
 
 @org.springframework.stereotype.Component
 @ReadingConverter
-public class LocalTimeReadConverter implements Converter<String, LocalTime> {
+public class MongoLocalTimeReader implements Converter<String, LocalTime> {
     @Override
     public LocalTime convert(String source) {
         try {

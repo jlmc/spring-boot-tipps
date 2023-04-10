@@ -26,7 +26,7 @@ public class MongoConfiguration {
     public MongoCustomConversions customConversions() {
         return new MongoCustomConversions(
                 List.of(
-                        new LocalTimeReadConverter(),
+                        new MongoLocalTimeReader(),
                         new MongoLocalTimeWriter()
                         )
         );
