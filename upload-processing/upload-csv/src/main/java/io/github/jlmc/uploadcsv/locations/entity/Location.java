@@ -1,19 +1,14 @@
 package io.github.jlmc.uploadcsv.locations.entity;
 
 import com.opencsv.bean.CsvBindByName;
-import com.opencsv.bean.CsvCustomBindByName;
-import com.opencsv.bean.CsvRecurse;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Singular;
 import lombok.ToString;
 import nonapi.io.github.classgraph.json.Id;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -21,14 +16,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Document(collection = "locations")
+
+
 @Data
-@Document(collation = "locations")
-
-
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
@@ -60,6 +54,7 @@ public class Location {
     private Integer version;
 
 
+    @Transient
     public Location update(Location that) {
         this.name = that.name;
         this.imageUrl = that.imageUrl;

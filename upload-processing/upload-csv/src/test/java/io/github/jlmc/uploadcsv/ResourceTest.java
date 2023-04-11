@@ -1,18 +1,16 @@
 package io.github.jlmc.uploadcsv;
 
-import com.opencsv.exceptions.CsvDataTypeMismatchException;
-import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import io.github.jlmc.uploadcsv.locations.control.CsvReadResult;
-import io.github.jlmc.uploadcsv.locations.control.CsvReader;
-import io.github.jlmc.uploadcsv.locations.control.CsvWriter;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReader;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReaderResult;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvWriter;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvReader;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvWriter;
 import io.github.jlmc.uploadcsv.locations.entity.Address;
 import io.github.jlmc.uploadcsv.locations.entity.Coordinates;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.time.ZoneId;
@@ -21,17 +19,24 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Disabled
+//@Disabled
 public class ResourceTest {
 
     String text = """
-            "ID","NAME","PHONENUMBER","IMAGEURL","TIMEZONE","ADDRESS_ADDRESS","ADDRESS_CITY","ADDRESS_ZIP_CODE","ADDRESS_COUNTRY_NAME","ADDRESS_REGION_NAME","LATITUDE","LONGITUDE","BUSINESS_MON"
-            "1","forum","123","image-1.png","Europe/Lisbon","Rua do Alto","Santa clara","3100","Portugal","Coimbra","12.0","99.0",""
-            "2","columbo","125","image-2.png","Europe/Lisbon","Oriente","Lisboa","3000","Portugal","Lisboa","17.093273892731","98.12345678",""
-            "","columbo","125","image-3.png","Europe/Lisbon","Oriente","Lisboa","3000","Portugal","Lisboa","18.12","76.34",""
-            """;
-    CsvReader csvReader = new CsvReader();
-    CsvWriter csvWriter = new CsvWriter();
+           "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+           "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
+           "6434b20bb62491116a7b1ad0","Lisboa","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad1","Porto","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad2","Amadora","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad3","Pombal","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad4","Leiria","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad5","Montemor","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ad6","Figuera","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1acf","Coimbra","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           "6434b20bb62491116a7b1ace","Almada","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+           """;
+    CsvReader<Location> csvReader = new LocationsCsvReader();
+    CsvWriter<Location> csvWriter = new LocationsCsvWriter();
 
     List<Location> locations = new ArrayList<>();
 
@@ -56,31 +61,13 @@ public class ResourceTest {
                                         .countryName("Portugal")
                                         .build())
                         .build();
-        Location location2 =
-                Location.builder()
-                        .id("2")
-                        .name("columbo")
-                        .imageUrl("image-2.png")
-                        .phoneNumber("125")
-                        .timeZone(ZoneId.of("Europe/Lisbon"))
-                        .address(Address.builder()
-                                        .address("Oriente")
-                                        .city("Lisboa")
-                                        .regionName("Lisboa")
-                                        .zipCode("3000")
-                                        .countryName("Portugal")
-                                        .coordinates(Coordinates.builder()
-                                                                .latitude(17.093273892731)
-                                                                .longitude(98.12345678D)
-                                                                .build())
-                                        .build())
-                        .build();
 
         locations = List.of(location1);
     }
 
     @Test
-    void beansToCSV() throws CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+    void beansToCSV() {
+
         Writer writer = csvWriter.write(locations, new StringWriter());
 
         System.out.println(writer);
@@ -88,16 +75,16 @@ public class ResourceTest {
 
     @Test
     void csvToBeans() {
-        var result = csvReader.read(new StringReader(text));
+        var result = csvReader.read("1234", text);
 
         System.out.println(result.items());
 
-        assertEquals(3, result.items().size());
+        assertEquals(10, result.items().size());
     }
 
     @Test
     void writeAndRead() {
-       var result = csvReader.read(new StringReader(text));
+       var result = csvReader.read("123", text);
 
         Writer write = csvWriter.write(result.items(), new StringWriter());
         String s = write.toString();
@@ -110,16 +97,11 @@ public class ResourceTest {
     void readValidation() {
         String inputWithErrors =
                 """
-                ID,NAME,PHONENUMBER,IMAGEURL,TIMEZONE,ADDRESS_ADDRESS,ADDRESS_CITY,ADDRESS_ZIP_CODE,ADDRESS_COUNTRY_NAME,ADDRESS_REGION_NAME,LATITUDE,LONGITUDE
-                1,forum,123,image-1.png,Europe/Lisbon,Rua do Alto,Santa clara,3100,Portugal,Coimbra,12.0,99.0
-                2,columbo,125,image-2.png,Europe/Lisbon,Oriente,Lisboa,3000,Portugal,Lisboa,17.093273892731,98.12345678
-                ,,125,image-3.png,Europe/Lisbon,Oriente,Lisboa,3000,Portugal,Lisboa,18.12,invalid-longitude
-                ,columbo,125,image-3.png,Europe/Lisbon,Oriente,Lisboa,3000,Portugal,Lisboa,18.12,76.34
-                ,,125,image-3.png,Europe/Lisbon,Oriente,Lisboa,3000,Portugal,Lisboa,18.12,76.34
-                ,test5
+                "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+                "6434b20bb62491116a7b1acd","","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/not-valid","10:00AM","","","","","",""
                 """;
 
-        CsvReadResult<Location> result = csvReader.read(new StringReader(inputWithErrors));
+        CsvReaderResult<Location> result = csvReader.read("1234", inputWithErrors);
 
         assertNotNull(result);
         assertNotNull(result.items());
@@ -129,11 +111,13 @@ public class ResourceTest {
     @Test
     void customMapper() {
         String csv = """
-                "ID","NAME","PHONENUMBER","IMAGEURL","TIMEZONE","ADDRESS_ADDRESS","ADDRESS_CITY","ADDRESS_ZIP_CODE","ADDRESS_COUNTRY_NAME","ADDRESS_REGION_NAME","LATITUDE","LONGITUDE","BUSINESS_MON"
-                "1","forum","123","image-1.png","Europe/Lisbon","Rua do Alto","Santa clara","3100","Portugal","Coimbra","12.0","99.0","10:00am-01:00pm | 02:00pm-08pm"
+                "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
                 """;
 
-        CsvReadResult<Location> result = csvReader.read(new StringReader(csv));
+
+
+        CsvReaderResult<Location> result = csvReader.read("1234", csv);
 
         assertTrue(result.isValid());
         assertEquals(1, result.items().size());
@@ -145,8 +129,8 @@ public class ResourceTest {
         System.out.println(write);
 
         String expectedCsv = """
-                "ID","NAME","PHONENUMBER","IMAGEURL","TIMEZONE","ADDRESS_ADDRESS","ADDRESS_CITY","ADDRESS_ZIP_CODE","ADDRESS_COUNTRY_NAME","ADDRESS_REGION_NAME","LATITUDE","LONGITUDE","BUSINESS_MON"
-                "1","forum","123","image-1.png","Europe/Lisbon","Rua do Alto","Santa clara","3100","Portugal","Coimbra","12.0","99.0","10:00AM-01:00PM|02:00PM-08:00PM"
+                "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
                 """;
 
         assertEquals(expectedCsv, write.toString());

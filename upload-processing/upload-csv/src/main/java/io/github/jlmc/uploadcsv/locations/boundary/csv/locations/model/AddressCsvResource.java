@@ -4,6 +4,7 @@ import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;
 import io.github.jlmc.uploadcsv.locations.entity.Address;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import static io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.Co
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 
 public class AddressCsvResource {
     @CsvBindByName(column = ADDRESS_STREET, required = true)

@@ -4,7 +4,6 @@ import com.opencsv.bean.AbstractBeanField;
 import com.opencsv.exceptions.CsvConstraintViolationException;
 
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
@@ -43,5 +42,11 @@ public class LocalTimeConverter extends AbstractBeanField<LocalTime, String> {
         } catch (DateTimeParseException e) {
             throw new CsvConstraintViolationException("The value " + value + " is not a valid local time.");
         }
+    }
+
+    public String convertToWrite(LocalTime localTime) {
+        if (localTime == null) return null;
+
+        return localTime.format(HH_MM_P_FORMATTER);
     }
 }

@@ -1,7 +1,6 @@
 package io.github.jlmc.uploadcsv.locations.control;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 public class LocationIdsNotFoundException extends RuntimeException {
     private final Collection<String> invalidIds;

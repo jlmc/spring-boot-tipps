@@ -5,12 +5,14 @@ import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.CsvZoneIdConverter;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.SlotCsvResourceListConverter;
+import io.github.jlmc.uploadcsv.locations.entity.Location;
 import io.github.jlmc.uploadcsv.locations.entity.Slot;
 import lombok.Data;
 import org.springframework.data.util.Pair;
 
 import java.time.DayOfWeek;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,6 +51,48 @@ public class LocationCsvResource {
     @CsvCustomBindByName(column = BUSINESS_SUN, converter = SlotCsvResourceListConverter.class)
     List<SlotCsvResource> businessSlotsSunday;
 
+    public static LocationCsvResource from(Location entity) {
+        LocationCsvResource resource = new LocationCsvResource();
+        resource.id = entity.getId();
+        resource.name = entity.getName();
+        resource.address = Optional.ofNullable(entity.getAddress()).map(entityAddress -> {
+            return new AddressCsvResource(
+                    entityAddress.getAddress(),
+                    entityAddress.getZipCode(),
+                    entityAddress.getCity(),
+                    entityAddress.getRegionName(), entityAddress.getCountryName(),
+                    Optional.ofNullable(entityAddress.getCoordinates()).map(entityAddressCoordenates -> new CoordinatesCsvResource(entityAddressCoordenates.getLatitude(), entityAddressCoordenates.getLongitude())).orElse(null)
+                  );
+        }).orElse(null);
+        resource.imageUrl = entity.getImageUrl();
+        resource.phoneNumber = entity.getPhoneNumber();
+        resource.timeZone = entity.getTimeZone();
+
+        resource.businessSlotsMonday = toBusinessSlots(entity, DayOfWeek.MONDAY);
+        resource.businessSlotsTuesday = toBusinessSlots(entity, DayOfWeek.TUESDAY);
+        resource.businessSlotsWednesday = toBusinessSlots(entity, DayOfWeek.WEDNESDAY);
+        resource.businessSlotsThursday = toBusinessSlots(entity, DayOfWeek.THURSDAY);
+        resource.businessSlotsFriday = toBusinessSlots(entity, DayOfWeek.FRIDAY);
+        resource.businessSlotsSaturday = toBusinessSlots(entity, DayOfWeek.SATURDAY);
+        resource.businessSlotsSunday = toBusinessSlots(entity, DayOfWeek.SUNDAY);
+
+        return resource;
+    }
+
+    private static List<SlotCsvResource> toBusinessSlots(Location entity, DayOfWeek dayOfWeek) {
+        Map<DayOfWeek, Set<Slot>> openHours = entity.getOpenHours();
+
+        if (openHours == null) {
+            return Collections.emptyList();
+        }
+
+        return businessSlots(openHours.getOrDefault(dayOfWeek, Collections.emptySet()));
+    }
+
+    private static List<SlotCsvResource> businessSlots(Set<Slot> entitySlots) {
+        return entitySlots.stream().map(SlotCsvResource::from).toList();
+    }
+
     public Map<DayOfWeek, Set<Slot>> getOpenHours() {
         return Stream.of(
 
@@ -74,4 +118,6 @@ public class LocationCsvResource {
                          return Map.entry(key, slots);
                      }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
+
 }
