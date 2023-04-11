@@ -1,4 +1,4 @@
-package io.github.jlmc.uploadcsv.configurations;
+package io.github.jlmc.uploadcsv.configurations.cors;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

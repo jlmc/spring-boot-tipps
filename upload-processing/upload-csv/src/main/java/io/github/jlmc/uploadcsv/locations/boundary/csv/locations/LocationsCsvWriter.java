@@ -9,13 +9,8 @@ import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvWriter;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.LocationCsvResource;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
-import io.github.jlmc.uploadcsv.util.ByteArrayInOutStream;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
-import java.io.ByteArrayInputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Collection;
 
@@ -38,27 +33,9 @@ public class LocationsCsvWriter implements CsvWriter<Location> {
     }
 
     @Override
-    public Mono<ByteArrayInputStream> generateCsv(Collection<Location> entities) {
-        return Mono.fromCallable(() -> {
-            try {
-                ByteArrayInOutStream stream = new ByteArrayInOutStream();
-                OutputStreamWriter streamWriter = new OutputStreamWriter(stream);
-
-                write(entities, streamWriter);
-
-                streamWriter.flush();
-                return stream.getInputStream();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
-        }).subscribeOn(Schedulers.boundedElastic());
-    }
-
-    @Override
-    public Writer write(Collection<Location> locations, Writer writer) {
+    public Writer write(Collection<Location> entities, Writer writer) {
         try {
-            var resources = locations.stream().map(this::toResource).toList();
+            var resources = entities.stream().map(this::toResource).toList();
 
             StatefulBeanToCsv<LocationCsvResource> beanToCsv = createBeanToCsv(writer);
 

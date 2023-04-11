@@ -30,6 +30,7 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
      * @param   size   the initial size.
      * @exception  IllegalArgumentException if size is negative.
      */
+    @SuppressWarnings("unused")
     public ByteArrayInOutStream(int size) {
         super(size);
     }
@@ -48,7 +49,7 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
         ByteArrayInputStream in = new ByteArrayInputStream(this.buf, 0, this.count);
 
         // set the buffer of the ByteArrayOutputStream
-        // to null so it can't be altered anymore
+        // to null, so it can't be altered anymore
         this.buf = null;
 
         return in;

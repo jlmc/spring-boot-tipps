@@ -1,9 +1,10 @@
-package io.github.jlmc.uploadcsv.configurations;
+package io.github.jlmc.uploadcsv.configurations.jackson;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 
+@SuppressWarnings("CommentedOutCode")
 @Configuration
 public class JacksonConfiguration implements WebFluxConfigurer {
 

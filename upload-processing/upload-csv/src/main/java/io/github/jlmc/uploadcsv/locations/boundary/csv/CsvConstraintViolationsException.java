@@ -10,4 +10,9 @@ public class CsvConstraintViolationsException extends RuntimeException {
         super("Found " + violations.size() + " violation(s) in the input data.");
         this.violations = violations;
     }
+
+    @SuppressWarnings("unused")
+    public Collection<Violation> getViolations() {
+        return violations;
+    }
 }

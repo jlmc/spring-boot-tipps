@@ -9,4 +9,9 @@ public class LocationIdsNotFoundException extends RuntimeException {
         super("Location ids not found <[%s]>.".formatted(String.join(", ", invalidIds)));
         this.invalidIds = invalidIds;
     }
+
+    @SuppressWarnings("unused")
+    public Collection<String> getInvalidIds() {
+        return invalidIds;
+    }
 }

@@ -11,6 +11,7 @@ public class ApiDocs {
             """;
 
 
+    @SuppressWarnings("unused")
     @Schema(name = "request data")
     static final class ApiContent {
         @Schema(name = "file",

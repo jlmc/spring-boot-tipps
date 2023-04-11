@@ -1,8 +1,6 @@
 package io.github.jlmc.uploadcsv.locations.control;
 
 import io.github.jlmc.uploadcsv.locations.entity.Location;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,8 +15,6 @@ import java.util.stream.Collectors;
 @Service
 public class BulkUpsertAccountLocationsInteractor {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BulkUpsertAccountLocationsInteractor.class);
-
     private final LocationRepository locationRepository;
 
     public BulkUpsertAccountLocationsInteractor(LocationRepository locationRepository) {
@@ -32,14 +28,14 @@ public class BulkUpsertAccountLocationsInteractor {
                     return locations;
                 })
                 .flatMap(dataLocation -> this.updateLocation(accountId, dataLocation))
-                .flatMap(l -> locationRepository.save(l));
+                .flatMap(locationRepository::save);
     }
 
     private Mono<Location> updateLocation(String accountId, Location dataLocation) {
         if (dataLocation.getId() == null) {
             return Mono.just(dataLocation);
         } else {
-            return locationRepository.findById(dataLocation.getId())
+            return locationRepository.findByAccountIdAndId(accountId, dataLocation.getId())
                                      .map(locationEntity -> locationEntity.update(dataLocation));
         }
     }

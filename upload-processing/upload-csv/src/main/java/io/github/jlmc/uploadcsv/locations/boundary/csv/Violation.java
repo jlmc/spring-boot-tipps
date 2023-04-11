@@ -5,7 +5,4 @@ public record Violation(
         String message,
         Exception cause
 ) {
-    public Violation(Long lineNumber, String message) {
-        this(lineNumber, message, null);
-    }
 }

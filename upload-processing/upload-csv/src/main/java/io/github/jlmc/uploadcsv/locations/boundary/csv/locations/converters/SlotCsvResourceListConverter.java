@@ -43,9 +43,12 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
 
     @Override
     protected String convertToWrite(Object value) {
-        if (value == null) return null;
+        if (value == null) {
+            return null;
+        }
 
         StringBuilder stringBuilder = new StringBuilder();
+        @SuppressWarnings("unchecked")
         List<SlotCsvResource> slots = (List<SlotCsvResource>) value;
         for (SlotCsvResource slot : slots) {
             String start = Optional.of(slot)

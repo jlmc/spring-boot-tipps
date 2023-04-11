@@ -114,9 +114,7 @@ public class ResourceTest {
                 "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
                 "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
                 """;
-
-
-
+        
         CsvReaderResult<Location> result = csvReader.read("1234", csv);
 
         assertTrue(result.isValid());

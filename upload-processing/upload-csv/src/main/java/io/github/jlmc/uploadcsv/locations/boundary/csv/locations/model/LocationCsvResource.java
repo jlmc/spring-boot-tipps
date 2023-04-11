@@ -55,19 +55,19 @@ public class LocationCsvResource {
         LocationCsvResource resource = new LocationCsvResource();
         resource.id = entity.getId();
         resource.name = entity.getName();
-        resource.address = Optional.ofNullable(entity.getAddress()).map(entityAddress -> {
-            return new AddressCsvResource(
-                    entityAddress.getAddress(),
-                    entityAddress.getZipCode(),
-                    entityAddress.getCity(),
-                    entityAddress.getRegionName(), entityAddress.getCountryName(),
-                    Optional.ofNullable(entityAddress.getCoordinates()).map(entityAddressCoordenates -> new CoordinatesCsvResource(entityAddressCoordenates.getLatitude(), entityAddressCoordenates.getLongitude())).orElse(null)
-                  );
-        }).orElse(null);
+        resource.address = Optional.ofNullable(entity.getAddress()).map(entityAddress -> new AddressCsvResource(
+                entityAddress.getAddress(),
+                entityAddress.getZipCode(),
+                entityAddress.getCity(),
+                entityAddress.getRegionName(), entityAddress.getCountryName(),
+                Optional.ofNullable(entityAddress.getCoordinates())
+                        .map(entityAddressCoordinates -> new CoordinatesCsvResource(entityAddressCoordinates.getLatitude(),
+                                entityAddressCoordinates.getLongitude()))
+                        .orElse(null)
+        )).orElse(null);
         resource.imageUrl = entity.getImageUrl();
         resource.phoneNumber = entity.getPhoneNumber();
         resource.timeZone = entity.getTimeZone();
-
         resource.businessSlotsMonday = toBusinessSlots(entity, DayOfWeek.MONDAY);
         resource.businessSlotsTuesday = toBusinessSlots(entity, DayOfWeek.TUESDAY);
         resource.businessSlotsWednesday = toBusinessSlots(entity, DayOfWeek.WEDNESDAY);

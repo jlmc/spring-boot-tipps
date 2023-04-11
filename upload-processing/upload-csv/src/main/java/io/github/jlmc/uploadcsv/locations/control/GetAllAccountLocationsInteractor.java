@@ -14,6 +14,6 @@ public class GetAllAccountLocationsInteractor {
     }
 
     public Flux<Location> getAllAccountLocation(String accountId) {
-        return locationRepository.findAll();
+        return locationRepository.findByAccountId(accountId);
     }
 }
