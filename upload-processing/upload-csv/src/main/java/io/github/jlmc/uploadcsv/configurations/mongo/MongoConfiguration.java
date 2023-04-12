@@ -1,6 +1,5 @@
 package io.github.jlmc.uploadcsv.configurations.mongo;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
@@ -11,24 +10,11 @@ import java.util.List;
 public class MongoConfiguration {
 
 
-    /*
-        @Bean
-    fun mongoCustomConversions(): MongoCustomConversions? {
-        return MongoCustomConversions(
-            listOf(
-                MongoOffsetDateTimeWriter(),
-                MongoOffsetDateTimeReader()
-            )
-        )
-    }
+    /**
+     * @see org.springframework.data.convert.Jsr310Converters
      */
-    @Bean
+    @org.springframework.context.annotation.Bean
     public MongoCustomConversions customConversions() {
-        return new MongoCustomConversions(
-                List.of(
-                        new MongoLocalTimeReader(),
-                        new MongoLocalTimeWriter()
-                        )
-        );
+        return new MongoCustomConversions(List.copyOf(CustomJsr310Converters.getConvertersToRegister()));
     }
 }
