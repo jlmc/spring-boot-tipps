@@ -1,6 +1,5 @@
 package io.github.jlmc.uploadcsv.locations.entity;
 
-import com.opencsv.bean.CsvBindByName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +18,9 @@ import java.time.ZoneId;
 import java.util.Map;
 import java.util.Set;
 
-@Document(collection = "locations")
+import static io.github.jlmc.uploadcsv.locations.entity.Location.LOCATIONS;
+
+@Document(collection = LOCATIONS)
 
 
 @Data
@@ -27,7 +28,9 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Location {
-    @CsvBindByName
+
+    public static final String LOCATIONS = "locations";
+
     @EqualsAndHashCode.Include
     @ToString.Include
 
@@ -52,7 +55,6 @@ public class Location {
 
     @Version
     private Integer version;
-
 
     @Transient
     public Location update(Location that) {
