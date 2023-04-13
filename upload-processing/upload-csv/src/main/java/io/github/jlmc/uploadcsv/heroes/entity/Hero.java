@@ -32,6 +32,11 @@ public class Hero implements Persistable<String> {
     @Version
     private Integer version;
 
+    private Hero(String name, String nickName) {
+        this.name = name;
+        this.nickName = nickName;
+    }
+
     public static Hero createHero(String name, String nickName) {
         return new Hero(name, nickName);
     }
@@ -40,11 +45,5 @@ public class Hero implements Persistable<String> {
     @Override
     public boolean isNew() {
         return this.id == null;
-    }
-
-
-    private Hero(String name, String nickName) {
-        this.name = name;
-        this.nickName = nickName;
     }
 }

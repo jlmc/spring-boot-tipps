@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
  * ByteArrayInOutStream can not be used anymore.
  * <p>
  * The ByteArrayInputStream can be retrieved using <code>getInputStream()</code>.
+ *
  * @author Nick Russler
  */
 public class ByteArrayInOutStream extends ByteArrayOutputStream {
@@ -27,8 +28,8 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
      * Creates a new ByteArrayInOutStream, with a buffer capacity of
      * the specified size, in bytes.
      *
-     * @param   size   the initial size.
-     * @exception  IllegalArgumentException if size is negative.
+     * @param size the initial size.
+     * @throws IllegalArgumentException if size is negative.
      */
     @SuppressWarnings("unused")
     public ByteArrayInOutStream(int size) {
@@ -42,6 +43,7 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
      * that can be read from the byte array. The buffer array is not copied. This
      * instance of ByteArrayInOutStream can not be used anymore after calling this
      * method.
+     *
      * @return the ByteArrayInputStream instance
      */
     public ByteArrayInputStream getInputStream() {

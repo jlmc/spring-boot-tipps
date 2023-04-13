@@ -42,7 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * @see  <a href="https://medium.com/@victortemitope95/how-to-write-and-download-a-csv-file-in-spring-webflux-5df8d817a597">Example</a>
+ * @see <a href="https://medium.com/@victortemitope95/how-to-write-and-download-a-csv-file-in-spring-webflux-5df8d817a597">Example</a>
  */
 @Tag(name = "locations service", description = "the locations API with description tag annotation")
 
@@ -124,7 +124,7 @@ public class LocationsBulkOperationsController {
                        .then();
     }
 
-    @GetMapping( path = "/{accountId}")
+    @GetMapping(path = "/{accountId}")
     @ResponseBody
     public ResponseEntity<Mono<Resource>> exportLocations(@PathVariable("accountId") String accountId) {
         String fileName = String.format("%s.csv", RandomStringUtils.randomAlphabetic(10));

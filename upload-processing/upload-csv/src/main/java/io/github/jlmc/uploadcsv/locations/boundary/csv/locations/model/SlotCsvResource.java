@@ -15,11 +15,11 @@ public class SlotCsvResource {
     private LocalTime openAt;
     private LocalTime closeAt;
 
-    public Slot toEntity() {
-        return Slot.of(openAt, closeAt);
-    }
-
     public static SlotCsvResource from(Slot slot) {
         return new SlotCsvResource(slot.getOpenAt(), slot.getCloseAt());
+    }
+
+    public Slot toEntity() {
+        return Slot.of(openAt, closeAt);
     }
 }
