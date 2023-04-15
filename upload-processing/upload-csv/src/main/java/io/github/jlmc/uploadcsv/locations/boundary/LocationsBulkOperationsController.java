@@ -3,17 +3,9 @@ package io.github.jlmc.uploadcsv.locations.boundary;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvConstraintViolationsException;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvReader;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
-import io.github.jlmc.uploadcsv.heroes.boundary.ApiDocs;
 import io.github.jlmc.uploadcsv.locations.control.BulkUpsertAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.locations.control.GetAllAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
@@ -41,12 +33,6 @@ import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-/**
- * @see <a href="https://medium.com/@victortemitope95/how-to-write-and-download-a-csv-file-in-spring-webflux-5df8d817a597">Example</a>
- */
-@Tag(name = "locations service", description = "the locations API with description tag annotation")
-
-
 @Validated
 @RestController
 
@@ -59,7 +45,6 @@ public class LocationsBulkOperationsController {
     private final CsvReader<Location> locationCsvReader;
     private final CsvWriter<Location> locationsCsvWriter;
     private final BulkUpsertAccountLocationsInteractor bulkUpsertAccountLocationsInteractor;
-
     private final GetAllAccountLocationsInteractor getAllAccountLocationsInteractor;
 
     public LocationsBulkOperationsController(CsvReader<Location> locationCsvReader,
@@ -72,28 +57,10 @@ public class LocationsBulkOperationsController {
         this.getAllAccountLocationsInteractor = getAllAccountLocationsInteractor;
     }
 
-    @Operation(
-            operationId = "exportLocations",
-            summary = "exports bulk csv content",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "exported with success",
-                            headers = {
-                                    @Header(name = HttpHeaders.CONTENT_TYPE, required = true, schema = @Schema(implementation = String.class, example = "text/csv")),
-                                    @Header(name = HttpHeaders.CONTENT_DISPOSITION, required = true, schema = @Schema(implementation = String.class, example = "attachment; filename=locations-123.csv"))
-                            },
-                            content = {
-                                    @Content(mediaType = "text/csv",
-                                            schema = @Schema(implementation = String.class),
-                                            examples = {@ExampleObject(value = ApiDocs.EXAMPLE)})
-                            }
-                    )
-            }
-    )
     @PostMapping(
             path = "/{accountId}",
-            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}
+            consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<Void> importLocationsInBulk(@PathVariable("accountId") String accountId, @RequestPart("file") FilePart filePart) {

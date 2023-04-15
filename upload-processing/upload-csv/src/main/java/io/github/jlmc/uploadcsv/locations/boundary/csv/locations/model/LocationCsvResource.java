@@ -7,7 +7,10 @@ import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.CsvZ
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.SlotCsvResourceListConverter;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import io.github.jlmc.uploadcsv.locations.entity.Slot;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.util.Pair;
 
 import java.time.DayOfWeek;
@@ -23,6 +26,9 @@ import java.util.stream.Stream;
 import static io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.Columns.*;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class LocationCsvResource {
     @CsvBindByName(column = LOCATION_ID)
     String id;

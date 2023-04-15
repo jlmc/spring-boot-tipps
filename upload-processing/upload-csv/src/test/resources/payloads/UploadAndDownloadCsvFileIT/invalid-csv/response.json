@@ -1,0 +1,18 @@
+{
+  "code": "XXXX4001",
+  "message": "Found 3 violation(s) in the input data.",
+  "fields": [
+    {
+      "name": "Line 2",
+      "description": "'America/unknow' is not in the zones list defined by IANA."
+    },
+    {
+      "name": "Line 3",
+      "description": "Field 'name' is mandatory but no value was provided."
+    },
+    {
+      "name": "Line 4",
+      "description": "The csv slots periods must have a start and a close element, the value 02:00pm can be parsed to a Slot."
+    }
+  ]
+}

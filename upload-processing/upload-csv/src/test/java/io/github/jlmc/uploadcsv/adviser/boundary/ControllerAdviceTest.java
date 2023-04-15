@@ -2,6 +2,7 @@ package io.github.jlmc.uploadcsv.adviser.boundary;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.jlmc.uploadcsv.Resources;
 import io.github.jlmc.uploadcsv.adviser.control.ConstraintViolationExceptionHandler;
 import io.github.jlmc.uploadcsv.adviser.control.CsvConstraintViolationsExceptionHandler;
 import io.github.jlmc.uploadcsv.adviser.control.MethodArgumentNotValidExceptionHandler;
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,12 +36,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static io.github.jlmc.uploadcsv.Resources.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @WebFluxTest()
@@ -62,10 +61,6 @@ class ControllerAdviceTest {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    private static String readResource(Resource classPathResource) throws IOException {
-        return Files.readString(classPathResource.getFile().toPath());
-    }
 
     @Test
     @DisplayName("""
@@ -90,8 +85,7 @@ class ControllerAdviceTest {
             when I call a controller with one invalid query parameter, it should return an response with error fields
             """
     )
-    void oneInvalidParameter() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("payloads/ControllerAdviceTest/oneInvalidParameter/response.json");
+    void oneInvalidParameter() {
         webTestClient.get()
                      .uri(uriBuilder ->
                              uriBuilder
@@ -103,7 +97,7 @@ class ControllerAdviceTest {
                      .exchange()
                      .expectStatus().isBadRequest()
                      .expectBody()
-                     .json(readResource(classPathResource), true);
+                     .json(classPathResourceContent("payloads/ControllerAdviceTest/oneInvalidParameter/response.json"), true);
     }
 
     @Test
@@ -112,8 +106,7 @@ class ControllerAdviceTest {
             it should return an response with error fields
             """
     )
-    void onePathParameterIsInvalid() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("payloads/ControllerAdviceTest/onePathParameterIsInvalid/response.json");
+    void onePathParameterIsInvalid() {
         webTestClient.get()
                      .uri(uriBuilder ->
                              uriBuilder
@@ -123,7 +116,9 @@ class ControllerAdviceTest {
                      .exchange()
                      .expectStatus().isBadRequest()
                      .expectBody()
-                     .json(readResource(classPathResource), true);
+                     .json(
+                             Resources.classPathResourceContent("payloads/ControllerAdviceTest/onePathParameterIsInvalid/response.json"),
+                             true);
     }
 
     private void requestAndVerify(
@@ -139,7 +134,7 @@ class ControllerAdviceTest {
                      .json(expectedResponse, true);
     }
 
-    private void requestAndVerify(Resource requestPayload, Resource expectedResponse) throws IOException {
+    private void requestAndVerify(Resource requestPayload, Resource expectedResponse) {
         webTestClient.post()
                      .uri("/customers")
                      .contentType(MediaType.APPLICATION_JSON)
@@ -147,41 +142,41 @@ class ControllerAdviceTest {
                      .exchange()
                      .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                      .expectBody()
-                     .json(readResource(expectedResponse), true);
+                     .json(resourceContent(expectedResponse), true);
     }
 
     @Test
     @DisplayName("when a payload contains a violation in nested collection of strings should should return bad request")
-    void violationInCollectionOfStrings() throws IOException {
-        Resource request = new ClassPathResource("payloads/ControllerAdviceTest/violationInCollectionOfStrings/request.json");
-        Resource response = new ClassPathResource("payloads/ControllerAdviceTest/violationInCollectionOfStrings/response.json");
+    void violationInCollectionOfStrings() {
+        Resource request = classPathResource("payloads/ControllerAdviceTest/violationInCollectionOfStrings/request.json");
+        Resource response = classPathResource("payloads/ControllerAdviceTest/violationInCollectionOfStrings/response.json");
 
-        requestAndVerify(readResource(request), readResource(response));
+        requestAndVerify(resourceContent(request), resourceContent(response));
     }
 
     @Test
     @DisplayName("when the violation is on the root of the request payload")
-    void violationOnTheRootOfPayload() throws IOException {
-        Resource resource = new ClassPathResource("payloads/ControllerAdviceTest/violationOnTheRootOfPayload/request.json");
-        Resource response = new ClassPathResource("payloads/ControllerAdviceTest/violationOnTheRootOfPayload/response.json");
+    void violationOnTheRootOfPayload() {
+        Resource resource = classPathResource("payloads/ControllerAdviceTest/violationOnTheRootOfPayload/request.json");
+        Resource response = classPathResource("payloads/ControllerAdviceTest/violationOnTheRootOfPayload/response.json");
 
         requestAndVerify(resource, response);
     }
 
     @Test
     @DisplayName("when the violation is on a child node object of the root of the request payload")
-    void violationOnChildOfRootOfPayload() throws IOException {
+    void violationOnChildOfRootOfPayload() {
         requestAndVerify(
-                new ClassPathResource("payloads/ControllerAdviceTest/violationOnChildOfRootOfPayload/request.json"),
-                new ClassPathResource("payloads/ControllerAdviceTest/violationOnChildOfRootOfPayload/response.json"));
+                classPathResource("payloads/ControllerAdviceTest/violationOnChildOfRootOfPayload/request.json"),
+                classPathResource("payloads/ControllerAdviceTest/violationOnChildOfRootOfPayload/response.json"));
     }
 
     @Test
     @DisplayName("when the violation is on one array nested in the root of the request payload")
-    void violationOnArrayElementInRootPayload() throws IOException {
+    void violationOnArrayElementInRootPayload() {
         requestAndVerify(
-                new ClassPathResource("payloads/ControllerAdviceTest/violationOnArrayElementInRootPayload/request.json"),
-                new ClassPathResource("payloads/ControllerAdviceTest/violationOnArrayElementInRootPayload/response.json")
+                classPathResource("payloads/ControllerAdviceTest/violationOnArrayElementInRootPayload/request.json"),
+                classPathResource("payloads/ControllerAdviceTest/violationOnArrayElementInRootPayload/response.json")
         );
     }
 

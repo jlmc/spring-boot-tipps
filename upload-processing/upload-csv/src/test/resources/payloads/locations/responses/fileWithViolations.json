@@ -1,0 +1,11 @@
+{
+  "code" : "XXXX4001",
+  "message" : "Found 2 violation(s) in the input data.",
+  "fields" : [ {
+    "name" : "Line 2",
+    "description" : "Field 'name' is mandatory but no value was provided."
+  }, {
+    "name" : "Line 2",
+    "description" : "The csv slots periods must have a start and a close element, the value 02:00pm can be parsed to a Slot."
+  } ]
+}

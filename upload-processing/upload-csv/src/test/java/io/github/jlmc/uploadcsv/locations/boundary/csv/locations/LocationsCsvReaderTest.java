@@ -4,14 +4,14 @@ import io.github.jlmc.uploadcsv.csv.boundary.CsvIllegalDataException;
 import io.github.jlmc.uploadcsv.locations.entity.Coordinates;
 import io.github.jlmc.uploadcsv.locations.entity.Slot;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
 
+import static io.github.jlmc.uploadcsv.Resources.classPathResource;
+import static io.github.jlmc.uploadcsv.Resources.classPathResourceContent;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.TUESDAY;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,10 +22,10 @@ class LocationsCsvReaderTest {
     private final LocationsCsvReader sut = new LocationsCsvReader();
 
     @Test
-    void readInputData() throws IOException {
-        var resource = new ClassPathResource("payloads/locations/post-locations-bulk-updates.csv");
-        var result =
-                sut.read(ACCOUNT_ID, Files.readString(resource.getFile().toPath()));
+    void readInputData() {
+        String content = classPathResourceContent("payloads/locations/post-locations-bulk-updates.csv");
+        var result = sut.read(ACCOUNT_ID, content);
+
 
         assertNotNull(result);
         assertEquals(3, result.items().size());
@@ -59,10 +59,9 @@ class LocationsCsvReaderTest {
     }
 
     @Test
-    void readInputWithViolations() throws IOException {
-        var resource = new ClassPathResource("payloads/locations/post-locations-bulk-with-violations.csv");
-        var result =
-                sut.read(ACCOUNT_ID, Files.readString(resource.getFile().toPath()));
+    void readInputWithViolations() {
+        var content =  classPathResourceContent("payloads/locations/post-locations-bulk-with-violations.csv");
+        var result = sut.read(ACCOUNT_ID, content);
 
         assertNotNull(result);
         assertFalse(result.isValid());
@@ -75,7 +74,7 @@ class LocationsCsvReaderTest {
 
     @Test
     void readIllegalInputData() {
-        var resource = new ClassPathResource("payloads/locations/post-locations-bulk-with-invalid-header.csv");
+        var resource = classPathResource("payloads/locations/post-locations-bulk-with-invalid-header.csv");
 
         var exception = assertThrows(
                 CsvIllegalDataException.class,

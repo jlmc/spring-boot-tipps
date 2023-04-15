@@ -1,8 +1,8 @@
 package io.github.jlmc.uploadcsv;
 
 import io.github.jlmc.uploadcsv.csv.boundary.CsvReader;
-import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
+import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvReader;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvWriter;
 import io.github.jlmc.uploadcsv.locations.entity.Address;
@@ -21,9 +21,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 //@Disabled
-public class ResourceTest {
+public class OpenCsvDrivingTest {
 
-    String text = """
+    final String text = """
            "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
            "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
            "6434b20bb62491116a7b1ad0","Lisboa","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
@@ -36,8 +36,8 @@ public class ResourceTest {
            "6434b20bb62491116a7b1acf","Coimbra","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
            "6434b20bb62491116a7b1ace","Almada","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
            """;
-    CsvReader<Location> csvReader = new LocationsCsvReader();
-    CsvWriter<Location> csvWriter = new LocationsCsvWriter();
+    final CsvReader<Location> csvReader = new LocationsCsvReader();
+    final CsvWriter<Location> csvWriter = new LocationsCsvWriter();
 
     List<Location> locations = new ArrayList<>();
 

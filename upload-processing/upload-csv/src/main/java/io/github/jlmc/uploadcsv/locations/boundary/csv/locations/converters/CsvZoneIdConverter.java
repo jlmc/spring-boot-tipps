@@ -8,6 +8,10 @@ import java.time.ZoneId;
 public class CsvZoneIdConverter extends AbstractBeanField<ZoneId, String> {
     @Override
     protected Object convert(String value) throws CsvConstraintViolationException {
+        return zoneIdOf(value);
+    }
+
+    public static ZoneId zoneIdOf(String value) throws CsvConstraintViolationException {
         if (value == null) return null;
 
         if (!ZoneId.getAvailableZoneIds().contains(value))

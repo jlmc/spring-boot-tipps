@@ -1,0 +1,12 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://admin:admin@localhost:27017/admin
+      auto-index-creation: true
+
+mongock:
+  enabled: false
+
+logging.level.org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+logging.level.org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+logging.level.org.springframework.data.mongodb.core: DEBUG

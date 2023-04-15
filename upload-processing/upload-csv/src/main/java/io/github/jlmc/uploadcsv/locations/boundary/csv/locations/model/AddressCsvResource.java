@@ -15,7 +15,7 @@ import static io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.Co
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 
 public class AddressCsvResource {
     @CsvBindByName(column = ADDRESS_STREET, required = true)
