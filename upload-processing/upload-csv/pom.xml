@@ -116,12 +116,14 @@
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
         </dependency>
+        -->
         <!--       <dependency>
                    <groupId>org.springdoc</groupId>
                    <artifactId>springdoc-openapi-data-rest</artifactId>
@@ -154,6 +156,131 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <!-- If you use JUnit 5 you will need to add a surefire plugin too. -->
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.8</version>
+                <!--
+                <configuration>
+                    <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+                    <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+                    <output>file</output>
+                    <append>true</append>
+                    <excludes>
+                        <exclude>*MethodAccess</exclude>
+                    </excludes>
+                </configuration>
+                -->
+                <configuration>
+                    <excludes>
+                        <exclude>*MethodAccess</exclude>
+                    </excludes>
+                    <rules>
+                        <!--
+                        Check configuration used to specify rules on element types
+                            (BUNDLE, PACKAGE, CLASS, SOURCEFILE or METHOD) with a list of limits.
+
+                            Each limit applies to a certain counter
+                            (INSTRUCTION, LINE, BRANCH, COMPLEXITY, METHOD, CLASS)
+
+                            and defines a minimum or maximum for the corresponding value
+
+                            (TOTALCOUNT, COVEREDCOUNT, MISSEDCOUNT, COVEREDRATIO, MISSEDRATIO).
+                            If a limit refers to a ratio it must be in the range from 0.0 to 1.0 where
+                             the number of decimal places will also determine the precision in error messages. A limit ratio may optionally be declared as a percentage where 0.80 and 80% represent the same value.
+
+                        If not specified the following defaults are assumed:
+
+                        rule element: BUNDLE
+                        limit counter: INSTRUCTION
+                        limit value: COVEREDRATIO
+                        -->
+                        <rule>
+                            <element>PACKAGE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.50</minimum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!--
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>test-compile</phase>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                -->
+            </plugin>
+
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <executions>
+                    <execution>
+                        <id>add-integration-test-source-as-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/it/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            -->
         </plugins>
     </build>
 
