@@ -89,7 +89,6 @@ public class UpdateLocationsOpenAndCloseAtToIsoLocalTime {
                      }
                  });
 
-
         return location;
     }
 

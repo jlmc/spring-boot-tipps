@@ -6,6 +6,7 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvException;
+import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvIllegalDataException;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReader;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReaderResult;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.Violation;
@@ -22,13 +23,15 @@ import java.util.stream.Collectors;
 
 @Component
 public class LocationsCsvReader implements CsvReader<Location> {
+
     @Override
     public CsvReaderResult<Location> read(String accountId, String csvContent) {
         StringReader reader = new StringReader(csvContent);
 
 
         CsvToBean<LocationCsvResource> csvCsvToBean = createStatefulBeanToCsv(reader);
-        List<LocationCsvResource> items = csvCsvToBean.parse();
+
+        List<LocationCsvResource> items = parse(csvCsvToBean);
 
         List<CsvException> capturedExceptions = csvCsvToBean.getCapturedExceptions();
 
@@ -67,6 +70,25 @@ public class LocationsCsvReader implements CsvReader<Location> {
                 .withThrowExceptions(false)
                 .withFieldAsNull(CSVReaderNullFieldIndicator.BOTH)
                 .build();
+    }
+
+    private List<LocationCsvResource> parse(CsvToBean<LocationCsvResource> csvCsvToBean) {
+        try {
+            return csvCsvToBean.parse();
+        } catch (IllegalStateException e) {
+            throw handledException(e);
+        }
+    }
+
+    private CsvIllegalDataException handledException(Exception exception) {
+        if (exception.getCause() instanceof CsvException csvException) {
+            var lineNumber = csvException.getLineNumber();
+            var errorName = (lineNumber < 0) ? "Csv Header" : "Line " + lineNumber;
+            var errorDetail = csvException.getMessage();
+            return new CsvIllegalDataException(errorName, errorDetail, csvException);
+        } else {
+            return new CsvIllegalDataException(null, null, exception);
+        }
     }
 
 }

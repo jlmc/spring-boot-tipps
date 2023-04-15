@@ -1,0 +1,10 @@
+{
+  "code": "XXXX4000",
+  "message": "Request cannot be processed due to validation errors",
+  "fields": [
+    {
+      "name": "per_page",
+      "description": "The Query parameter 'per_page' must be between 1 and 10"
+    }
+  ]
+}

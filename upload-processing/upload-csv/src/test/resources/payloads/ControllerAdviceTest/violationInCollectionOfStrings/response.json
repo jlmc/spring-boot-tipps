@@ -1,0 +1,14 @@
+{
+  "code": "XXXX4000",
+  "message": "Request cannot be processed due to validation errors",
+  "fields": [
+    {
+      "name": "contacts[1].useTags[2]",
+      "description": "must not be blank"
+    },
+    {
+      "name": "contacts[2].useTags[1]",
+      "description": "must not be blank"
+    }
+  ]
+}
