@@ -1,4 +1,6 @@
-package io.github.jlmc.uploadcsv.locations.boundary.csv;
+package io.github.jlmc.uploadcsv.csv.boundary;
+
+import io.github.jlmc.uploadcsv.csv.entity.Violation;
 
 import java.util.Collection;
 

@@ -2,7 +2,7 @@ package io.github.jlmc.uploadcsv.adviser.control;
 
 import io.github.jlmc.uploadcsv.adviser.entity.ApiError;
 import io.github.jlmc.uploadcsv.adviser.entity.ErrorField;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvConstraintViolationsException;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvConstraintViolationsException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

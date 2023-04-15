@@ -1,4 +1,4 @@
-package io.github.jlmc.uploadcsv.locations.boundary.csv;
+package io.github.jlmc.uploadcsv.csv.boundary;
 
 import io.github.jlmc.uploadcsv.util.ByteArrayInOutStream;
 import reactor.core.publisher.Mono;

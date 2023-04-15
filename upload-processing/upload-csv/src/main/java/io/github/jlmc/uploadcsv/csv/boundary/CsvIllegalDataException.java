@@ -1,4 +1,4 @@
-package io.github.jlmc.uploadcsv.locations.boundary.csv;
+package io.github.jlmc.uploadcsv.csv.boundary;
 
 import java.util.Optional;
 
@@ -6,8 +6,8 @@ public class CsvIllegalDataException extends IllegalArgumentException {
 
     private final Error error;
 
-    public CsvIllegalDataException(String errorName, String errorDescription, Throwable cause) {
-        super(cause.getMessage(), cause);
+    public CsvIllegalDataException(String errorName, String errorDescription, String message, Throwable cause) {
+        super(message, cause);
 
         if (errorName != null && errorDescription != null) {
             this.error = new Error(errorName, errorDescription);

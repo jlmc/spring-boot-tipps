@@ -3,7 +3,7 @@ package io.github.jlmc.uploadcsv.adviser.boundary;
 import io.github.jlmc.uploadcsv.adviser.control.ExceptionHandler;
 import io.github.jlmc.uploadcsv.adviser.entity.ApiError;
 import io.github.jlmc.uploadcsv.adviser.entity.ErrorField;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvIllegalDataException;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvIllegalDataException;
 import org.springframework.stereotype.Component;
 
 @Component

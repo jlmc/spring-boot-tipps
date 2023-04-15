@@ -1,4 +1,4 @@
-package io.github.jlmc.uploadcsv.locations.boundary.csv;
+package io.github.jlmc.uploadcsv.csv.entity;
 
 import java.util.List;
 import java.util.Optional;

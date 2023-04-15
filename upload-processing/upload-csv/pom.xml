@@ -116,6 +116,12 @@
             <artifactId>springdoc-openapi-webflux-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
         <!--       <dependency>
                    <groupId>org.springdoc</groupId>
                    <artifactId>springdoc-openapi-data-rest</artifactId>

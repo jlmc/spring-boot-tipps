@@ -6,7 +6,7 @@ import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvWriter;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.LocationCsvResource;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package io.github.jlmc.uploadcsv.locations.boundary.csv;
+package io.github.jlmc.uploadcsv.csv.entity;
 
 public record Violation(
         Long lineNumber,

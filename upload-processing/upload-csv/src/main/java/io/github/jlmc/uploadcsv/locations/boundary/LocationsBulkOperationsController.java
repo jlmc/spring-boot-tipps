@@ -1,9 +1,9 @@
 package io.github.jlmc.uploadcsv.locations.boundary;
 
+import io.github.jlmc.uploadcsv.csv.boundary.CsvConstraintViolationsException;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvReader;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
 import io.github.jlmc.uploadcsv.heroes.boundary.ApiDocs;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvConstraintViolationsException;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReader;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvWriter;
 import io.github.jlmc.uploadcsv.locations.control.BulkUpsertAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.locations.control.GetAllAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.locations.entity.Location;

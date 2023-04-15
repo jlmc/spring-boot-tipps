@@ -5,8 +5,8 @@ import io.github.jlmc.uploadcsv.adviser.control.CsvConstraintViolationsException
 import io.github.jlmc.uploadcsv.adviser.control.MethodArgumentNotValidExceptionHandler;
 import io.github.jlmc.uploadcsv.adviser.control.WebExchangeBindExceptionHandler;
 import io.github.jlmc.uploadcsv.adviser.entity.ApiError;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvConstraintViolationsException;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvIllegalDataException;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvConstraintViolationsException;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvIllegalDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

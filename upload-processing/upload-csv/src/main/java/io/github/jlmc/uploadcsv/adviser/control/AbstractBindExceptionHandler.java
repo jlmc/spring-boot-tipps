@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-class AbstractBindExceptionHandler {
+abstract class AbstractBindExceptionHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractBindExceptionHandler.class);
 

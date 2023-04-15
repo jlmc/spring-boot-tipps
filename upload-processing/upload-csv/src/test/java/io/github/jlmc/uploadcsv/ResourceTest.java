@@ -1,8 +1,8 @@
 package io.github.jlmc.uploadcsv;
 
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReader;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvReaderResult;
-import io.github.jlmc.uploadcsv.locations.boundary.csv.CsvWriter;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvReader;
+import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
+import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvReader;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvWriter;
 import io.github.jlmc.uploadcsv.locations.entity.Address;
