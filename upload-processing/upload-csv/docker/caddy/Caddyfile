@@ -1,0 +1,9 @@
+http://localhost:9090, http://http-proxy:9090 {
+    route /certs {
+        reverse_proxy http://api-gw-stub:3000
+    }
+
+    route /jwt {
+        reverse_proxy http://api-gw-stub:3000
+    }
+}

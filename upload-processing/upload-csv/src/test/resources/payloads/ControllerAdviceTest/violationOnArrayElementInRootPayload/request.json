@@ -1,0 +1,23 @@
+{
+  "id": "generated-id",
+  "firstName": "Duke",
+  "lastName": "June",
+  "details": {
+    "nif": "123456789",
+    "bornYear": 2000
+  },
+  "contacts": [
+    {
+      "type": "phone",
+      "value": "+351 239 641 899"
+    },
+    {
+      "type": "email",
+      "value": " "
+    },
+    {
+      "type": "fax",
+      "value": "+351 444 333 222"
+    }
+  ]
+}

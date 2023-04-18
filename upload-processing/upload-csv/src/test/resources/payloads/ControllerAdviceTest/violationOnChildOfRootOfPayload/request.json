@@ -1,0 +1,8 @@
+{
+  "firstName": "Duke",
+  "lastName": "June",
+  "details": {
+    "nif": "1234",
+    "bornYear": 1899
+  }
+}

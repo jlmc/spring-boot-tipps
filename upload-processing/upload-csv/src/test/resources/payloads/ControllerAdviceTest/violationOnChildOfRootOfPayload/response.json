@@ -1,0 +1,10 @@
+{
+  "code": "XXXX4000",
+  "message": "Request cannot be processed due to validation errors",
+  "fields": [
+    {
+      "name" : "details.bornYear",
+      "description" : "must be greater than or equal to 1990"
+    }
+  ]
+}
