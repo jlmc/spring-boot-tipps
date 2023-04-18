@@ -1,6 +1,7 @@
 package io.github.jlmc.uploadcsv.locations.boundary.csv.locations;
 
 import com.opencsv.CSVWriter;
+import com.opencsv.ICSVWriter;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
@@ -22,10 +23,9 @@ public class LocationsCsvWriter implements CsvWriter<Location> {
                 LocationsColumnNameMappingStrategy.columnNameMappingStrategy();
 
         return new StatefulBeanToCsvBuilder<LocationCsvResource>(writer)
-                .withQuotechar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
-                //.withLineEnd(RFC4180_LINE_END)
-                .withLineEnd(CSVWriter.DEFAULT_LINE_END)
-                .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+                .withQuotechar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
+                .withLineEnd(ICSVWriter.DEFAULT_LINE_END)
+                .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withMappingStrategy(headerColumnNameMappingStrategy)
                 .withOrderedResults(true)
                 .withThrowExceptions(false)

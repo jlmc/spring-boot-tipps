@@ -170,7 +170,6 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <forkedProcessExitTimeoutInSeconds>240</forkedProcessExitTimeoutInSeconds>
-                  <!--  <debugForkedProcess>true</debugForkedProcess>-->
                 </configuration>
                 <executions>
                     <execution>
