@@ -2,9 +2,14 @@ package io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Columns {
+import static java.util.stream.Collectors.toMap;
+
+public final class Columns {
+
+    private Columns() {
+        throw new UnsupportedOperationException();
+    }
 
     public static final String LOCATION_ID = "LOCATION_ID";
     public static final String LOCATION_NAME = "LOCATION_NAME";
@@ -48,10 +53,10 @@ public class Columns {
             BUSINESS_SUN
     );
 
-    public static final Map<String, Integer> COLUMN_INDEXES =
+    private static final Map<String, Integer> COLUMN_INDEXES =
             COLUMNS.stream()
                    .map(it -> Map.entry(it, COLUMNS.indexOf(it)))
-                   .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                   .collect(toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     public static Integer indexOf(String columnName) {
         return COLUMN_INDEXES.getOrDefault(columnName, Integer.MAX_VALUE);

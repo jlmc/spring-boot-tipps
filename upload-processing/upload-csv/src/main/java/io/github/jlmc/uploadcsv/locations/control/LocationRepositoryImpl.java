@@ -50,14 +50,8 @@ public class LocationRepositoryImpl implements LocationsQueries {
 
     @Override
     public Flux<String> findAllIdsByAccountIdAndIdIn(String accountId, Collection<String> ids) {
-        /*
-        val query = Query(Criteria.where("accountId").`is`(accountId).and("id").`in`(ids))
-        query.fields().include("id", "accountId", "name", "timeZone", "address")
-        return reactiveMongoTemplate.find(query, Location::class.java).mapNotNull(Location::id)
-        */
         Query query = new Query(Criteria.where("accountId").is(accountId).and("id").in(ids));
         query.fields().include("id");
-        //return reactiveMongoTemplate.findDistinct(query, "id", "locations", String.class);
         return reactiveMongoTemplate.find(query, Location.class).map(Location::getId);
     }
 }

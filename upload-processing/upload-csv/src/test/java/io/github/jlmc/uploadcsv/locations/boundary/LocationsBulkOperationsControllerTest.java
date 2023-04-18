@@ -89,7 +89,7 @@ class LocationsBulkOperationsControllerTest {
 
         @Test
         void whenExistsLocations() {
-            when(getAllAccountLocationsInteractor.getAllAccountLocation(eq("1")))
+            when(getAllAccountLocationsInteractor.getAllAccountLocation("1"))
                     .thenReturn(Flux.fromIterable(List.of(ObjectFactory.location("1"), ObjectFactory.location("2"))));
 
             String expected = resourceContent(classPathResource("payloads/locations/responses/download-csv.csv"));

@@ -250,10 +250,7 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>0.8.7</version>
-<!--                    <version2>${maven.jacoco.plugin.version}</version2>-->
                 </plugin>
-
-                <!-- TODO: remove plugin below when not needed by spotbugs-maven-plugin anymore -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
@@ -267,6 +264,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
-
 </project>
