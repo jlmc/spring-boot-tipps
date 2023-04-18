@@ -38,7 +38,7 @@ public class ConstraintViolationExceptionHandler implements ExceptionHandler<Con
                     methodNode.getName(),
                     methodNode.getParameterTypes().toArray(new Class[0]));
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -116,8 +116,7 @@ public class ConstraintViolationExceptionHandler implements ExceptionHandler<Con
                 new ArrayList<>(Arrays.asList(method.getParameterAnnotations()[parameterNode.getParameterIndex()]));
 
         Method interfaceMethod = ClassUtils.getInterfaceMethodIfPossible(method, beanClass);
-        //noinspection ConstantValue
-        if (interfaceMethod != null && interfaceMethod != method) {
+        if (method != interfaceMethod) {
             parameterAnnotations.addAll(Arrays.asList(interfaceMethod.getParameterAnnotations()[parameterNode.getParameterIndex()]));
         }
 

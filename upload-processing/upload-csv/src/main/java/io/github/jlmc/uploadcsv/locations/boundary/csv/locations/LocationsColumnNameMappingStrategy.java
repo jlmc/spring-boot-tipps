@@ -7,7 +7,11 @@ import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model.LocationC
 
 import java.util.Comparator;
 
-class LocationsColumnNameMappingStrategy {
+final class LocationsColumnNameMappingStrategy {
+
+    private LocationsColumnNameMappingStrategy() {
+        throw new UnsupportedOperationException();
+    }
 
     static HeaderColumnNameMappingStrategy<LocationCsvResource> columnNameMappingStrategy() {
         var strategy =

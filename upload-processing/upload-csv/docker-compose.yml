@@ -58,6 +58,16 @@ services:
 #      - demo-network
 
 
+
+  sonarqube:
+    # https://hub.docker.com/_/sonarqube
+    # http://localhost:9000
+    # https://docs.sonarqube.org/9.9/analyzing-source-code/scanners/sonarscanner-for-maven/
+    image: sonarqube:8.9-community
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+
 networks:
   demo-network:
     driver: bridge

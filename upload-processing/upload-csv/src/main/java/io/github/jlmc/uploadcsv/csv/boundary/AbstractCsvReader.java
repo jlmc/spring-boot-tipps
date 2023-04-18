@@ -1,6 +1,5 @@
 package io.github.jlmc.uploadcsv.csv.boundary;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.ICSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -20,7 +19,7 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
 
     private final Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy;
 
-    public AbstractCsvReader(Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy) {
+    protected AbstractCsvReader(Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy) {
         this.columnNameMappingStrategy = columnNameMappingStrategy;
     }
 
@@ -50,7 +49,7 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
         HeaderColumnNameMappingStrategy<R> rHeaderColumnNameMappingStrategy = columnNameMappingStrategy.get();
         return new CsvToBeanBuilder<R>(reader)
                 .withMappingStrategy(rHeaderColumnNameMappingStrategy)
-                .withQuoteChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
+                .withQuoteChar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
                 .withOrderedResults(true)
                 .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withThrowExceptions(false)

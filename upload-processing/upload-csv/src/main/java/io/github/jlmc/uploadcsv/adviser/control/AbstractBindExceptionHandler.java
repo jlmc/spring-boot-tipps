@@ -32,7 +32,7 @@ abstract class AbstractBindExceptionHandler {
     private final MessageSource messageSource;
     private final ObjectMapper mapper;
 
-    public AbstractBindExceptionHandler(MessageSource messageSource, ObjectMapper mapper) {
+    protected AbstractBindExceptionHandler(MessageSource messageSource, ObjectMapper mapper) {
         this.messageSource = messageSource;
         this.mapper = mapper;
     }
@@ -116,7 +116,6 @@ abstract class AbstractBindExceptionHandler {
         return jsonPathBuilder.asString();
     }
 
-    //     private fun getJacksonPropertyDefinition(beanClass: Class<*>, nodeName: String): BeanPropertyDefinition {
     private BeanPropertyDefinition getJacksonPropertyDefinition(Class<?> beanClass, String nodeName) {
         JavaType type = mapper.getTypeFactory().constructType(beanClass);
         BeanDescription beanDescription = mapper.getSerializationConfig().introspect(type);

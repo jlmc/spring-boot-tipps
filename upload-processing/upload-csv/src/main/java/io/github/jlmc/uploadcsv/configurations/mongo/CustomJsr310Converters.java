@@ -49,7 +49,7 @@ final class CustomJsr310Converters {
             try {
                 return LocalDate.parse(source);
             } catch (DateTimeParseException e) {
-                throw new RuntimeException(e);
+                throw new IllegalArgumentException(e);
             }
         }
     }
@@ -75,7 +75,7 @@ final class CustomJsr310Converters {
             try {
                 return LocalTime.parse(source);
             } catch (DateTimeParseException e) {
-                throw new RuntimeException(e);
+                throw new IllegalArgumentException(e);
             }
         }
     }

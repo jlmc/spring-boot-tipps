@@ -77,7 +77,7 @@ class LocationRepositoryIT {
                 it should return a Page with the correct documents
                 """
         )
-        public void getLocationsByAccountIdFirstPage() {
+        void getLocationsByAccountIdFirstPage() {
             var page = 0;
             var perPage = 3;
             var totalElements = 22;
