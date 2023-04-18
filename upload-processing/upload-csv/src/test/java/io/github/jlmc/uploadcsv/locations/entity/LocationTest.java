@@ -11,7 +11,7 @@ class LocationTest {
 
     @Test
     void imageUrlRegex() {
-        String regex = Location.IMAGE_URL_PATTER;
+        String regex = Location.IMAGE_URL_REGEX;
         Pattern pattern = Pattern.compile(regex);
 
         assertTrue(pattern.matcher("https://static.nike.com/a/images/f_auto/c5fbda6e-5cb6-4fae-8a05-e47212074dbf/image.jpeg").matches());

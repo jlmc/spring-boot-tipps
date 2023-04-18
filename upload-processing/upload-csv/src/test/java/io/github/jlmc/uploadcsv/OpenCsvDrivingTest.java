@@ -21,7 +21,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//@Disabled
 public class OpenCsvDrivingTest {
 
     final String text = """
@@ -37,6 +36,11 @@ public class OpenCsvDrivingTest {
             "6434b20bb62491116a7b1acf","Coimbra","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
             "6434b20bb62491116a7b1ace","Almada","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
             """;
+
+    private static final String EXPECTED_CSV = """
+                    "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+                    "1","forum","Rua do Alto, nº 5 ","3100","Santa clara","Coimbra","Portugal","12.0","99.0","image-1.png","123","Europe/Lisbon","","","","","","",""
+                    """;
     final CsvReader<Location> csvReader = new LocationsCsvReader();
     final CsvWriter<Location> csvWriter = new LocationsCsvWriter();
 
@@ -79,10 +83,11 @@ public class OpenCsvDrivingTest {
 
     @Test
     void beansToCSV() {
-
         Writer writer = csvWriter.write(locations, new StringWriter());
 
         System.out.println(writer);
+
+        assertEquals(EXPECTED_CSV, writer.toString());
     }
 
     @Test
@@ -158,5 +163,7 @@ public class OpenCsvDrivingTest {
         Writer write = csvWriter.write(new ArrayList<>(), new StringWriter());
 
         System.out.println(write);
+
+        assertEquals("", write.toString());
     }
 }
