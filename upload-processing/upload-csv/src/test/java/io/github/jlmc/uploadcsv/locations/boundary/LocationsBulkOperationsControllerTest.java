@@ -24,7 +24,6 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoCo
 import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
-import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
@@ -68,7 +67,6 @@ import static org.mockito.Mockito.*;
 @EnableAutoConfiguration(exclude = {
         MongoReactiveAutoConfiguration.class,
         MongoAutoConfiguration.class,
-        EmbeddedMongoAutoConfiguration.class,
         MongoReactiveRepositoriesAutoConfiguration.class
 })
 class LocationsBulkOperationsControllerTest {
