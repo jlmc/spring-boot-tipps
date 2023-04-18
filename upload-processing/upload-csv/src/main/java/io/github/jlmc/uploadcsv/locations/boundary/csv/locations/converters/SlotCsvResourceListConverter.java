@@ -15,7 +15,7 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
     public static final String SEPARATOR = "|";
     private static final String SEPARATOR_REGEX = "\\|";
     private static final String SLOT_PERIOD_SEPARATOR = "-";
-    private final LocalTimeConverter localTimeConverter = LocalTimeConverter.INSTANCE;
+    private static final LocalTimeConverter LOCAL_TIME_CONVERTER = LocalTimeConverter.INSTANCE;
 
     @Override
     protected Object convert(String value) throws CsvConstraintViolationException {
@@ -52,11 +52,11 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
         for (SlotCsvResource slot : slots) {
             String start = Optional.of(slot)
                                    .map(SlotCsvResource::getOpenAt)
-                                   .map(localTimeConverter::convertToWrite)
+                                   .map(LOCAL_TIME_CONVERTER::convertToWrite)
                                    .orElse(null);
             String end = Optional.of(slot)
                                  .map(SlotCsvResource::getCloseAt)
-                                 .map(localTimeConverter::convertToWrite)
+                                 .map(LOCAL_TIME_CONVERTER::convertToWrite)
                                  .orElse(null);
 
             if (start != null) {
@@ -84,6 +84,6 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
                     "The csv slots periods must have a start and a close element, the value " + period + " can be parsed to a Slot.");
         }
 
-        return new SlotCsvResource(localTimeConverter.convert(splits[0]), localTimeConverter.convert(splits[1]));
+        return new SlotCsvResource(LOCAL_TIME_CONVERTER.convert(splits[0]), LOCAL_TIME_CONVERTER.convert(splits[1]));
     }
 }

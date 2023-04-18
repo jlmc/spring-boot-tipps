@@ -70,3 +70,19 @@ http://localhost:8080/webjars/swagger-ui/index.html
 
 
 http://localhost:8080/v3/api-docs.yaml
+
+
+## Sonarqube
+
+```shell
+gradle sonar -Dsonar.host.url=http://localhost:9000 -Dsonar.verbose=true -Dsonar.login=sqa_dadccd3cf3d47280a09b6ad6340249512dd4197a
+
+$ mvn clean package verify sonar:sonar -Dsonar.login=sqa_dadccd3cf3d47280a09b6ad6340249512dd4197a
+
+
+$ ./gradlew sonarqube --info \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.verbose=true \
+  -Dsonar.login=sqa_dadccd3cf3d47280a09b6ad6340249512dd4197a \
+  -Dsonar.dependencyCheck.securityHotspot=true
+```

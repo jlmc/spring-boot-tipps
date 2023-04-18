@@ -13,7 +13,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
 
@@ -36,7 +35,7 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
         List<Violation> violations =
                 capturedExceptions.stream()
                                   .map(it -> new Violation(it.getLineNumber(), it.getMessage(), it))
-                                  .collect(Collectors.toList());
+                                  .toList();
 
         List<E> entities = toEntities(accountId, items);
 
