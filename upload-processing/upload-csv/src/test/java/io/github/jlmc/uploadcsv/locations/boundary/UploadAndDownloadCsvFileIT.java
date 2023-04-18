@@ -120,9 +120,9 @@ class UploadAndDownloadCsvFileIT {
 
                                                    assertNotNull(response);
                                                    assertEquals(3, response.size());
-                                                   assertEquals("South Lyon", response.get(0).get("name"));
+                                                   assertEquals("Almada", response.get(0).get("name"));
                                                    assertEquals("New Milford", response.get(1).get("name"));
-                                                   assertEquals("Almada", response.get(2).get("name"));
+                                                   assertEquals("South Lyon", response.get(2).get("name"));
 
 
                                                    var returnedIds = response.stream()

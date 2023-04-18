@@ -3,6 +3,7 @@ package io.github.jlmc.uploadcsv;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvReader;
 import io.github.jlmc.uploadcsv.csv.boundary.CsvWriter;
 import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
+import io.github.jlmc.uploadcsv.csv.entity.Violation;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvReader;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.LocationsCsvWriter;
 import io.github.jlmc.uploadcsv.locations.entity.Address;
@@ -24,18 +25,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class OpenCsvDrivingTest {
 
     final String text = """
-           "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
-           "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
-           "6434b20bb62491116a7b1ad0","Lisboa","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad1","Porto","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad2","Amadora","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad3","Pombal","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad4","Leiria","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad5","Montemor","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ad6","Figuera","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1acf","Coimbra","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           "6434b20bb62491116a7b1ace","Almada","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://example-125.com","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
-           """;
+            "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+            "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://static.nike.com/image.jpg","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
+            "6434b20bb62491116a7b1ad0","Lisboa","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad1","Porto","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad2","Amadora","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad3","Pombal","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad4","Leiria","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad5","Montemor","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ad6","Figuera","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1acf","Coimbra","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            "6434b20bb62491116a7b1ace","Almada","Forum Avenue","1234","Almada","Lisbon","Portugal","","","https://static.nike.com/image.jpg","+12029182134","Europe/Lisbon","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM","10:00AM-01:00PM|02:00PM-08:00PM"
+            """;
     final CsvReader<Location> csvReader = new LocationsCsvReader();
     final CsvWriter<Location> csvWriter = new LocationsCsvWriter();
 
@@ -44,6 +45,11 @@ public class OpenCsvDrivingTest {
     @BeforeAll
     public static void beforeAll() {
         System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+    }
+
+    private static void assertViolation(Long expectedLine, String expectedMessage, Violation givenViolation) {
+        assertEquals(expectedLine, givenViolation.lineNumber());
+        assertEquals(expectedMessage, givenViolation.message());
     }
 
     @BeforeEach
@@ -90,7 +96,7 @@ public class OpenCsvDrivingTest {
 
     @Test
     void writeAndRead() {
-       var result = csvReader.read("123", text);
+        var result = csvReader.read("123", text);
 
         Writer write = csvWriter.write(result.items(), new StringWriter());
         String s = write.toString();
@@ -103,22 +109,29 @@ public class OpenCsvDrivingTest {
     void readValidation() {
         String inputWithErrors =
                 """
-                "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
-                "6434b20bb62491116a7b1acd","","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/not-valid","10:00AM","","","","","",""
-                """;
+                        "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
+                        "6434b20bb62491116a7b1acd","","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/not-valid","10:00AM","","","","","",""
+                        """;
 
         CsvReaderResult<Location> result = csvReader.read("1234", inputWithErrors);
 
         assertNotNull(result);
         assertNotNull(result.items());
         assertFalse(result.isValid());
+        assertEquals(4, result.violations().size());
+
+        assertViolation(2L, "Field 'name' is mandatory but no value was provided.", result.violations().get(0));
+        assertViolation(2L, "Field imageUrl value \"https://example-123.com\" did not match expected format of ^(http|https)://[a-zA-Z0-9-.]+.[a-zA-Z]{2,}(/[^/]*)*/[^/]+.(jpg|jpeg|png|webp)$", result.violations().get(1));
+        assertViolation(2L, "'America/not-valid' is not in the zones list defined by IANA.", result.violations().get(2));
+        assertViolation(2L, "The csv slots periods must have a start and a close element, the value 10:00AM can be parsed to a Slot.", result.violations().get(3));
+
     }
 
     @Test
     void customMapper() {
         String csv = """
                 "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
-                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
+                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://static.nike.com/image.jpg","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
                 """;
 
         CsvReaderResult<Location> result = csvReader.read("1234", csv);
@@ -134,7 +147,7 @@ public class OpenCsvDrivingTest {
 
         String expectedCsv = """
                 "LOCATION_ID","LOCATION_NAME","ADDRESS_STREET","ADDRESS_ZIP_CODE","ADDRESS_CITY","ADDRESS_REGION","COUNTRY_NAME","LATITUDE","LONGITUDE","IMAGE_URL","CONTACT_PHONE","TIMEZONE","BUSINESS_MON","BUSINESS_TUE","BUSINESS_WED","BUSINESS_THU","BUSINESS_FRI","BUSINESS_SAT","BUSINESS_SUN"
-                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://example-123.com","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
+                "6434b20bb62491116a7b1acd","South Lyon","796 Hillcrest Ave","48178","Los Angeles","California","United States","12.7","34.5","https://static.nike.com/image.jpg","+12029182132","America/Los_Angeles","10:00AM-01:00PM","","","","","",""
                 """;
 
         assertEquals(expectedCsv, write.toString());

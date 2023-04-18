@@ -3,6 +3,8 @@ package io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model;
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvCustomBindByName;
 import com.opencsv.bean.CsvRecurse;
+import com.opencsv.bean.validators.MustMatchRegexExpression;
+import com.opencsv.bean.validators.PreAssignmentValidator;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.CsvZoneIdConverter;
 import io.github.jlmc.uploadcsv.locations.boundary.csv.locations.converters.SlotCsvResourceListConverter;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
@@ -36,6 +38,7 @@ public class LocationCsvResource {
     String name;
     @CsvRecurse
     AddressCsvResource address;
+    @PreAssignmentValidator(validator = MustMatchRegexExpression.class, paramString = Location.IMAGE_URL_PATTER)
     @CsvBindByName(column = IMAGE_URL)
     String imageUrl;
     @CsvBindByName(column = CONTACT_PHONE)

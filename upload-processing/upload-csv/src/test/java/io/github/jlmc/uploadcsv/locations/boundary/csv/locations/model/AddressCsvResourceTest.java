@@ -1,7 +1,6 @@
 package io.github.jlmc.uploadcsv.locations.boundary.csv.locations.model;
 
 import io.github.jlmc.uploadcsv.locations.entity.Address;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -39,7 +39,7 @@ class LocationsCsvReaderTest {
         assertEquals("California", location.getAddress().getRegionName());
         assertEquals("United States", location.getAddress().getCountryName());
         assertEquals(new Coordinates(12.7, 34.5), location.getAddress().getCoordinates());
-        assertEquals("https://example-123.com", location.getImageUrl());
+        assertEquals("https://static.nike.com/a/images/f_auto/c5fbda6e-5cb6-4fae-8a05-e47212074dbf/image.jpeg", location.getImageUrl());
         assertEquals(ZoneId.of("America/Los_Angeles"), location.getTimeZone());
         assertEquals("+12029182132", location.getPhoneNumber());
         assertEquals(2, location.getOpenHours().size());
@@ -65,11 +65,13 @@ class LocationsCsvReaderTest {
 
         assertNotNull(result);
         assertFalse(result.isValid());
-        assertEquals(2, result.violations().size());
+        assertEquals(3, result.violations().size());
         assertEquals(2, result.violations().get(0).lineNumber());
         assertEquals(2, result.violations().get(1).lineNumber());
+        assertEquals(4, result.violations().get(2).lineNumber());
         assertEquals("Field 'name' is mandatory but no value was provided.", result.violations().get(0).message());
         assertEquals("The csv slots periods must have a start and a close element, the value 02:00pm can be parsed to a Slot.", result.violations().get(1).message());
+        assertEquals("Field imageUrl value \"https://example-125.com\" did not match expected format of ^(http|https)://[a-zA-Z0-9-.]+.[a-zA-Z]{2,}(/[^/]*)*/[^/]+.(jpg|jpeg|png|webp)$", result.violations().get(2).message());
     }
 
     @Test
