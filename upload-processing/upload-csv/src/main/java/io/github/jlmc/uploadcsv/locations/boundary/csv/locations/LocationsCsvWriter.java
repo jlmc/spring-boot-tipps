@@ -1,6 +1,5 @@
 package io.github.jlmc.uploadcsv.locations.boundary.csv.locations;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.ICSVWriter;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import com.opencsv.bean.StatefulBeanToCsv;
