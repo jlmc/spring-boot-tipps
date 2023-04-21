@@ -1,5 +1,6 @@
 package io.github.jlmc.uploadcsv.csv.boundary;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 public class CsvIllegalDataException extends IllegalArgumentException {
@@ -20,5 +21,5 @@ public class CsvIllegalDataException extends IllegalArgumentException {
         return Optional.ofNullable(error);
     }
 
-    public record Error(String name, String description) {}
+    public record Error(String name, String description) implements Serializable {}
 }

@@ -37,27 +37,21 @@ public class LocationRepositoryImpl implements LocationsQueries {
      */
     @Override
     public Mono<Page<Location>> getLocationsByAccountId(String accountId, Pageable pageable) {
-        Mono<Long> count = repository.countByAccountId(accountId);
-        Mono<List<Location>> listMono = repository.findAllByAccountId(accountId, pageable).collectList();
+        Mono<Long> totalMono = repository.countByAccountId(accountId);
+        Mono<List<Location>> contentMono = repository.findAllByAccountId(accountId, pageable).collectList();
 
-        return count.zipWhen(it -> listMono)
-                     .map((Tuple2<Long, List<Location>> tuple) -> {
-                         Long t1 = tuple.getT1();
-                         List<Location> t2 = tuple.getT2();
-                         return new PageImpl<>(t2, pageable, t1);
-                     });
+        return Mono.zip(totalMono, contentMono)
+                   .map((Tuple2<Long, List<Location>> it) -> {
+                       Long total = it.getT1();
+                       List<Location> content = it.getT2();
+                       return new PageImpl<>(content, pageable, total);
+                   });
     }
 
     @Override
     public Flux<String> findAllIdsByAccountIdAndIdIn(String accountId, Collection<String> ids) {
-        /*
-        val query = Query(Criteria.where("accountId").`is`(accountId).and("id").`in`(ids))
-        query.fields().include("id", "accountId", "name", "timeZone", "address")
-        return reactiveMongoTemplate.find(query, Location::class.java).mapNotNull(Location::id)
-        */
         Query query = new Query(Criteria.where("accountId").is(accountId).and("id").in(ids));
         query.fields().include("id");
-        //return reactiveMongoTemplate.findDistinct(query, "id", "locations", String.class);
         return reactiveMongoTemplate.find(query, Location.class).map(Location::getId);
     }
 }

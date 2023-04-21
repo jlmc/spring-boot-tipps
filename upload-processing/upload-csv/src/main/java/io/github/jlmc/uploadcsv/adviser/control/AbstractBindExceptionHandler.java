@@ -17,9 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ElementKind;
-import javax.validation.Path;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ElementKind;
+import jakarta.validation.Path;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +32,7 @@ abstract class AbstractBindExceptionHandler {
     private final MessageSource messageSource;
     private final ObjectMapper mapper;
 
-    public AbstractBindExceptionHandler(MessageSource messageSource, ObjectMapper mapper) {
+    protected AbstractBindExceptionHandler(MessageSource messageSource, ObjectMapper mapper) {
         this.messageSource = messageSource;
         this.mapper = mapper;
     }
@@ -116,7 +116,6 @@ abstract class AbstractBindExceptionHandler {
         return jsonPathBuilder.asString();
     }
 
-    //     private fun getJacksonPropertyDefinition(beanClass: Class<*>, nodeName: String): BeanPropertyDefinition {
     private BeanPropertyDefinition getJacksonPropertyDefinition(Class<?> beanClass, String nodeName) {
         JavaType type = mapper.getTypeFactory().constructType(beanClass);
         BeanDescription beanDescription = mapper.getSerializationConfig().introspect(type);

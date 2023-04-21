@@ -2,6 +2,10 @@ package io.github.jlmc.uploadcsv.adviser.control;
 
 import io.github.jlmc.uploadcsv.adviser.entity.ApiError;
 import io.github.jlmc.uploadcsv.adviser.entity.ErrorField;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ElementKind;
+import jakarta.validation.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,10 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.validation.ElementKind;
-import javax.validation.Path;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class ConstraintViolationExceptionHandler implements ExceptionHandler<Con
                     methodNode.getName(),
                     methodNode.getParameterTypes().toArray(new Class[0]));
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
     }
 
@@ -116,8 +116,7 @@ public class ConstraintViolationExceptionHandler implements ExceptionHandler<Con
                 new ArrayList<>(Arrays.asList(method.getParameterAnnotations()[parameterNode.getParameterIndex()]));
 
         Method interfaceMethod = ClassUtils.getInterfaceMethodIfPossible(method, beanClass);
-        //noinspection ConstantValue
-        if (interfaceMethod != null && interfaceMethod != method) {
+        if (method != interfaceMethod) {
             parameterAnnotations.addAll(Arrays.asList(interfaceMethod.getParameterAnnotations()[parameterNode.getParameterIndex()]));
         }
 

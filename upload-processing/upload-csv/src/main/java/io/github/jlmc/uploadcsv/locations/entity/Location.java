@@ -29,7 +29,7 @@ import static io.github.jlmc.uploadcsv.locations.entity.Location.LOCATIONS;
 @ToString(onlyExplicitlyIncluded = true)
 public class Location {
 
-    public static final String IMAGE_URL_PATTER = "^(http|https)://[a-zA-Z0-9-.]+.[a-zA-Z]{2,}(/[^/]*)*/[^/]+.(jpg|jpeg|png|webp)$";
+    public static final String IMAGE_URL_REGEX = "^(http|https)://[a-zA-Z0-9-.]+.[a-zA-Z]{2,}(/[^/]*)*/[^/]+.(jpg|jpeg|png|webp)$";
 
     public static final String LOCATIONS = "locations";
 

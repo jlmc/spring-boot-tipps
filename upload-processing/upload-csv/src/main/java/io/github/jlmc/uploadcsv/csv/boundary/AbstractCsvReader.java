@@ -1,6 +1,5 @@
 package io.github.jlmc.uploadcsv.csv.boundary;
 
-import com.opencsv.CSVWriter;
 import com.opencsv.ICSVWriter;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -14,13 +13,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
 
     private final Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy;
 
-    public AbstractCsvReader(Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy) {
+    protected AbstractCsvReader(Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy) {
         this.columnNameMappingStrategy = columnNameMappingStrategy;
     }
 
@@ -37,7 +35,7 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
         List<Violation> violations =
                 capturedExceptions.stream()
                                   .map(it -> new Violation(it.getLineNumber(), it.getMessage(), it))
-                                  .collect(Collectors.toList());
+                                  .toList();
 
         List<E> entities = toEntities(accountId, items);
 
@@ -50,7 +48,7 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
         HeaderColumnNameMappingStrategy<R> rHeaderColumnNameMappingStrategy = columnNameMappingStrategy.get();
         return new CsvToBeanBuilder<R>(reader)
                 .withMappingStrategy(rHeaderColumnNameMappingStrategy)
-                .withQuoteChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
+                .withQuoteChar(ICSVWriter.DEFAULT_ESCAPE_CHARACTER)
                 .withOrderedResults(true)
                 .withSeparator(ICSVWriter.DEFAULT_SEPARATOR)
                 .withThrowExceptions(false)

@@ -15,8 +15,8 @@ public class LocalTimeConverter extends AbstractBeanField<LocalTime, String> {
 
     protected static final LocalTimeConverter INSTANCE = new LocalTimeConverter();
 
-    private static final Pattern HH_MM_P = Pattern.compile("^(1[0-2]|0?[0-9]):([0-5][0-9])\\s?(AM|PM|am|pm)$");
-    private static final Pattern HH_P = Pattern.compile("^(1[0-2]|0?[0-9])(AM|PM|am|pm)$");
+    private static final Pattern HH_MM_P = Pattern.compile("^(1[0-2]|0?\\d):([0-5]\\d)\\s?(AM|PM|am|pm)$");
+    private static final Pattern HH_P = Pattern.compile("^(1[0-2]|0?\\d)(AM|PM|am|pm)$");
     private static final DateTimeFormatter HH_MM_P_FORMATTER = new DateTimeFormatterBuilder()
             .appendPattern("hh:mm")
             .appendText(AMPM_OF_DAY)

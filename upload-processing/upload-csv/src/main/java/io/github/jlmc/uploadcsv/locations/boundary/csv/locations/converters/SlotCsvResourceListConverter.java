@@ -15,7 +15,7 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
     public static final String SEPARATOR = "|";
     private static final String SEPARATOR_REGEX = "\\|";
     private static final String SLOT_PERIOD_SEPARATOR = "-";
-    private final LocalTimeConverter LOCAL_TIME_CONVERTER = LocalTimeConverter.INSTANCE;
+    private static final LocalTimeConverter LOCAL_TIME_CONVERTER = LocalTimeConverter.INSTANCE;
 
     @Override
     protected Object convert(String value) throws CsvConstraintViolationException {
@@ -39,7 +39,6 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
 
         return slots;
     }
-
 
     @Override
     protected String convertToWrite(Object value) {

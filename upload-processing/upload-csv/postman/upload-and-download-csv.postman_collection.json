@@ -1,0 +1,147 @@
+{
+  "info": {
+    "_postman_id": "35f33e02-4489-404f-9f1e-ffe4bb1ca754",
+    "name": "upload-and-download-csv",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26041360"
+  },
+  "item": [
+    {
+      "name": "locations",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "create-locations.csv"
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/locations/:accountId",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "locations",
+            ":accountId"
+          ],
+          "variable": [
+            {
+              "key": "accountId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "locations-csv",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "create-locations.csv"
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/locations-bulk/:accountId",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "locations-bulk",
+            ":accountId"
+          ],
+          "variable": [
+            {
+              "key": "accountId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "locations-csv",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": "create-locations.csv"
+            }
+          ]
+        },
+        "url": {
+          "raw": "localhost:8080/locations-bulk/:accountId",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "locations-bulk",
+            ":accountId"
+          ],
+          "variable": [
+            {
+              "key": "accountId",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "locations-csv template",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "localhost:8080/locations-bulk/_empty",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "locations-bulk",
+            "_empty"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

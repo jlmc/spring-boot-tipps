@@ -76,11 +76,11 @@ class LocationsCsvReaderTest {
 
     @Test
     void readIllegalInputData() {
-        var resource = classPathResource("payloads/locations/post-locations-bulk-with-invalid-header.csv");
+        String csvContent = classPathResourceContent("payloads/locations/post-locations-bulk-with-invalid-header.csv");
 
         var exception = assertThrows(
                 CsvIllegalDataException.class,
-                () -> sut.read(ACCOUNT_ID, Files.readString(resource.getFile().toPath()))
+                () -> sut.read(ACCOUNT_ID, csvContent)
         );
 
         assertEquals("Error capturing CSV header!", exception.getMessage());
