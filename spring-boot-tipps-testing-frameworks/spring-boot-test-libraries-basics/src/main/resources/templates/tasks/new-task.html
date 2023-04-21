@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>MVC - Task details</title>
+</head>
+<body>
+
+<h3>new task</h3>
+
+
+<form method="POST" th:object="${task}" class="form-vertical  js-form-loading">
+
+    <label for="title" class="control-label">Title</label>
+    <input th:field="*{title}" id="title" type="text" class="form-control"/>
+
+    <button class="btn  btn-primary" type="submit">Save</button>
+</form>
+
+
+</body>
+</html>
+

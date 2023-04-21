@@ -1,0 +1,17 @@
+{
+    "request": {
+        "method": "GET",
+        "urlPattern": "\\/contacts\\/?.*\\/activities"
+    },
+    "response": {
+        "status": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "transformers": [
+            "response-template",
+            "body-transformer"
+        ],
+        "body": "{ \"total\": 1, \"page\": 1, \"per_page\": 1, \"_embedded\": { \"activities\": [ { \"id\": \"bf587839b55b494eb129ca2eff408bee\", \"created_at\": \"2021-03-19T15:35:36Z\", \"duration\": 1542, \"contact_id\": \"604f49e2eb2489000b217b88\", \"talkdesk_phone_number\": \"+16086776527\", \"contact_phone_number\": \"+17378742833\", \"call_type\": \"in\", \"ring_groups\": [ \"agents\" ], \"user_id\": \"5fce3aa64f1a4a0006a82a05\", \"number_id\": \"5fce3bd34f1a4a0007a82a04\", \"activity_type\": \"call\" }, { \"id\": \"2f16846c3e8f4d57bb8e9cfb7085035c\", \"created_at\": \"2021-03-16T16:51:37Z\", \"duration\": 17, \"contact_id\": \"604f49e2eb2489000b217b88\", \"talkdesk_phone_number\": \"+15319996577\", \"contact_phone_number\": \"+17378742833\", \"call_type\": \"in\", \"ring_groups\": [ \"agents\" ], \"user_id\": \"603f83f03095fe4f64fe73cf\", \"number_id\": \"5fce3beb4f1a4a0007a82a05\", \"activity_type\": \"call\" } ] }, \"_links\": { \"self\": { \"href\": \"https://api.talkdeskstg.com/contacts/604f49e2eb2489000b217b88/activities?page=1&per_page=15\" } } }"
+    }
+}
