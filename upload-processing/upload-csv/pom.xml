@@ -222,8 +222,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <!-- mvn sonar:sonar -Dsonar.login=myAuthenticationToken
- -->
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
             </plugin>
