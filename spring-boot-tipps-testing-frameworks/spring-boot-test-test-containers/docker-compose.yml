@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+
+  postgres:
+    image: postgres:13.2-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_USER: user
+      POSTGRES_DB: demo
+    networks:
+      - demo-tc
+
+  api-gw:
+    # build: https://${BUNDLE_GITHUB__COM}@github.com/Talkdesk/api-gw-contract-stub.git
+    # build: https://ghp_gldl23EejbWCwDo6mkHnwNho1sDH1J1OcpP@github.com/Talkdesk/api-gw-contract-stub.git
+    image: hub.talkdeskapp.com/talkdesk/api-gw-contract-stub:eadbf8e9054587318503ca2326bf0590347b4893
+    environment:
+      # consult the README.MD file in the section "Local Development Environment" to know how to define the right Service name and issuer
+      - SERVICE_NAME=foo
+      - ISSUER=http://localhost:3000
+    ports:
+      - "3000:3000"
+    networks:
+      - demo-tc
+
+
+networks:
+  demo-tc:
+    driver: bridge

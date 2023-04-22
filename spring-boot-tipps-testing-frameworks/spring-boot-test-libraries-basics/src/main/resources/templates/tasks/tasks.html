@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>MVC - Tasks</title>
+</head>
+<body>
+<h1>Tasks List</h1>
+
+<table>
+
+    <div style="background: antiquewhite">
+        <a th:href="@{/views/tasks/new}">Create a new one</a>
+        <a></a>
+
+    </div>
+
+
+    <thead>
+    <th></th>
+    <th>
+        <b>Title</b>
+    </th>
+    <th>
+    </th>
+    </thead>
+    <tbody>
+    <tr th:each="t : ${tasks}">
+        <td></td>
+        <td class="text-center" th:text="${t.title}"></td>
+        <td>
+
+            <a th:href="@{'/views/tasks/' + ${t.id}}">view</a>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
+
