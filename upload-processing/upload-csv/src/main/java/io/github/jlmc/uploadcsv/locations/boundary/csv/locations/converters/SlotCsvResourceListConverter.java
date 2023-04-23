@@ -18,7 +18,7 @@ public class SlotCsvResourceListConverter extends AbstractBeanField<List<SlotCsv
     private static final LocalTimeConverter LOCAL_TIME_CONVERTER = LocalTimeConverter.INSTANCE;
 
     @Override
-    protected Object convert(String value) throws CsvConstraintViolationException {
+    protected List<SlotCsvResource> convert(String value) throws CsvConstraintViolationException {
         if (value == null || value.trim().isBlank()) {
             return Collections.emptyList();
         }

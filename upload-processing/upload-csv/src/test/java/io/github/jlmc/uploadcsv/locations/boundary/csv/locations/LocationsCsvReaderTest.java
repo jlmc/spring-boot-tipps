@@ -1,16 +1,18 @@
 package io.github.jlmc.uploadcsv.locations.boundary.csv.locations;
 
 import io.github.jlmc.uploadcsv.csv.boundary.CsvIllegalDataException;
+import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
 import io.github.jlmc.uploadcsv.locations.entity.Coordinates;
+import io.github.jlmc.uploadcsv.locations.entity.Location;
 import io.github.jlmc.uploadcsv.locations.entity.Slot;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Set;
 
-import static io.github.jlmc.uploadcsv.Resources.classPathResource;
 import static io.github.jlmc.uploadcsv.Resources.classPathResourceContent;
 import static java.time.DayOfWeek.MONDAY;
 import static java.time.DayOfWeek.TUESDAY;
@@ -94,5 +96,21 @@ class LocationsCsvReaderTest {
                 "LATITUDE,LONGITUDE,IMAGE_URL,CONTACT_PHONE,TIMEZONE," +
                 "BUSINESS_MON,BUSINESS_TUE,BUSINESS_WED,BUSINESS_THU," +
                 "BUSINESS_FRI,BUSINESS_SAT,BUSINESS_SUN]."), exception.getError().get());
+    }
+
+
+    @Test
+    void read5MBFiles() {
+        String resource = classPathResourceContent("payloads/locations/post-5MB.csv");
+
+        Instant stated = Instant.now();
+        CsvReaderResult<Location> result = sut.read("X1", resource);
+        Instant ended = Instant.now();
+
+        Duration duration = Duration.between(stated, ended);
+
+        assertTrue(result.isValid());
+
+
     }
 }

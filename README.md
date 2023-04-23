@@ -52,4 +52,6 @@ The goal of this repository is to place some examples of how to use and resolve 
    1. Serialization demos
    2. jackson tests with @JsonTest annotation
 8. Spring security
+9. [Processing csv file with open csv](upload-processing/upload-csv/README.md)
+   1. Mongo db migration with mongock in web flux project
 

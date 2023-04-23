@@ -8,13 +8,19 @@ import com.opencsv.enums.CSVReaderNullFieldIndicator;
 import com.opencsv.exceptions.CsvException;
 import io.github.jlmc.uploadcsv.csv.entity.CsvReaderResult;
 import io.github.jlmc.uploadcsv.csv.entity.Violation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.function.Supplier;
 
 public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCsvReader.class);
 
     private final Supplier<HeaderColumnNameMappingStrategy<R>> columnNameMappingStrategy;
 
@@ -24,6 +30,9 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
 
     @Override
     public CsvReaderResult<E> read(String accountId, String csvContent) {
+        Instant stated = Instant.now();
+        LOGGER.info("Stating read csv content: {}", stated);
+
         StringReader reader = new StringReader(csvContent);
 
         CsvToBean<R> csvCsvToBean = createStatefulBeanToCsv(reader);
@@ -38,6 +47,9 @@ public abstract class AbstractCsvReader<E, R> implements CsvReader<E> {
                                   .toList();
 
         List<E> entities = toEntities(accountId, items);
+
+        Instant ends = Instant.now();
+        LOGGER.info("Ends read csv content: <{}> - it takes <{}>", ends, Duration.between(ends, stated));
 
         return new CsvReaderResult<>(entities, violations);
     }

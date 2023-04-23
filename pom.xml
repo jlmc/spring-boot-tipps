@@ -23,5 +23,6 @@
         <module>bean-validation</module>
         <module>spring-boot-tipps-kafka</module>
         <module>spring-boot-tipps-testing-frameworks</module>
+        <module>upload-processing/upload-csv</module>
     </modules>
 </project>
