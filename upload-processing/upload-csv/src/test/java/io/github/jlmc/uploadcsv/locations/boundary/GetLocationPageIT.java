@@ -33,14 +33,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class GetLocationPageIT {
 
     public static final String ACCOUNT_ID = "1";
-    private static final ParameterizedTypeReference<List<Map<String, Object>>> LIST_PARAMETERIZED_TYPE_REFERENCE =
-            new ParameterizedTypeReference<>() {
-            };
+
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_PARAMETERIZED_TYPE_REFERENCE = new ParameterizedTypeReference<>() {
+    };
+
     @Container
     static MongoDBContainer mongoDBContainer = Containers.getMongoDBContainer();
     @Autowired
     private WebTestClient webClient;
-
     @Autowired
     private ReactiveMongoTemplate reactiveMongoTemplate;
 
@@ -63,14 +63,11 @@ class GetLocationPageIT {
                         IntStream.range(0, totalOfElements)
                                  .mapToObj(it -> location(null, ACCOUNT_ID))
                                  .toList());
-        var existingLocations =
-                removeAll.thenMany(populateLocations)
-                         .collectList()
-                         .block(Duration.ofSeconds(10));
+        removeAll.thenMany(populateLocations)
+                 .collectList()
+                 .block(Duration.ofSeconds(10));
 
 
-        ParameterizedTypeReference<Map<String, Object>> pageAsMapType = new ParameterizedTypeReference<>() {
-        };
         webClient.get()
                  .uri(uriBuilder -> uriBuilder.path("/locations/{accountId}/page")
                                               .queryParam("page", page)
@@ -79,7 +76,7 @@ class GetLocationPageIT {
                  .exchange()
                  .expectStatus().isOk()
                  .expectHeader().contentTypeCompatibleWith(MediaType.APPLICATION_JSON)
-                 .expectBody(pageAsMapType)
+                 .expectBody(MAP_PARAMETERIZED_TYPE_REFERENCE)
                  .consumeWith(pageMap -> {
                      Map<String, Object> responseBody = pageMap.getResponseBody();
 
@@ -96,4 +93,6 @@ class GetLocationPageIT {
                      assertEquals(pageSize, content.size());
                  });
     }
+
+
 }

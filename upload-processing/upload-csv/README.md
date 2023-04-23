@@ -86,3 +86,17 @@ $ ./gradlew sonarqube --info \
   -Dsonar.login=sqa_dadccd3cf3d47280a09b6ad6340249512dd4197a \
   -Dsonar.dependencyCheck.securityHotspot=true
 ```
+
+
+# mapstruct
+
+- https://mapstruct.org/documentation/installation/
+
+
+# Issues
+
+- This solution for the use case of uploading a CSV file takes a very long time when the file is too big: 
+
+| File Size    | Duration   |
+|--------------|------------|
+| 6 Mega bytes | 17 seconds |

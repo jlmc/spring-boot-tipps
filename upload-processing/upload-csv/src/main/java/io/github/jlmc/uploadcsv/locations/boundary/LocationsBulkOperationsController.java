@@ -7,6 +7,8 @@ import io.github.jlmc.uploadcsv.locations.control.BulkUpsertAccountLocationsInte
 import io.github.jlmc.uploadcsv.locations.control.GetAllAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.locations.entity.Location;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -42,6 +44,8 @@ import java.util.List;
 )
 public class LocationsBulkOperationsController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LocationsBulkOperationsController.class);
+
     private final CsvReader<Location> locationCsvReader;
     private final CsvWriter<Location> locationsCsvWriter;
     private final BulkUpsertAccountLocationsInteractor bulkUpsertAccountLocationsInteractor;
@@ -64,6 +68,7 @@ public class LocationsBulkOperationsController {
     )
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public Mono<Void> importLocationsInBulk(@PathVariable("accountId") String accountId, @RequestPart("file") FilePart filePart) {
+
         return filePart.content()
                        .map(dataBuffer -> {
                            byte[] bytes = new byte[dataBuffer.readableByteCount()];
@@ -76,6 +81,7 @@ public class LocationsBulkOperationsController {
                            return acc;
                        })
                        .map(it -> {
+
                            var results = locationCsvReader.read(accountId, it.toString());
 
                            if (!results.isValid()) {

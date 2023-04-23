@@ -21,4 +21,8 @@ public interface LocationRepository extends ReactiveMongoRepository<Location, St
     Mono<Long> countByAccountId(String accountId);
 
     Flux<Location> findAllByAccountId(String accountId, Pageable pageable);
+
+    Mono<Void> deleteAllByAccountId(String accountId);
+
+    Mono<Void> deleteByAccountIdAndId(String accountId, String id);
 }
