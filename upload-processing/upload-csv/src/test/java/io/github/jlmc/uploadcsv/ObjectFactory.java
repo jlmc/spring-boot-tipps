@@ -36,7 +36,11 @@ public final class ObjectFactory {
     }
 
     public static Slot slot() {
-        return Slot.of(LocalTime.parse("09:00"), LocalTime.parse("19:00"));
+        return slot("09:00", "19:00");
+    }
+
+    public static Slot slot(String isoStartAt, String isoClosetAt) {
+        return Slot.of(LocalTime.parse(isoStartAt), LocalTime.parse(isoClosetAt));
     }
 
     public static Location location() {

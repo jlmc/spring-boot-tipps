@@ -2,22 +2,17 @@ package io.github.jlmc.uploadcsv.locations.entity;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.annotation.Transient;
-import org.springframework.data.annotation.Version;
+import org.springframework.data.annotation.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.stream.IntStream;
 
 import static io.github.jlmc.uploadcsv.locations.entity.Location.LOCATIONS;
 
@@ -26,7 +21,6 @@ import static io.github.jlmc.uploadcsv.locations.entity.Location.LOCATIONS;
 
 @Data
 @Builder(toBuilder = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString(onlyExplicitlyIncluded = true)
 public class Location {
 
@@ -34,9 +28,7 @@ public class Location {
 
     public static final String LOCATIONS = "locations";
 
-    @EqualsAndHashCode.Include
     @ToString.Include
-
     @Id
     private String id;
     @ToString.Include
@@ -49,6 +41,8 @@ public class Location {
     private ZoneId timeZone;
     private Address address;
     private Map<DayOfWeek, Set<Slot>> openHours;
+    @Builder.Default
+    private Set<SpecialDay> specialDays = new HashSet<>();
 
     @CreatedDate
     private Instant createdDate;
@@ -69,6 +63,45 @@ public class Location {
         this.openHours = that.openHours;
         return this;
     }
+
+    public List<DailyAvailabilities> dailyAvailabilitiesOf(Instant since, int plusDays) {
+        ZonedDateTime zonedDateTime = since.atZone(this.timeZone);
+
+        return IntStream.range(0, plusDays).mapToObj(zonedDateTime::plusDays)
+                        .map(this::dailyAvailabilities)
+                        .toList();
+    }
+
+    private DailyAvailabilities dailyAvailabilities(ZonedDateTime zonedDateTime) {
+        var specialDay =
+                specialDays.stream()
+                           .sorted(Comparator.comparing(it -> it.repeats().ordinal()))
+                           .filter(it -> it.match(zonedDateTime.toLocalDate()))
+                           .findFirst();
+
+        if (specialDay.isPresent()) {
+            SpecialDay specialDay1 = specialDay.get();
+            String name1 = specialDay1.name();
+            List<Slot> list =
+                    specialDay1.slots()
+                               .stream()
+                               .map(Slot::copy)
+                               .sorted(Slot.COMPARATOR)
+                               .toList();
+            return new DailyAvailabilities(zonedDateTime.toLocalDate(), list, name1);
+        } else {
+            List<Slot> list =
+                    openHours.getOrDefault(zonedDateTime.getDayOfWeek(), Collections.emptySet())
+                             .stream()
+                             .map(Slot::copy)
+                             .sorted(Slot.COMPARATOR)
+                             .toList();
+
+            return new DailyAvailabilities(zonedDateTime.toLocalDate(), list);
+        }
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
