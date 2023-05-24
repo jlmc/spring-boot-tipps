@@ -71,3 +71,25 @@ curl 'http://localhost:8080/graphql' \
   -H 'content-type: application/json' \
   --data-raw '{"query":"query {\n  greet(name: \"John\")\n}\n\n"}'
 ```
+
+## Return Array From GraphQL Query
+
+```kotlin
+    @QueryMapping
+    fun gerRandomNumbers(): List<Int> {
+        return listOf(1, 2, 3)
+    }
+```
+
+```graphql
+type Query {
+    gerRandomNumbers: [Int!]!
+}
+```
+
+```
+curl --location 'http://localhost:8080/graphql' \
+--header 'Content-Type: application/json' \
+--data '{"query":"query randonNumber {\n    gerRandomNumbers\n}","variables":{}}'
+```
+

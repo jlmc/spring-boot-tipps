@@ -1,4 +1,5 @@
 type Query {
     helloworld: String
     greet(name: String!): String!
+    gerRandomNumbers: [Int!]!
 }

@@ -19,4 +19,12 @@ class HelloWorldResolver {
     fun greet(@Argument name: String): String {
         return "Hello $name"
     }
+
+    /**
+     * gerRandomNumbers: [Int!]!
+     */
+    @QueryMapping
+    fun gerRandomNumbers(): List<Int> {
+        return listOf(1, 2, 3)
+    }
 }
