@@ -93,3 +93,25 @@ curl --location 'http://localhost:8080/graphql' \
 --data '{"query":"query randonNumber {\n    gerRandomNumbers\n}","variables":{}}'
 ```
 
+### Returning a custom type
+
+```graphql
+query getBook {
+    getBook {
+        id
+        title
+    }
+}
+
+query getBook {
+    getBook {
+        title
+    }
+}
+
+query getBook {
+    getBook {
+        id
+    }
+}
+```
