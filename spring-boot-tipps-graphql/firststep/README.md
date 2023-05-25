@@ -115,3 +115,156 @@ query getBook {
     }
 }
 ```
+
+## Field Resolver In GraphQL
+
+```
+type Query {
+    getPosts: [Post!]!
+}
+
+type BookResource {
+    id: ID,
+    title: String
+}
+
+type Post {
+    id: ID
+    title: String!
+    description: String
+    author: User
+}
+
+type User {
+    id: ID!
+    name: String!
+    posts: [Post!]!
+}
+```
+
+```
+import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.stereotype.Controller
+import java.util.*
+
+@Controller
+class PostResolver {
+
+    @QueryMapping
+    fun getPosts(): List<Post> {
+        return listOf(
+            Post(
+                id = UUID.randomUUID(),
+                title = "clean code",
+                description = "Clean Code: A Handbook of Agile Software Craftsmanship."
+            )
+        )
+    }
+}
+```
+
+```
+query readPosts {
+    getPosts {
+        id
+        title
+        description
+        author {
+            id
+        }
+    }
+}
+
+{
+    "data": {
+        "getPosts": [
+            {
+                "id": "91e82e32-8eb7-4d0e-a3c7-f37acb62e704",
+                "title": "clean code",
+                "description": "Clean Code: A Handbook of Agile Software Craftsmanship.",
+                "author": null
+            }
+        ]
+    }
+}
+
+```
+
+
+```
+curl --location 'http://localhost:8080/graphql' \
+--header 'Content-Type: application/json' \
+--data '{"query":"query readPosts {\n    getPosts {\n        id\n        title\n        description\n        author {\n            id\n        }\n    }\n}","variables":{}}'
+```
+
+#### field resolver
+
+```graphql
+query readPosts {
+    getPosts {
+        id
+        title
+        description
+        author {
+            id,
+            name
+            posts {
+                id
+                title
+                description
+            }
+        }
+    }
+}
+```
+
+```json
+{
+  "data": {
+    "getPosts": [
+      {
+        "id": "00000000-0000-0000-0000-000000000001",
+        "title": "clean code",
+        "description": "Clean Code: A Handbook of Agile Software Craftsmanship.",
+        "author": {
+          "id": "3df76aa0-2e57-419f-a9b0-93dd81b09f2f",
+          "name": "Duke author of clean code",
+          "posts": [
+            {
+              "id": "00000000-0000-0000-0000-000000000001",
+              "title": "some post from 3df76aa0-2e57-419f-a9b0-93dd81b09f2f Duke author of clean code",
+              "description": "na"
+            },
+            {
+              "id": "00000000-0000-0000-0000-000000000002",
+              "title": "some post from 3df76aa0-2e57-419f-a9b0-93dd81b09f2f Duke author of clean code",
+              "description": "na"
+            }
+          ]
+        }
+      },
+      {
+        "id": "00000000-0000-0000-0000-000000000002",
+        "title": "Real World Java EE Patterns",
+        "description": "Real World Java EE Patterns.",
+        "author": {
+          "id": "105b5429-1ca8-4b11-8e2b-7cd008d05c97",
+          "name": "Duke author of Real World Java EE Patterns",
+          "posts": [
+            {
+              "id": "00000000-0000-0000-0000-000000000001",
+              "title": "some post from 105b5429-1ca8-4b11-8e2b-7cd008d05c97 Duke author of Real World Java EE Patterns",
+              "description": "na"
+            },
+            {
+              "id": "00000000-0000-0000-0000-000000000002",
+              "title": "some post from 105b5429-1ca8-4b11-8e2b-7cd008d05c97 Duke author of Real World Java EE Patterns",
+              "description": "na"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+```

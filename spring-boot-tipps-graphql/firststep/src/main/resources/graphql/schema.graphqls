@@ -3,6 +3,7 @@ type Query {
     greet(name: String!): String!
     gerRandomNumbers: [Int!]!
     getBook: BookResource!
+    getPosts: [PostResource!]!
 }
 
 type BookResource {
@@ -10,4 +11,15 @@ type BookResource {
     title: String
 }
 
-# val id: Long, val title: String
+type PostResource {
+    id: ID
+    title: String!
+    description: String
+    author: UserResource
+}
+
+type UserResource {
+    id: ID!
+    name: String!
+    posts: [PostResource!]!
+}
