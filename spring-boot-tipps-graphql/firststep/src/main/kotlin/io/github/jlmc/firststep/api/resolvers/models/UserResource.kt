@@ -1,4 +1,4 @@
-package io.github.jlmc.firststep.api.resolvers.posts
+package io.github.jlmc.firststep.api.resolvers.models
 
 import io.github.jlmc.firststep.domain.User
 import java.util.*

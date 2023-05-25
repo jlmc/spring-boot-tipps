@@ -1,6 +1,11 @@
 package io.github.jlmc.firststep.api.resolvers.posts
 
+import io.github.jlmc.firststep.api.resolvers.models.PostResource
+import io.github.jlmc.firststep.api.resolvers.models.UserResource
 import io.github.jlmc.firststep.application.service.PostService
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
@@ -9,6 +14,12 @@ import org.springframework.stereotype.Controller
 class PostResolver(
     private val postService: PostService,
 ) {
+
+    @QueryMapping
+    fun mostPopularPosts(@Argument page: Int = 0, @Argument size: Int): List<PostResource> {
+        val pageable: Pageable = PageRequest.of(page, size)
+        return postService.mostPopularPosts(pageable).content.map(::PostResource)
+    }
 
     @QueryMapping
     fun getPosts(): List<PostResource> {

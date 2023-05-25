@@ -268,3 +268,61 @@ query readPosts {
   }
 }
 ```
+
+## Pagination With GraphQL
+
+```
+query mostPopularPosts {
+    mostPopularPosts(page: 0, size: 2) {
+        id
+        title
+        votes
+        description
+        author {
+            id
+            name
+            posts {
+                title
+                id
+                votes
+            }
+        }
+    }
+}
+```
+
+```
+query mostPopularPosts {
+    mostPopularPosts(page: 0, size: 2) {
+        id
+        title
+        votes
+        description
+        author {
+            id
+            name
+            posts {
+                title
+                id
+                votes
+            }
+        }
+    }
+}
+```
+
+# Mutations
+
+```
+mutation addUserMutationName {
+   addUser(addUserInput: { 
+       name: "JC" 
+       })
+}
+```
+
+```
+curl --location 'http://localhost:8080/graphql' \
+--header 'Content-Type: application/json' \
+--data '{"query":"mutation addUserMutationName {\n   addUser(addUserInput: { \n       name: \"JC\" \n       })\n}","variables":{}}'
+```

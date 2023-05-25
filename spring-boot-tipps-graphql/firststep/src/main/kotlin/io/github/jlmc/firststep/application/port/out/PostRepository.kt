@@ -13,6 +13,6 @@ interface PostRepository : JpaRepository<Post, UUID> {
     @Query(value = "select p.author from Post p where p.id = :postId")
     fun findPostAuthor(@Param("postId") postId: UUID): User?
 
-    @Query("select p from Post p where p.author.id = :authorId order by p.id")
+    @Query("select p from Post p where p.author.id = :authorId order by p.createdDate asc")
     fun getPostsAuthorId(@Param("authorId") authorId: UUID): List<Post>
 }

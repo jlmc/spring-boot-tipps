@@ -4,6 +4,7 @@ type Query {
     gerRandomNumbers: [Int!]!
     getBook: BookResource!
     getPosts: [PostResource!]!
+    mostPopularPosts(page: Int!, size: Int!): [PostResource!]!
 }
 
 type BookResource {
@@ -15,6 +16,7 @@ type PostResource {
     id: ID
     title: String!
     description: String
+    votes: Int!
     author: UserResource
 }
 
@@ -22,4 +24,12 @@ type UserResource {
     id: ID!
     name: String!
     posts: [PostResource!]!
+}
+
+type Mutation {
+    addUser(addUserInput: AddUserInput!) :ID
+}
+
+input AddUserInput {
+    name: String!
 }
