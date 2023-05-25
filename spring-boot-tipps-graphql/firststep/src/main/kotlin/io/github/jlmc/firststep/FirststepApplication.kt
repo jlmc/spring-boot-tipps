@@ -7,5 +7,6 @@ import org.springframework.boot.runApplication
 class FirststepApplication
 
 fun main(args: Array<String>) {
+    //System.setProperty("org.hibernate.orm.jdbc.extract", "trace")
     runApplication<FirststepApplication>(*args)
 }

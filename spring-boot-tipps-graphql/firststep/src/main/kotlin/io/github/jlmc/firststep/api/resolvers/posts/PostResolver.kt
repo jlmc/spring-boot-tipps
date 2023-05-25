@@ -1,27 +1,18 @@
 package io.github.jlmc.firststep.api.resolvers.posts
 
+import io.github.jlmc.firststep.application.service.PostService
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
-import java.util.UUID
 
 @Controller
-class PostResolver {
+class PostResolver(
+    private val postService: PostService,
+) {
 
     @QueryMapping
     fun getPosts(): List<PostResource> {
-        return listOf(
-            PostResource(
-                id = UUID(0L, 1L),
-                title = "clean code",
-                description = "Clean Code: A Handbook of Agile Software Craftsmanship."
-            ),
-            PostResource(
-                id = UUID(0L, 2L),
-                title = "Real World Java EE Patterns",
-                description = "Real World Java EE Patterns."
-            )
-        )
+        return postService.getPosts().map(::PostResource)
     }
 
     /**
@@ -30,7 +21,7 @@ class PostResolver {
      */
     @SchemaMapping(typeName = "PostResource") // the typeName defines who is the parent of this field resolver
     fun author(postResource: PostResource): UserResource {
-        return UserResource(id = UUID.randomUUID(), name = "Duke author of " + postResource.title)
+        return postService.getAuthorByPostId(postResource.id)?.let(::UserResource) ?: throw IllegalStateException()
     }
 
     /**
@@ -38,15 +29,6 @@ class PostResolver {
      */
     @SchemaMapping(typeName = "UserResource")
     fun posts(userResource: UserResource): List<PostResource> {
-        val postResources =
-            (1..2).map {
-                PostResource(
-                    id = UUID(0, it.toLong()),
-                    title = "some post from ${userResource.id} ${userResource.name}",
-                    description = "na"
-                )
-            }
-
-        return postResources
+        return postService.getPostsAuthorId(userResource.id).map(::PostResource)
     }
 }
