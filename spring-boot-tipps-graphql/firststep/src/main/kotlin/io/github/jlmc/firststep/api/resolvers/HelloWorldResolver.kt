@@ -1,4 +1,4 @@
-package io.github.jlmc.firststep.api.resolvers.helloworld
+package io.github.jlmc.firststep.api.resolvers
 
 import io.github.jlmc.firststep.api.models.BookResource
 import org.springframework.graphql.data.method.annotation.Argument

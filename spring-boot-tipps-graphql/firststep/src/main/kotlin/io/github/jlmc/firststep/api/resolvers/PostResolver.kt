@@ -1,4 +1,4 @@
-package io.github.jlmc.firststep.api.resolvers.posts
+package io.github.jlmc.firststep.api.resolvers
 
 import io.github.jlmc.firststep.api.resolvers.models.PostResource
 import io.github.jlmc.firststep.api.resolvers.models.UserResource
