@@ -1,6 +1,6 @@
 package io.github.jlmc.firststep.api.controllers
 
-import io.github.jlmc.firststep.api.models.BookResource
+import io.github.jlmc.firststep.api.controllers.models.BookResource
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController

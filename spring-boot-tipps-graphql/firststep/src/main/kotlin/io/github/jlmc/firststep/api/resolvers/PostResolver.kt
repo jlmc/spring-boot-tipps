@@ -35,11 +35,4 @@ class PostResolver(
         return postService.getAuthorByPostId(postResource.id)?.let(::UserResource) ?: throw IllegalStateException()
     }
 
-    /**
-     * field resolver for `post.author.posts`
-     */
-    @SchemaMapping(typeName = "UserResource")
-    fun posts(userResource: UserResource): List<PostResource> {
-        return postService.getPostsAuthorId(userResource.id).map(::PostResource)
-    }
 }

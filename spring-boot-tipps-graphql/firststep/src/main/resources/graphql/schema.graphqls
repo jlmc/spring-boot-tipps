@@ -5,6 +5,7 @@ type Query {
     getBook: BookResource!
     getPosts: [PostResource!]!
     mostPopularPosts(page: Int!, size: Int!): [PostResource!]!
+    getUsers(page: Int!, size: Int!): UsersPage!
 }
 
 type BookResource {
@@ -33,3 +34,15 @@ type Mutation {
 input AddUserInput {
     name: String!
 }
+
+
+type UsersPage {
+    content: [UserResource!]!
+    pageNumber: Int!
+    pageSize: Int!
+    totalPages: Int!
+    isFirst: Boolean!
+    isLast: Boolean!
+}
+
+

@@ -326,3 +326,26 @@ curl --location 'http://localhost:8080/graphql' \
 --header 'Content-Type: application/json' \
 --data '{"query":"mutation addUserMutationName {\n   addUser(addUserInput: { \n       name: \"JC\" \n       })\n}","variables":{}}'
 ```
+
+## Users page
+
+```graphql
+query getuserspage {
+   getUsers(page: 0 size: 2) {
+       content {
+           id
+           name
+           posts {
+               id
+               title
+           }
+       }
+       isFirst
+       isLast
+       totalPages
+       pageSize
+       pageNumber
+
+   }
+}
+```
