@@ -1,4 +1,4 @@
-package io.github.jlmc.firststep.api.resolvers.models
+package io.github.jlmc.firststep.adapter.`in`.graphql.model
 
 @JvmRecord
 data class UsersPage(

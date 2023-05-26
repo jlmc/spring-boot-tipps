@@ -1,6 +1,6 @@
-package io.github.jlmc.firststep.api.resolvers
+package io.github.jlmc.firststep.adapter.`in`.graphql
 
-import io.github.jlmc.firststep.api.controllers.models.BookResource
+import io.github.jlmc.firststep.adapter.`in`.graphql.model.BookResource
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.stereotype.Controller
