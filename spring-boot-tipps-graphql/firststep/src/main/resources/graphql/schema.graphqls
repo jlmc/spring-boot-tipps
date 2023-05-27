@@ -25,6 +25,7 @@ type UserResource {
     id: ID!
     name: String!
     posts: [PostResource!]!
+    totalPosts: Int!
 }
 
 type Mutation {
