@@ -29,12 +29,18 @@ type UserResource {
 
 type Mutation {
     addUser(addUserInput: AddUserInput!) :ID
+    addPost(addPostInput: AddPostInput!): PostResource!
 }
 
 input AddUserInput {
     name: String!
 }
 
+input AddPostInput {
+    title: String!
+    description: String
+    authorId: ID
+}
 
 type UsersPage {
     content: [UserResource!]!

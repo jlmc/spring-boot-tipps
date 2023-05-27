@@ -349,3 +349,24 @@ query getuserspage {
    }
 }
 ```
+
+
+## add new post record
+
+```graphql
+mutation addPostOperation {
+    addPost (addPostInput: {
+        title: "How to"
+        description: "lero lero"
+        authorId: "3ad1498a-6755-43b3-bd15-0e6720180fe1"
+    }) {
+        id
+        title
+        description
+        author {
+            id
+            name
+        }
+    }
+}
+```
