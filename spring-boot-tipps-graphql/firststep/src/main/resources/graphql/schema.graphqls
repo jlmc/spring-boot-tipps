@@ -39,6 +39,13 @@ type UserResource {
 type Mutation {
     addUser(addUserInput: AddUserInput!) :ID
     addPost(addPostInput: AddPostInput!): PostResource!
+    addComment(addCommentInput: AddCommentInput!): CommentResource!
+}
+
+input AddCommentInput {
+    authorId: ID!
+    postId: ID!
+    text: String!
 }
 
 input AddUserInput {

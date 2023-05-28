@@ -1,13 +1,12 @@
 package io.github.jlmc.firststep.adapter.`in`.graphql
 
+import io.github.jlmc.firststep.adapter.`in`.graphql.model.AddCommentInput
 import io.github.jlmc.firststep.adapter.`in`.graphql.model.CommentResource
 import io.github.jlmc.firststep.adapter.`in`.graphql.model.PostResource
 import io.github.jlmc.firststep.adapter.`in`.graphql.model.UserResource
-import io.github.jlmc.firststep.application.port.`in`.GetCommentAuthorUserCase
-import io.github.jlmc.firststep.application.port.`in`.GetCommentPostUserCase
-import io.github.jlmc.firststep.application.port.`in`.GetCommentsCommand
-import io.github.jlmc.firststep.application.port.`in`.GetCommentsUseCase
+import io.github.jlmc.firststep.application.port.`in`.*
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
@@ -18,7 +17,21 @@ class CommentResolver(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val getCommentPostUserCase: GetCommentPostUserCase,
     private val getCommentAuthorUserCase: GetCommentAuthorUserCase,
+    private val addCommentUserCase: AddCommentUserCase,
 ) {
+
+    @MutationMapping(name = "addComment")
+    fun addComment(
+        @Argument(name = "addCommentInput") addCommentInput: AddCommentInput
+    ): CommentResource {
+        return addCommentUserCase.addComment(
+            AddCommentCommand(
+                authorId = addCommentInput.authorId,
+                postId = addCommentInput.postId,
+                text = addCommentInput.text
+            )
+        ).let(::CommentResource)
+    }
 
     @QueryMapping
     fun getComments(
