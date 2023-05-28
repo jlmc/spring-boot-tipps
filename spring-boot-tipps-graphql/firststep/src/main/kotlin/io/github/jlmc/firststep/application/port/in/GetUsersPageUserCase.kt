@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page
 
 interface GetUsersPageUserCase {
 
-    fun getUsersPage(command: GetUsersPageCommand) : Page<User>
+    fun getUsersPage(command: GetUsersPageCommand): Page<User>
 }

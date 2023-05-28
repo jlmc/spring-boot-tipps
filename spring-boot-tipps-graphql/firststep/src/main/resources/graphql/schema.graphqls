@@ -6,6 +6,12 @@ type Query {
     getPosts: [PostResource!]!
     mostPopularPosts(page: Int!, size: Int!): [PostResource!]!
     getUsers(page: Int!, size: Int!): UsersPage!
+    getComments(authorId: ID, postId: ID): [CommentResource!]!
+}
+
+type CommentResource {
+    id: ID
+    text: String
 }
 
 type BookResource {

@@ -33,7 +33,7 @@ class HelloWorldResolver {
      *  getBook: BookResource!
      */
     @QueryMapping
-    fun getBook() : BookResource {
+    fun getBook(): BookResource {
         return BookResource(123, "John is candidate to Duke")
     }
 }

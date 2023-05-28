@@ -18,7 +18,14 @@ class User(
         orphanRemoval = true,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
     )
-    val posts: Set<Post> = mutableSetOf()
+    val posts: Set<Post> = mutableSetOf(),
+
+    @OneToMany(
+        mappedBy = "author",
+        orphanRemoval = true,
+        cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
+    )
+    val comments: Set<Comment> = mutableSetOf(),
 ) {
     fun addPosts(posts: Collection<Post>) {
         posts.forEach {

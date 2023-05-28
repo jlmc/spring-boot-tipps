@@ -26,7 +26,7 @@ class UserService(private val userRepository: UserRepository) :
         return userRepository.findAll(PageRequest.of(command.page, command.size, command.sort))
     }
 
-    override fun getUserTotalPosts(command: GetUserTotalPostsCommand) : Long {
+    override fun getUserTotalPosts(command: GetUserTotalPostsCommand): Long {
 
 
         return userRepository.countUserPosts(command.userId)

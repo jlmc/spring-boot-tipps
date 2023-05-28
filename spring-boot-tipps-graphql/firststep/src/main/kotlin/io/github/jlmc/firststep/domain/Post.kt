@@ -31,7 +31,7 @@ class Post(
 
     @CreatedDate
     //@CreationTimestamp
-    @Column(name ="created_date")
+    @Column(name = "created_date")
     var createdDate: Instant? = null,
     @LastModifiedDate
     @Column(name = "last_modified_date")
@@ -42,5 +42,20 @@ class Post(
         AttributeOverride(name = "system", column = Column(name = "src_system", updatable = false))
     )
     val srcSystem: SystemAware? = SystemAware.createSystemAware("D"),
-)
+
+    @OneToMany(
+        mappedBy = "post",
+        orphanRemoval = true,
+        cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
+    )
+    val comments: Set<Comment> = mutableSetOf(),
+) {
+
+    fun addComments(comments: Collection<Comment>) {
+        comments.forEach {
+            it.post = this
+            (this.comments as MutableSet).add(it)
+        }
+    }
+}
 

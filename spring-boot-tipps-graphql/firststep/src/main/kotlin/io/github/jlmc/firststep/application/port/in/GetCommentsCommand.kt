@@ -2,5 +2,4 @@ package io.github.jlmc.firststep.application.port.`in`
 
 import java.util.*
 
-@JvmRecord
-data class GetUserTotalPostsCommand(val userId: UUID)
+data class GetCommentsCommand(val postId: UUID?, val authorId: UUID?)

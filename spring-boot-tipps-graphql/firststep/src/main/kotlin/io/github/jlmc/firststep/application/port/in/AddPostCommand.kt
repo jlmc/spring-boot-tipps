@@ -5,7 +5,7 @@ import jakarta.validation.Validation
 import jakarta.validation.ValidatorFactory
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import java.util.UUID
+import java.util.*
 
 
 @JvmRecord
