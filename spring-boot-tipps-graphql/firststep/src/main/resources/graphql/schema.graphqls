@@ -10,8 +10,10 @@ type Query {
 }
 
 type CommentResource {
-    id: ID
-    text: String
+    id: ID!
+    text: String!
+    author: UserResource!
+    post: PostResource!
 }
 
 type BookResource {

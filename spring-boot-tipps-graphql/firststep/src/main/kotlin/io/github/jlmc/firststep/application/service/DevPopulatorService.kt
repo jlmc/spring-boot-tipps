@@ -1,6 +1,7 @@
 package io.github.jlmc.firststep.application.service
 
 import io.github.jlmc.firststep.application.port.out.UserRepository
+import io.github.jlmc.firststep.domain.Comment
 import io.github.jlmc.firststep.domain.Post
 import io.github.jlmc.firststep.domain.User
 import org.slf4j.LoggerFactory
@@ -42,13 +43,17 @@ class DevPopulatorService : CommandLineRunner {
     private fun createPostsForTheAuthor(author: User, limit: Long = 3L): List<Post> {
         return (0..limit)
             .map {
-                Post(
+                val p = Post(
                     id = null,
                     title = "post $it from author ${author.name}",
                     description = "lero lero!!!",
                     author = author,
                     votes = it.toInt()
                 )
+
+                p.addComments(listOf(Comment(text = "first author comment!", post = p, author = author)))
+
+                p
             }
     }
 }
