@@ -1,0 +1,22 @@
+version: '3.9'
+
+networks:
+  demo-network:
+    driver: bridge
+
+services:
+  db:
+    image: postgres:13-alpine
+    hostname: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - demo-network
+    environment:
+      POSTGRES_USER: demos
+      POSTGRES_PASSWORD: demos
+      POSTGRES_DB: demos
+    volumes:
+      - .volumes/postgresql/postgresql:/var/lib/postgresql
+      - .volumes/postgresql/postgresql_data:/var/lib/postgresql/data
