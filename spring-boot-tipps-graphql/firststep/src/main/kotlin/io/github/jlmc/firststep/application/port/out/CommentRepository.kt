@@ -22,4 +22,6 @@ interface CommentRepository : JpaRepository<Comment, UUID>, JpaSpecificationExec
     @Query(value = "select c from Comment c left join fetch c.post p where p.id = :postId")
     fun getCommentsByPostId(@Param("postId") postId: UUID) : List<Comment>
 
+    @Query(value = "select c from Comment c left join fetch c.post p left join fetch p.author left join fetch c.author where p.id in :postIds")
+    fun getCommentsByPostIds(@Param("postIds") postIds: Collection<UUID>) : List<Comment>
 }

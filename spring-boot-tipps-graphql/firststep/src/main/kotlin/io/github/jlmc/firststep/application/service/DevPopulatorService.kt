@@ -7,13 +7,14 @@ import io.github.jlmc.firststep.domain.User
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
-import org.springframework.context.annotation.Profile
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-@Profile("!production")
+//@Profile("!production")
+@ConditionalOnProperty(name = ["dev.initial.mapping"], havingValue = "true", matchIfMissing = false)
 class DevPopulatorService : CommandLineRunner {
 
     private val logger = LoggerFactory.getLogger(this::class.java)

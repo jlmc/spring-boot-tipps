@@ -47,6 +47,11 @@ class PostService(
         return commentRepository.getCommentsByPostId(postId)
     }
 
+    fun getPostsComments(postIds: Collection<UUID>): List<Comment> = when {
+        postIds.isEmpty() -> emptyList()
+        else -> commentRepository.getCommentsByPostIds(postIds)
+    }
+
     @Transactional
     override fun addPost(command: AddPostCommand): Post {
         val user = userRepository.findById(command.authorId)
@@ -58,4 +63,6 @@ class PostService(
 
         return newPost
     }
+
+
 }
