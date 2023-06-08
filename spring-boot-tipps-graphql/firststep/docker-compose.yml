@@ -17,6 +17,11 @@ services:
       POSTGRES_USER: demos
       POSTGRES_PASSWORD: demos
       POSTGRES_DB: demos
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
       - .volumes/postgresql/postgresql:/var/lib/postgresql
       - .volumes/postgresql/postgresql_data:/var/lib/postgresql/data

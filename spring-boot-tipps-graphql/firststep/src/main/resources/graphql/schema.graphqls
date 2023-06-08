@@ -27,6 +27,7 @@ type PostResource {
     description: String
     votes: Int!
     author: UserResource
+    comments: [CommentResource!]
 }
 
 type UserResource {
@@ -66,5 +67,3 @@ type UsersPage {
     isFirst: Boolean!
     isLast: Boolean!
 }
-
-

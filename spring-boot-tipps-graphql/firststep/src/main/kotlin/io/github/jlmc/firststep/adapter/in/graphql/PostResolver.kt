@@ -1,6 +1,7 @@
 package io.github.jlmc.firststep.adapter.`in`.graphql
 
 import io.github.jlmc.firststep.adapter.`in`.graphql.model.AddPostInput
+import io.github.jlmc.firststep.adapter.`in`.graphql.model.CommentResource
 import io.github.jlmc.firststep.adapter.`in`.graphql.model.PostResource
 import io.github.jlmc.firststep.application.port.`in`.AddPostCommand
 import io.github.jlmc.firststep.application.port.`in`.AddPostUseCase
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
+import org.springframework.graphql.data.method.annotation.SchemaMapping
 import org.springframework.stereotype.Controller
 
 @Controller
@@ -27,6 +29,11 @@ class PostResolver(
     @QueryMapping
     fun getPosts(): List<PostResource> {
         return postService.getPosts().map(::PostResource)
+    }
+
+    @SchemaMapping(typeName = "PostResource", field = "comments")
+    fun comments(postResource: PostResource) : List<CommentResource> {
+        return postService.getPostComments(postResource.id).map(::CommentResource)
     }
 
     @MutationMapping

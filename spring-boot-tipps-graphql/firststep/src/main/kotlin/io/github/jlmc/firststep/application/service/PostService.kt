@@ -2,8 +2,10 @@ package io.github.jlmc.firststep.application.service
 
 import io.github.jlmc.firststep.application.port.`in`.AddPostCommand
 import io.github.jlmc.firststep.application.port.`in`.AddPostUseCase
+import io.github.jlmc.firststep.application.port.out.CommentRepository
 import io.github.jlmc.firststep.application.port.out.PostRepository
 import io.github.jlmc.firststep.application.port.out.UserRepository
+import io.github.jlmc.firststep.domain.Comment
 import io.github.jlmc.firststep.domain.Post
 import io.github.jlmc.firststep.domain.User
 import org.springframework.data.domain.Page
@@ -18,7 +20,8 @@ import java.util.*
 @Transactional(readOnly = true)
 class PostService(
     private val postRepository: PostRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val commentRepository: CommentRepository
 ) : AddPostUseCase {
 
     fun getPosts(): List<Post> {
@@ -38,6 +41,10 @@ class PostService(
             PageRequest.of(pageable.pageNumber, pageable.pageSize, Sort.by(Sort.Order.desc("votes")))
 
         return postRepository.findAll(pageableSorted)
+    }
+
+    fun getPostComments(postId: UUID): List<Comment> {
+        return commentRepository.getCommentsByPostId(postId)
     }
 
     @Transactional
