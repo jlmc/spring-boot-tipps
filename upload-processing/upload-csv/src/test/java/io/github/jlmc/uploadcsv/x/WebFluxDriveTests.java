@@ -115,7 +115,6 @@ public class WebFluxDriveTests {
 
     }
 
-
     @Test
     void whenSaveInactiveReturnsError() {
         String accountId = "ACCOUNT_ID";
@@ -145,7 +144,68 @@ public class WebFluxDriveTests {
                 .verifyComplete();
     }
 
-    ////
+    //// multiple
+
+    @Test
+    void whenMultipleAllMethodsRunsOk() {
+        String accountId = "ACCOUNT_ID";
+        String locationIdA = "location A";
+        Location locationA = Location.builder().id(locationIdA).name("tests instance A").build();
+        String locationIdB = "location B";
+        Location locationB = Location.builder().id(locationIdB).name("tests instance B").build();
+        String locationIdC = "location C";
+        Location locationC = Location.builder().id(locationIdC).name("tests instance C").build();
+
+        lenient()
+                .when(locationRepository.getLocationByAccountIdAndId(eq(accountId), eq(locationIdA)))
+                .thenReturn(Mono.just(locationA));
+        lenient()
+                .when(locationRepository.getLocationByAccountIdAndId(eq(accountId), eq(locationIdB)))
+                .thenReturn(Mono.just(locationB));
+        lenient()
+                .when(locationRepository.getLocationByAccountIdAndId(eq(accountId), eq(locationIdC)))
+                .thenReturn(Mono.just(locationC));
+
+        lenient()
+                .when(locationRepository.deleteByAccountIdAndId(eq(accountId), eq(locationIdA)))
+                .thenReturn(Mono.empty().then());
+        lenient()
+                .when(locationRepository.deleteByAccountIdAndId(eq(accountId), eq(locationIdB)))
+                .thenReturn(Mono.empty().then());
+        lenient()
+                .when(locationRepository.deleteByAccountIdAndId(eq(accountId), eq(locationIdC)))
+                .thenReturn(Mono.empty().then());
+
+        lenient()
+                .when(locationRepository.saveInactiveLocation(Mockito.eq(locationA)))
+                .thenReturn(Mono.just(locationA));
+        lenient()
+                .when(locationRepository.saveInactiveLocation(Mockito.eq(locationB)))
+                .thenReturn(Mono.just(locationB));
+        lenient()
+                .when(locationRepository.saveInactiveLocation(Mockito.eq(locationC)))
+                .thenReturn(Mono.just(locationC));
+
+        Set<String> locationIds = Set.of(locationIdA, locationIdB, locationIdC);
+        StepVerifier.withVirtualTime(() -> sut.deleteAccountLocationsById(accountId, locationIds).log())
+                .expectSubscription()
+                .thenAwait(Duration.ofMinutes(1))
+                .then(() -> {
+                    verify(locationRepository, times(1)).getLocationByAccountIdAndId(eq(accountId), eq(locationIdA));
+                    verify(locationRepository, times(1)).deleteByAccountIdAndId(eq(accountId), eq(locationIdA));
+                    verify(locationRepository, times(1)).saveInactiveLocation(eq(locationA));
+
+                    verify(locationRepository, times(1)).getLocationByAccountIdAndId(eq(accountId), eq(locationIdC));
+                    verify(locationRepository, times(1)).deleteByAccountIdAndId(eq(accountId), eq(locationIdC));
+                    verify(locationRepository, times(1)).saveInactiveLocation(eq(locationC));
+
+                    verify(locationRepository, times(1)).getLocationByAccountIdAndId(eq(accountId), eq(locationIdC));
+                    verify(locationRepository, times(1)).deleteByAccountIdAndId(eq(accountId), eq(locationIdC));
+                    verify(locationRepository, times(1)).saveInactiveLocation(eq(locationC));
+                })
+                .verifyComplete();
+    }
+
 
 
 
