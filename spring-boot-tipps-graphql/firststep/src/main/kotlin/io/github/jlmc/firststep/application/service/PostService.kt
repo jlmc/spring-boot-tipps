@@ -64,5 +64,21 @@ class PostService(
         return newPost
     }
 
+    fun getPostsByAuthorIds(authorIds: Set<UUID>): Map<User, List<Post>> {
+        return authorIds
+            .takeIf { it.isNotEmpty() }
+            ?.let(postRepository::getPostByAuthorIdIn)
+            ?.groupBy(keySelector = { it -> it.author }, valueTransform = { it })
+            ?.map { entry ->
+                entry.key to entry.value.sortedBy { it.createdDate }
+            }?.toMap() ?: emptyMap()
+    }
+
+    fun getTotalPostByAuthor(userIds: Set<UUID>): Map<UUID, Long> {
+        return this.postRepository.getTotalPostByAuthor(userIds).associate {
+            it.first.id!! to it.second
+        }
+    }
+
 
 }

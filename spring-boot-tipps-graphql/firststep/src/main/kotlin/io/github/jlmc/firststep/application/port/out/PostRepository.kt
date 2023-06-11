@@ -15,4 +15,10 @@ interface PostRepository : JpaRepository<Post, UUID> {
 
     @Query("select p from Post p where p.author.id = :authorId order by p.createdDate asc")
     fun getPostsAuthorId(@Param("authorId") authorId: UUID): List<Post>
+
+    @Query("select p from Post p inner join fetch p.author a where a.id in :authorIds order by a.id, p.createdDate")
+    fun getPostByAuthorIdIn(@Param("authorIds") authorIds: Collection<UUID>): List<Post>
+
+    @Query("select new kotlin.Pair(u, count(p.id)) from User u left join u.posts p group by u.id")
+    fun getTotalPostByAuthor(@Param("authorIds") authorIds: Collection<UUID>): List<Pair<User, Long>>
 }
