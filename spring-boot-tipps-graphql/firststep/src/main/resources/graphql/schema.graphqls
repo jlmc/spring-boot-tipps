@@ -8,7 +8,7 @@ type Query {
     getUsers(page: Int!, size: Int!): UsersPage!
     getComments(authorId: ID, postId: ID): [CommentResource!]!
 
-    scalarTest(date: Date, bornAt: DateTime) : String!
+    scalarTest(date: Date, bornAt: DateTime, phoneNumber: PhoneNumber) : String!
 }
 
 type CommentResource {

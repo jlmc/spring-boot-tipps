@@ -274,7 +274,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "query getPosts {\n   scalarTest(date: \"2023-01-23\", bornAt: \"1996-12-19T16:39:57-08:00\")\n}",
+						"query": "query getPosts {\n   scalarTest(date: \"2023-01-23\", bornAt: \"1996-12-19T16:39:57-08:00\", phoneNumber: \"+58940001\")\n}",
 						"variables": ""
 					}
 				},

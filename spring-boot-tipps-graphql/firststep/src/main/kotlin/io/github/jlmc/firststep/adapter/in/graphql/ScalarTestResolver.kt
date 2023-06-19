@@ -17,9 +17,10 @@ class ScalarTestResolver {
     fun scalarTest(
         @Argument date: LocalDate,
         @Argument bornAt: OffsetDateTime,
+        @Argument phoneNumber: String,
     ): String {
         logger.info("Receive scalar type: {}", date)
 
-        return "Receive scalar type $date born at $bornAt"
+        return "Receive scalar type $date born at $bornAt, phoneNumber $phoneNumber"
     }
 }
