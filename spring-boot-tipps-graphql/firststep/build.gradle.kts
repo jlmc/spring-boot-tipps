@@ -23,6 +23,10 @@ repositories {
 }
 
 dependencies {
+
+    // https://github.com/graphql-java/graphql-java-extended-scalars
+    implementation("com.graphql-java:graphql-java-extended-scalars:20.2")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-graphql")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -32,6 +36,9 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     implementation("org.flywaydb:flyway-core")
     runtimeOnly("org.postgresql:postgresql")
+
+
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework:spring-webflux")
