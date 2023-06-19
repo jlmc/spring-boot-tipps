@@ -22,7 +22,7 @@ class Post(
     @Column
     val description: String,
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false, updatable = false)
     var author: User,
 
@@ -44,6 +44,7 @@ class Post(
     val srcSystem: SystemAware? = SystemAware.createSystemAware("D"),
 
     @OneToMany(
+        fetch = FetchType.LAZY,
         mappedBy = "post",
         orphanRemoval = true,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
@@ -58,4 +59,3 @@ class Post(
         }
     }
 }
-

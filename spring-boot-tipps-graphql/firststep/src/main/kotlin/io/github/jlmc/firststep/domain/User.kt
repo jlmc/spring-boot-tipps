@@ -14,6 +14,7 @@ class User(
     val name: String,
 
     @OneToMany(
+        fetch = FetchType.LAZY,
         mappedBy = "author",
         orphanRemoval = true,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
@@ -21,6 +22,7 @@ class User(
     val posts: Set<Post> = mutableSetOf(),
 
     @OneToMany(
+        fetch = FetchType.LAZY,
         mappedBy = "author",
         orphanRemoval = true,
         cascade = [CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE]
