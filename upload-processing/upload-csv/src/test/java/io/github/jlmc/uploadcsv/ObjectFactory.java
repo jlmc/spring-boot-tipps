@@ -1,9 +1,9 @@
 package io.github.jlmc.uploadcsv;
 
-import io.github.jlmc.uploadcsv.locations.entity.Address;
-import io.github.jlmc.uploadcsv.locations.entity.Coordinates;
-import io.github.jlmc.uploadcsv.locations.entity.Location;
-import io.github.jlmc.uploadcsv.locations.entity.Slot;
+import io.github.jlmc.uploadcsv.domain.Address;
+import io.github.jlmc.uploadcsv.domain.Coordinates;
+import io.github.jlmc.uploadcsv.domain.Location;
+import io.github.jlmc.uploadcsv.domain.Slot;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.DayOfWeek;

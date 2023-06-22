@@ -1,7 +1,7 @@
 package io.github.jlmc.uploadcsv.configurations.mongock;
 
 import com.mongodb.reactivestreams.client.MongoClient;
-import io.github.jlmc.uploadcsv.migrations.UpdateLocationsOpenAndCloseAtToIsoLocalTime;
+import io.github.jlmc.uploadcsv.adapters.out.persistence.UpdateLocationsOpenAndCloseAtToIsoLocalTime;
 import io.mongock.driver.mongodb.reactive.driver.MongoReactiveDriver;
 import io.mongock.runner.springboot.EnableMongock;
 import io.mongock.runner.springboot.MongockSpringboot;
