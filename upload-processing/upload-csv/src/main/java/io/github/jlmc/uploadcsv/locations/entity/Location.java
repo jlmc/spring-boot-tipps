@@ -16,6 +16,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import static io.github.jlmc.uploadcsv.locations.entity.Location.LOCATIONS;
@@ -67,5 +68,18 @@ public class Location {
         this.address = that.address;
         this.openHours = that.openHours;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Location location)) return false;
+
+        return Objects.equals(id, location.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
     }
 }
