@@ -171,6 +171,10 @@
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
             <version>3.4.11</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
