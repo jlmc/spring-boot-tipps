@@ -1,0 +1,106 @@
+spring:
+  rabbitmq:
+    host: localhost
+    username: "guest"
+    password: "guest"
+    #port: 5676
+    port: 5672
+  cloud:
+    stream:
+      rabbit:
+        default:
+          # https://cloud.spring.io/spring-cloud-static/spring-cloud-stream-binder-rabbit/3.0.0.RELEASE/reference/html/spring-cloud-stream-binder-rabbit.html#_rabbitmq_consumer_properties
+          consumer:
+            dlqQuorum:
+              enabled: true
+            quorum:
+              enabled: true
+        bindings:
+          #CONSUMERS
+          receiveExternalTaskCrcValidation:
+            consumer:
+              prefetch: 1
+              acknowledgeMode: auto
+              autoBindDlq: true
+              bindingRoutingKey: ${config.bpm.topic.CrcValidation}
+          receiveExternalTaskInformationExtraction:
+            consumer:
+              prefetch: 1
+              acknowledgeMode: auto
+              autoBindDlq: true
+              bindingRoutingKey: ${config.bpm.topic.InformationExtraction}
+          #PRODUCERS
+          subscribeTopics:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          deployBpm:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          correlateMessage:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          startProcess:
+            producer:
+              lazy: true
+              ttl: 1296000000
+              exchangeType: fanout
+      bindings:
+        #CONSUMERS
+        deployBpmResponse:
+          destination: bpm.deploy.workflow.response
+          group: ${spring.application.name}
+
+        #EXTERNAL TASKS
+        receiveExternalTaskCrcValidation:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.CrcValidation}
+        receiveExternalTaskInformationExtraction:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.InformationExtraction}
+
+        #PRODUCERS
+        subscribeTopics:
+          destination: bpm.subscribe.worker
+          producer:
+            required-groups:
+              - backup
+        deployBpm:
+          destination: bpm.deploy.workflow
+          producer:
+            required-groups:
+              - backup
+        correlateMessage:
+          destination: bpm.correlate.message
+          producer:
+            required-groups:
+              - backup
+        startProcess:
+          destination: bpm.start.process
+          producer:
+            required-groups:
+              - backup
+        #Default configuration
+        default:
+          content-type: application/json
+  application:
+    name: docs-processing-service
+config:
+  workerId: ${spring.application.name}
+  messaging:
+    routingExpression: type
+  bpm:
+    deploy:
+      enableDuplicateFilter: true
+      deployChangedOnly: true
+      migrate: true
+    topic:
+      CrcValidation : documentProcessing_crc_validation
+      InformationExtraction : documentProcessing_informationExtraction
+    subscribeTopics:
+      - ${config.bpm.topic.CrcValidation}

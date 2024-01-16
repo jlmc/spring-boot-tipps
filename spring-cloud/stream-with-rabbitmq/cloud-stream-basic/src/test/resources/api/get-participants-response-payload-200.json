@@ -1,0 +1,9 @@
+[
+  {
+    "documentTypeCode": "ABC",
+    "signable": true,
+    "signableNow": false,
+    "mandatory": true,
+    "context": "HIRING"
+  }
+]

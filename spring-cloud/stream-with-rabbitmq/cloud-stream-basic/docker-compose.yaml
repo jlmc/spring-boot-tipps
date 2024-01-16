@@ -1,0 +1,36 @@
+version: "3.8"
+
+networks:
+  cloud-net:
+    driver: bridge
+
+#volumes:
+#  postgres_data:
+#    driver: local
+
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8.16-management
+    #image: rabbitmq:3.8.14-management-alpine
+    restart: always
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # HTTP
+      - "25672:25672" # clustering
+      - "15692:15692" # http/prometheus
+    #environment:
+      #- RABBITMQ_DEFAULT_USER=guest
+      #- RABBITMQ_DEFAULT_PASS=guest
+      #- RABBITMQ_DEFAULT_VHOST=demo
+    #healthcheck:
+    #  test: rabbitmq-diagnostics check_port_connectivity
+    #  # test: rabbitmq-diagnostics -q status && rabbitmq-diagnostics -q check_local_alarms
+    #  interval: 30s
+    #  timeout: 30s
+    #  retries: 10
+    #volumes:
+    #  - .volumes/rabbitmq:/var/lib/rabbitmq
+    networks:
+      - cloud-net
+

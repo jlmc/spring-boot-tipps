@@ -1,0 +1,163 @@
+server:
+  port: 8081
+spring:
+  rabbitmq:
+    host: localhost
+    username: "guest"
+    password: "guest"
+    port: 5676
+    #port: 5672
+
+  cloud:
+    function:
+      ## those are the declaration of the listeners
+      definition: deployBpmResponse;receiveExternalTaskCrcValidation;receiveExternalTaskInformationExtraction
+
+    stream:
+
+      bindings:
+        ## producers
+        startProcess:
+          destination: bpm.start.process
+          producer:
+            required-groups:
+              - backup
+        correlateMessage:
+          destination: bpm.correlate.message
+          producer:
+            required-groups:
+              - backup
+        subscribeTopics:
+          destination: bpm.subscribe.worker
+          producer:
+            required-groups:
+              - backup
+        deployBpm:
+          destination: bpm.deploy.workflow
+          producer:
+            required-groups:
+              - backup
+
+        ## consumers
+        deployBpmResponse:
+          destination: bpm.deploy.workflow.response
+          group: ${spring.application.name}
+        receiveExternalTaskCrcValidation:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.CrcValidation}
+        receiveExternalTaskInformationExtraction:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.InformationExtraction}
+
+
+
+        deployBpmResponse-in-0:
+          content-type: application/json
+          destination: bpm.deploy.workflow.response
+          group: ${spring.application.name}
+          consumer:
+            concurrency: 1
+            max-attempts: 10
+            back-off-initial-interval: 150
+            back-off-multiplier: 2.0
+            back-off-max-interval: 20000
+
+        receiveExternalTaskCrcValidation-in-0:
+          content-type: application/json
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.CrcValidation}
+          consumer:
+            concurrency: 1
+            max-attempts: 10
+            back-off-initial-interval: 150
+            back-off-multiplier: 2.0
+            back-off-max-interval: 20000
+        receiveExternalTaskInformationExtraction-in-0:
+          content-type: application/json
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.InformationExtraction}
+          consumer:
+            concurrency: 1
+            max-attempts: 10
+            back-off-initial-interval: 150
+            back-off-multiplier: 2.0
+            back-off-max-interval: 20000
+
+
+      rabbit:
+        bindings:
+          # producers https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream-binder-rabbit.html#rabbit-prod-props
+          # # spring.cloud.stream.rabbit.bindings.<channelName>.producer.
+          startProcess:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchange-type: fanout
+          correlateMessage:
+            producer:
+              exchange-type: fanout
+              ttl: 1296000000
+              lazy: true
+          subscribeTopics:
+            producer:
+              exchange-type: fanout
+              ttl: 1296000000
+              lazy: true
+          deployBpm:
+            producer:
+              exchange-type: fanout
+              ttl: 1296000000
+              lazy: true
+
+          # consumers
+          deployBpmResponse-in-0:
+            consumer:
+              consumer-tag-prefix: ${spring.application.name}.deployBpmResponse
+              acknowledge-mode: auto
+              #auto-bind-dlq: true
+              prefetch: 1
+              #prefetch: 3
+              #dlq-quorum:
+              #  enabled: true
+              quorum:
+                enabled: true
+          receiveExternalTaskCrcValidation-in-0:
+            consumer:
+              consumer-tag-prefix: ${spring.application.name}.receiveExternalTaskCrcValidation
+              binding-routing-key: ${config.bpm.topic.CrcValidation}
+              acknowledge-mode: auto
+              auto-bind-dlq: true
+              prefetch: 1
+              dlq-quorum:
+                enabled: true
+              quorum:
+                enabled: true
+          receiveExternalTaskInformationExtraction-in-0:
+            consumer:
+              consumer-tag-prefix: ${spring.application.name}.receiveExternalTaskInformationExtraction
+              binding-routing-key: ${config.bpm.topic.InformationExtraction}
+              acknowledge-mode: auto
+              auto-bind-dlq: true
+              prefetch: 1
+              dlq-quorum:
+                enabled: true
+              quorum:
+                enabled: true
+
+
+  application:
+    name: docs-processing-service
+config:
+  workerId: ${spring.application.name}
+  messaging:
+    routingExpression: type
+  bpm:
+    deploy:
+      enableDuplicateFilter: true
+      deployChangedOnly: true
+      migrate: true
+    topic:
+      CrcValidation : documentProcessing_crc_validation
+      InformationExtraction : documentProcessing_informationExtraction
+    subscribeTopics:
+      - ${config.bpm.topic.CrcValidation}
