@@ -1,0 +1,48 @@
+version: '3.9'
+
+networks:
+  xsb2-demo:
+    driver: bridge
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type="single-node"
+      #- cluster.name=docker-cluster
+      #- bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      #- ES_JAVA_OPTS="-Xms512m -Xmx512m"
+      - cluster.routing.allocation.disk.threshold_enabled= false
+      - cluster.name=docker-cluster
+      #- network.host: 0.0.0.0
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    #volumes:
+    #  - ./volumes/esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - xsb2-demo
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.2
+    container_name: kibana
+    environment:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      - xsb2-demo
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8.16-management
+    ports:
+      - "5673:5672"
+      - "15673:15672"

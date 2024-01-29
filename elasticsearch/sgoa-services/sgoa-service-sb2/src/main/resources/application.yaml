@@ -1,0 +1,161 @@
+server:
+  compression:
+    enabled: true
+  port: 8081
+  shutdown: graceful
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+spring:
+  application:
+  
+    name: sgoa-service-sb2
+  # Time to wait for active requests to finish during the shutdown
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  rabbitmq:
+    host: localhost
+    port: 5673
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      rabbit:
+        default:
+          # https://cloud.spring.io/spring-cloud-static/spring-cloud-stream-binder-rabbit/3.0.0.RELEASE/reference/html/spring-cloud-stream-binder-rabbit.html#_rabbitmq_consumer_properties
+          consumer:
+            dlqQuorum:
+              enabled: true
+            quorum:
+              enabled: true
+        bindings:
+          #CONSUMERS
+          receiveExternalTaskLoadOperation:
+            consumer:
+              prefetch: 1
+              acknowledgeMode: auto
+              autoBindDlq: true
+              bindingRoutingKey: ${config.bpm.topic.LoadOperation}
+          receiveExternalTaskLoadSingleOperation:
+            consumer:
+              prefetch: 1
+              acknowledgeMode: auto
+              autoBindDlq: true
+              bindingRoutingKey: ${config.bpm.topic.LoadSingleOperation}
+          #PRODUCERS
+          subscribeTopics:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          deployBpm:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          correlateMessage:
+            producer:
+              ttl: 1296000000
+              lazy: true
+              exchangeType: fanout
+          startProcess:
+            producer:
+              lazy: true
+              ttl: 1296000000
+              exchangeType: fanout
+      bindings:
+        #CONSUMERS
+        deployBpmResponse:
+          destination: bpm.deploy.workflow.response
+          group: ${spring.application.name}
+        #EXTERNAL TASKS
+        receiveExternalTaskLoadOperation:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.LoadOperation}
+        receiveExternalTaskLoadSingleOperation:
+          destination: bpm.notify.externaltask
+          group: ${config.bpm.topic.LoadSingleOperation}
+        #PRODUCERS
+        subscribeTopics:
+          destination: bpm.subscribe.worker
+          producer:
+            required-groups:
+              - backup
+        deployBpm:
+          destination: bpm.deploy.workflow
+          producer:
+            required-groups:
+              - backup
+        correlateMessage:
+          destination: bpm.correlate.message
+          producer:
+            required-groups:
+              - backup
+        startProcess:
+          destination: bpm.start.process
+          producer:
+            required-groups:
+              - backup
+        #Default configuration
+        default:
+          content-type: application/json
+
+
+
+
+
+
+
+# spring.data.elasticsearch.properties.index.search.slowlog.threshold.query.info=1ms
+
+
+app:
+  elasticsearch:
+    host-and-port: "localhost:9200"
+    path-prefix: ""
+    reverse-proxy: false
+    https: false
+    secured: false
+    username: "user"
+    password: "--"
+    customers-index: customers
+
+
+config:
+  workerId: ${spring.application.name}
+  messaging:
+    routingExpression: type
+  bpm:
+    deploy:
+      enableDuplicateFilter: true
+      deployChangedOnly: true
+      migrate: true
+    topic:
+      LoadOperation: sgoa_LoadOperation
+      LoadSingleOperation: sgoa_LoadSingleOperation
+    subscribeTopics:
+      - ${config.bpm.topic.LoadOperation}
+      - ${config.bpm.topic.LoadSingleOperation}
+
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        web: DEBUG
+        data:
+          elasticsearch:
+            core: debug
+            client: trace
+        boot:
+          autoconfigure:
+            logging: INFO
+      apache.http: debug
+    io:
+      github.jlmc: DEBUG
+
+
+# logging.level.org.apache.http=DEBUG
+
+# logging.level.org.springframework.data.elasticsearch.client.WIRE=trace
