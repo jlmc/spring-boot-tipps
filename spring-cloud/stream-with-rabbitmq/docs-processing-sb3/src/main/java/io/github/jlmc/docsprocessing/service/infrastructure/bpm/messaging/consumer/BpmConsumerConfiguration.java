@@ -37,8 +37,8 @@ public class BpmConsumerConfiguration {
     //     @StreamListener(value = BpmConsumerChannelNames.EXTERNAL_TASK_CRC_VALIDATION)
     //    public void receiveExternalTaskCrcValidation(final ExternalTaskDto externalTaskDto) {
     @Bean
-    Consumer<ExternalTaskDto> receiveExternalTaskCrcValidation() {
-        return t -> System.out.println("receiveExternalTaskCrcValidation::: >>>>> " + t);
+    Consumer<ExternalTaskDto> receiveExternalTaskCrcValidation(ExternalTaskCrcValidator validator) {
+        return validator::accept;
     }
 
 

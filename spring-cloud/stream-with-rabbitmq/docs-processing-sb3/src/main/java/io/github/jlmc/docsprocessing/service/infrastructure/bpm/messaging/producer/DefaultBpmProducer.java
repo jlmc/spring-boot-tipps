@@ -22,10 +22,10 @@ public class DefaultBpmProducer {
     public static final String DEPLOY_BPM = "deployBpm";
 
     @Value("${config.messaging.routingExpression}")
-    private String routingKeyExpression;
+    String routingKeyExpression;
 
     @Value("${spring.application.name}")
-    private String appName;
+    String appName;
 
 
     private final StreamBridge publisher;
@@ -53,7 +53,7 @@ public class DefaultBpmProducer {
 
 
         //bpmProducer.startProcess().send(build);
-        log.info(startProcessDto.getProcessName() + " - Process started");
+        log.info(startProcessDto.processName() + " - Process started");
     }
 
     public void correlateMessage(final CorrelateMessageDto correlateMessageDto) {
