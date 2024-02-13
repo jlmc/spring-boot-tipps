@@ -1,6 +1,7 @@
 package io.github.jlmc.docsprocessing.service.infrastructure.bpm.messaging.consumer;
 
 import io.github.jlmc.docsprocessing.service.commons.gateway.response.ExternalTaskDto;
+import io.github.jlmc.docsprocessing.service.infrastructure.bpm.messaging.DockerImages;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +33,7 @@ class ExternalTaskCrcValidatorTest {
 
     @Container
     private static final RabbitMQContainer rabbitMQContainer =
-            new RabbitMQContainer("rabbitmq:3.8.16-management");
+            new RabbitMQContainer(DockerImages.RABBIT_MQ);
 
     @SpyBean
     ExternalTaskCrcValidator validator;

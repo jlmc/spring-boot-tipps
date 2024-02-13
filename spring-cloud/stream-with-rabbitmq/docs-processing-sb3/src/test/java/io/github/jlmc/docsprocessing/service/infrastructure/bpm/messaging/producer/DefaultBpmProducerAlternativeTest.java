@@ -1,6 +1,8 @@
 package io.github.jlmc.docsprocessing.service.infrastructure.bpm.messaging.producer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.jlmc.docsprocessing.service.commons.gateway.response.StartProcessDto;
+import io.github.jlmc.docsprocessing.service.infrastructure.bpm.messaging.DockerImages;
 import junit.framework.AssertionFailedError;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -48,7 +50,7 @@ class DefaultBpmProducerAlternativeTest {
 
     @Container
     private static final RabbitMQContainer rabbitMQContainer =
-            new RabbitMQContainer("rabbitmq:3.8.16-management");
+            new RabbitMQContainer(DockerImages.RABBIT_MQ);
     public static final String EX_BPM_START_PROCESS = "bpm.start.process";
 
     @DynamicPropertySource
@@ -98,8 +100,8 @@ class DefaultBpmProducerAlternativeTest {
             assertEquals("kafka", headers.get("target-protocol"));
             assertNotNull(payload);
             LOGGER.info("The payload as string: {}", new String(payload, StandardCharsets.UTF_8));
-            DefaultBpmProducer.CorrelateMessageDto received = readValueAs(payload, DefaultBpmProducer.CorrelateMessageDto.class);
-            assertEquals(processName, received);
+            StartProcessDto received = readValueAs(payload, StartProcessDto.class);
+            assertEquals(processName, received.processName());
         }
     }
 
