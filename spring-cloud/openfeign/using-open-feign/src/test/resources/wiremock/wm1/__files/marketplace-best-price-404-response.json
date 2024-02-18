@@ -1,0 +1,8 @@
+{
+  "type": "about:blank",
+  "title": "Product Not Found",
+  "status": 404,
+  "detail": "Product Not Found",
+  "instance": "/marketplace/products/404/best-price",
+  "custom_property": "Could not found the product best price of the product 404"
+}

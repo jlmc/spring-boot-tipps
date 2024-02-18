@@ -1,0 +1,7 @@
+{
+  "value": "{{randomDecimal lower=5.0 upper=100.9}}",
+  "currency": "EUR",
+  "time": "{{now}}",
+  "sellerId": "1",
+  "hash": "{{randomValue type='UUID'}}"
+}

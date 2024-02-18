@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/marketplace/products/404/best-price"
+  },
+
+  "response": {
+    "status": 404,
+    "bodyFileName": "marketplace-best-price-404-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
