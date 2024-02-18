@@ -1,0 +1,803 @@
+{
+	"info": {
+		"_postman_id": "ce503c33-d326-493e-b9d3-b8d84998f01e",
+		"name": "wiremock",
+		"description": "WireMock is a tool for mocking HTTP services, allowing you to simulate responses from APIs for testing purposes. It does provide administrative endpoints for managing its configuration and state. Here are some common administrative endpoints in WireMock:\n\n1. **/__admin/**: This is the base URL for accessing administrative endpoints. All administrative actions are performed under this endpoint.\n2. **/__admin/mappings**: This endpoint allows you to manage the mappings (stub mappings) that define the expected requests and responses. You can add, update, delete, or retrieve mappings using this endpoint.\n3. **/__admin/requests**: Use this endpoint to view details about incoming requests, such as the request URL, method, headers, and body.\n4. **/__admin/recordings**: If WireMock is configured in record mode, this endpoint displays recorded requests and responses.\n5. **/__admin/mappings/reset**: Resets all stub mappings. This endpoint clears any mappings that have been configured.\n6. **/__admin/requests/reset**: Resets the request journal. This endpoint clears the history of incoming requests.\n7. **/__admin/reset**: Resets WireMock to its initial state. This includes clearing all stub mappings, resetting the request journal, and any other internal state.\n8. **/__admin/settings**: This endpoint allows you to view or modify WireMock settings, such as the port number, HTTPS settings, and more.\n    \n\nThese are some of the commonly used administrative endpoints in WireMock. They provide essential functionality for managing stub mappings, inspecting requests, resetting state, and configuring WireMock's behavior.\n\nIt's worth noting that access to these administrative endpoints might be restricted based on the configuration of WireMock, particularly in a production environment. Always ensure that proper security measures are in place to prevent unauthorized access to administrative functionalities. For more detailed information on each endpoint and its usage, refer to the official WireMock documentation.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26041360"
+	},
+	"item": [
+		{
+			"name": "get __admin",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/__admin",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"__admin"
+					]
+				},
+				"description": "This is the base URL for accessing administrative endpoints. All administrative actions are performed under this endpoint."
+			},
+			"response": []
+		},
+		{
+			"name": "__admin/mappings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/__admin/mappings",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"__admin",
+						"mappings"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "New Request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{wire-host}}/__admin/mappings",
+							"host": [
+								"{{wire-host}}"
+							],
+							"path": [
+								"__admin",
+								"mappings"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"mappings\": [\n        {\n            \"id\": \"a40afaed-a41f-4d77-be5c-b35e406dbc8f\",\n            \"request\": {\n                \"url\": \"/some/thing-2\",\n                \"method\": \"GET\"\n            },\n            \"response\": {\n                \"status\": 200,\n                \"bodyFileName\": \"response-body-2.json\",\n                \"headers\": {\n                    \"Content-Type\": \"application/json\"\n                }\n            },\n            \"uuid\": \"a40afaed-a41f-4d77-be5c-b35e406dbc8f\"\n        },\n        {\n            \"id\": \"0a8fc08c-b5f3-44bf-bc51-6180c6a39b07\",\n            \"request\": {\n                \"url\": \"/some/thing-1\",\n                \"method\": \"GET\"\n            },\n            \"response\": {\n                \"status\": 200,\n                \"body\": \"Hello, world!\",\n                \"headers\": {\n                    \"Content-Type\": \"text/plain\"\n                }\n            },\n            \"uuid\": \"0a8fc08c-b5f3-44bf-bc51-6180c6a39b07\"\n        }\n    ],\n    \"meta\": {\n        \"total\": 2\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "__admin/mappings Copy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:56281/__admin/mappings",
+					"host": [
+						"localhost"
+					],
+					"port": "56281",
+					"path": [
+						"__admin",
+						"mappings"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "New Request",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/__admin/mappings",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"__admin",
+								"mappings"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"mappings\": [\n        {\n            \"id\": \"a40afaed-a41f-4d77-be5c-b35e406dbc8f\",\n            \"request\": {\n                \"url\": \"/some/thing-2\",\n                \"method\": \"GET\"\n            },\n            \"response\": {\n                \"status\": 200,\n                \"bodyFileName\": \"response-body-2.json\",\n                \"headers\": {\n                    \"Content-Type\": \"application/json\"\n                }\n            },\n            \"uuid\": \"a40afaed-a41f-4d77-be5c-b35e406dbc8f\"\n        },\n        {\n            \"id\": \"0a8fc08c-b5f3-44bf-bc51-6180c6a39b07\",\n            \"request\": {\n                \"url\": \"/some/thing-1\",\n                \"method\": \"GET\"\n            },\n            \"response\": {\n                \"status\": 200,\n                \"body\": \"Hello, world!\",\n                \"headers\": {\n                    \"Content-Type\": \"text/plain\"\n                }\n            },\n            \"uuid\": \"0a8fc08c-b5f3-44bf-bc51-6180c6a39b07\"\n        }\n    ],\n    \"meta\": {\n        \"total\": 2\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "__admin/requests",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/__admin/requests",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"__admin",
+						"requests"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "__admin/recordings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/__admin/recordings",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"__admin",
+						"recordings"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "__admin/requests Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{wire-host}}/__admin/recordings",
+							"host": [
+								"{{wire-host}}"
+							],
+							"path": [
+								"__admin",
+								"recordings"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "__admin/settings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/__admin/settings",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"__admin",
+						"settings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "call mock endpoint",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/some/thing-2",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"some",
+						"thing-2"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "__admin/settings Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{wire-host}}/some/thing-2",
+							"host": [
+								"{{wire-host}}"
+							],
+							"path": [
+								"some",
+								"thing-2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Matched-Stub-Id",
+							"value": "a40afaed-a41f-4d77-be5c-b35e406dbc8f"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"1234\",\n    \"name\": \"Duke\"\n}"
+				}
+			]
+		},
+		{
+			"name": "marketplace-product-best-price",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{wire-host}}/marketplace/products/:product-id/best-price",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"marketplace",
+						"products",
+						":product-id",
+						"best-price"
+					],
+					"variable": [
+						{
+							"key": "product-id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "call mock endpoint Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{wire-host}}/marketplace/products/:product-id/best-price",
+							"host": [
+								"{{wire-host}}"
+							],
+							"path": [
+								"marketplace",
+								"products",
+								":product-id",
+								"best-price"
+							],
+							"variable": [
+								{
+									"key": "product-id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Matched-Stub-Id",
+							"value": "34c98cfe-9eb2-4631-ab47-875e96dbb54f"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"value\": \"38.78293138439458\",\n    \"currency\": \"EUR\",\n    \"time\": \"2024-02-18T16:28:07Z\",\n    \"sellerId\": \"1\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/marketplace/reservations",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productId\": \"1\",\n    \"sellerId\": \"1\",\n    \"priceDetailHash\": \"sjklasj\",\n    \"clientNif\": \"123456789\"\n\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{wire-host}}/marketplace/reservations",
+					"host": [
+						"{{wire-host}}"
+					],
+					"path": [
+						"marketplace",
+						"reservations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get full fruit with full details",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/fruits/:product-id",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fruits",
+						":product-id"
+					],
+					"variable": [
+						{
+							"key": "product-id",
+							"value": "404"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get full fruit with full details",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/fruits/:product-id",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"fruits",
+								":product-id"
+							],
+							"variable": [
+								{
+									"key": "product-id",
+									"value": "404"
+								}
+							]
+						}
+					},
+					"status": "Internal Server Error",
+					"code": 500,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/problem+json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Feb 2024 22:15:37 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"about:blank\",\n    \"title\": \"Internal Server Error\",\n    \"status\": 500,\n    \"detail\": \"The external request 'GET http://localhost:8081/marketplace/products/404/best-price' result in a error '404 Not Found'\",\n    \"instance\": \"/api/fruits/404\",\n    \"errorDetail\": \"{  \\\"type\\\": \\\"about:blank\\\",  \\\"title\\\": \\\"Product Not Found\\\",  \\\"status\\\": 404,  \\\"detail\\\": \\\"Product Not Found\\\",  \\\"instance\\\": \\\"/marketplace/products/404/best-price\\\",  \\\"custom_property\\\": \\\"Could not found the product best price of the product 404\\\"}\"\n}"
+				}
+			]
+		},
+		{
+			"name": "get full fruit with full details not found",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/fruits/dsdsd",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fruits",
+						"dsdsd"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get full fruit with full details not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/fruits/dsdsd",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"fruits",
+								"dsdsd"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Vary",
+							"value": "Origin"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Method"
+						},
+						{
+							"key": "Vary",
+							"value": "Access-Control-Request-Headers"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/problem+json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Feb 2024 19:13:28 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"about:blank\",\n    \"title\": \"Not Found\",\n    \"status\": 404,\n    \"detail\": \"No static resource api/fruits/dsdsd.\",\n    \"instance\": \"/api/fruits/dsdsd\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/api/fruits/reservations",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"productId\": \"1\",\n    \"sellerId\": \"1\",\n    \"priceDetailHash\": \"sjklasj\",\n    \"clientNif\": \"123456789\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/fruits/reservations",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fruits",
+						"reservations"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "/marketplace/reservations Copy",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": \"1\",\n    \"sellerId\": \"1\",\n    \"priceDetailHash\": \"sjklasj\",\n    \"clientNif\": \"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/fruits/reservations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"fruits",
+								"reservations"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Location",
+							"value": "http://localhost:8080/api/fruits/reservations/09da5034-7eb9-4a53-bc26-fda7922c5019"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Feb 2024 18:49:17 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"09da5034-7eb9-4a53-bc26-fda7922c5019\"\n}"
+				}
+			]
+		},
+		{
+			"name": "get all fruits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/fruits",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fruits"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get full fruit with full details Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/fruits",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"fruits"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Feb 2024 16:38:12 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"id\": \"1\",\n        \"name\": \"Durian\",\n        \"description\": \"Rich and creamy tropical delight\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"2\",\n        \"name\": \"Guava\",\n        \"description\": \"Sweet tropical fruit\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"3\",\n        \"name\": \"Lychee\",\n        \"description\": \"Sweet and fragrant\",\n        \"origin\": \"China\"\n    },\n    {\n        \"id\": \"4\",\n        \"name\": \"Starfruit\",\n        \"description\": \"Tangy and refreshing\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"5\",\n        \"name\": \"Horned Melon\",\n        \"description\": \"Exotic and vibrant\",\n        \"origin\": \"Sub-Saharan Africa\"\n    },\n    {\n        \"id\": \"6\",\n        \"name\": \"Persimmon\",\n        \"description\": \"Sweet and tangy\",\n        \"origin\": \"East Asia\"\n    },\n    {\n        \"id\": \"7\",\n        \"name\": \"Longan\",\n        \"description\": \"Sweet and succulent\",\n        \"origin\": \"Southern China\"\n    },\n    {\n        \"id\": \"8\",\n        \"name\": \"Pawpaw\",\n        \"description\": \"Tropical sweetness\",\n        \"origin\": \"North America\"\n    },\n    {\n        \"id\": \"9\",\n        \"name\": \"Pomelo\",\n        \"description\": \"Sweet and tangy citrus\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"10\",\n        \"name\": \"Ugli Fruit\",\n        \"description\": \"Sweet and tangy\",\n        \"origin\": \"Jamaica\"\n    },\n    {\n        \"id\": \"11\",\n        \"name\": \"Feijoa\",\n        \"description\": \"Sweet and aromatic\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"12\",\n        \"name\": \"Jabuticaba\",\n        \"description\": \"Unique and sweet\",\n        \"origin\": \"Brazil\"\n    },\n    {\n        \"id\": \"13\",\n        \"name\": \"Salak\",\n        \"description\": \"Sweet and tangy\",\n        \"origin\": \"Indonesia\"\n    },\n    {\n        \"id\": \"14\",\n        \"name\": \"Miracle Fruit\",\n        \"description\": \"Unique and berry-like\",\n        \"origin\": \"West Africa\"\n    },\n    {\n        \"id\": \"15\",\n        \"name\": \"Rambutan\",\n        \"description\": \"Sweet and juicy\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"16\",\n        \"name\": \"Mangosteen\",\n        \"description\": \"Exotic and sweet\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"17\",\n        \"name\": \"Acerola\",\n        \"description\": \"Tart and tangy\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"18\",\n        \"name\": \"Soursop\",\n        \"description\": \"Creamy and tropical\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"19\",\n        \"name\": \"Tamarillo\",\n        \"description\": \"Tart and tangy\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"20\",\n        \"name\": \"Physalis\",\n        \"description\": \"Tangy and exotic\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"21\",\n        \"name\": \"Kiwano\",\n        \"description\": \"Refreshing and exotic\",\n        \"origin\": \"Africa\"\n    },\n    {\n        \"id\": \"22\",\n        \"name\": \"Pepino\",\n        \"description\": \"Sweet and juicy\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"23\",\n        \"name\": \"Maracuya\",\n        \"description\": \"Tangy and tropical\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"24\",\n        \"name\": \"Pitaya\",\n        \"description\": \"Dragon fruit with a sweet taste\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"25\",\n        \"name\": \"Jujube\",\n        \"description\": \"Sweet and chewy with a crisp texture\",\n        \"origin\": \"China\"\n    },\n    {\n        \"id\": \"26\",\n        \"name\": \"Passion Fruit\",\n        \"description\": \"Tangy and tropical\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"27\",\n        \"name\": \"Quince\",\n        \"description\": \"Aromatic and tart\",\n        \"origin\": \"Western Asia\"\n    },\n    {\n        \"id\": \"28\",\n        \"name\": \"Pomegranate\",\n        \"description\": \"Juicy and vibrant\",\n        \"origin\": \"Middle East\"\n    },\n    {\n        \"id\": \"29\",\n        \"name\": \"Kumquat\",\n        \"description\": \"Tiny citrus with a sweet peel\",\n        \"origin\": \"Asia\"\n    },\n    {\n        \"id\": \"30\",\n        \"name\": \"Papaya\",\n        \"description\": \"Sweet and tropical\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"31\",\n        \"name\": \"Sapote\",\n        \"description\": \"Rich and creamy tropical fruit\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"32\",\n        \"name\": \"Mango\",\n        \"description\": \"Juicy and sweet tropical fruit\",\n        \"origin\": \"South Asia\"\n    },\n    {\n        \"id\": \"33\",\n        \"name\": \"Pineapple\",\n        \"description\": \"Sweet and tangy tropical fruit\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"34\",\n        \"name\": \"Jackfruit\",\n        \"description\": \"Sweet and tropical\",\n        \"origin\": \"India\"\n    },\n    {\n        \"id\": \"35\",\n        \"name\": \"Custard Apple\",\n        \"description\": \"Sweet and creamy tropical fruit\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"36\",\n        \"name\": \"Star Apple\",\n        \"description\": \"Sweet and juicy\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"37\",\n        \"name\": \"Cherimoya\",\n        \"description\": \"Sweet and creamy with a hint of banana\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"38\",\n        \"name\": \"Loquat\",\n        \"description\": \"Sweet and tangy\",\n        \"origin\": \"China\"\n    },\n    {\n        \"id\": \"39\",\n        \"name\": \"Carambola\",\n        \"description\": \"Sweet and tangy\",\n        \"origin\": \"Malaysia\"\n    },\n    {\n        \"id\": \"40\",\n        \"name\": \"Tamarind\",\n        \"description\": \"Tangy and sweet tropical fruit\",\n        \"origin\": \"Africa\"\n    },\n    {\n        \"id\": \"41\",\n        \"name\": \"Date\",\n        \"description\": \"Sweet and chewy\",\n        \"origin\": \"Middle East\"\n    },\n    {\n        \"id\": \"42\",\n        \"name\": \"Longan\",\n        \"description\": \"Sweet and floral\",\n        \"origin\": \"Asia\"\n    },\n    {\n        \"id\": \"43\",\n        \"name\": \"Soursop\",\n        \"description\": \"Tangy and creamy tropical fruit\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"44\",\n        \"name\": \"Guava\",\n        \"description\": \"Sweet and tropical\",\n        \"origin\": \"Central America\"\n    },\n    {\n        \"id\": \"45\",\n        \"name\": \"Durian\",\n        \"description\": \"Foul-smelling but sweet and creamy\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"46\",\n        \"name\": \"Feijoa\",\n        \"description\": \"Tangy and aromatic\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"47\",\n        \"name\": \"Rambutan\",\n        \"description\": \"Sweet and juicy with a hairy exterior\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"48\",\n        \"name\": \"Mangosteen\",\n        \"description\": \"Sweet and tangy with a floral aroma\",\n        \"origin\": \"Southeast Asia\"\n    },\n    {\n        \"id\": \"49\",\n        \"name\": \"Pepino Dulce\",\n        \"description\": \"Sweet and refreshing\",\n        \"origin\": \"South America\"\n    },\n    {\n        \"id\": \"50\",\n        \"name\": \"Tangelo\",\n        \"description\": \"Tangy and sweet hybrid citrus fruit\",\n        \"origin\": \"United States\"\n    },\n    {\n        \"id\": \"401\",\n        \"name\": \"Yuzu\",\n        \"description\": \"Citrus fruit with tangy flavor\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"402\",\n        \"name\": \"Nashi Pear\",\n        \"description\": \"Crisp and juicy pear variety\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"403\",\n        \"name\": \"Ume\",\n        \"description\": \"Small, sour plum used in Japanese cuisine\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"404\",\n        \"name\": \"Shiso\",\n        \"description\": \"Herb commonly used in Japanese cooking\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"405\",\n        \"name\": \"Sudachi\",\n        \"description\": \"Small citrus fruit with tart flavor\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"406\",\n        \"name\": \"Daikon\",\n        \"description\": \"Large, white radish with mild flavor\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"407\",\n        \"name\": \"Mikan\",\n        \"description\": \"Seedless mandarin orange variety\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"500\",\n        \"name\": \"Yubari Melon\",\n        \"description\": \"High-quality cantaloupe melon\",\n        \"origin\": \"Yubari, Hokkaido, Japan\"\n    },\n    {\n        \"id\": \"501\",\n        \"name\": \"Akebi\",\n        \"description\": \"Purple-skinned fruit with white, jelly-like interior\",\n        \"origin\": \"Japan\"\n    },\n    {\n        \"id\": \"502\",\n        \"name\": \"Momotaro Tomato\",\n        \"description\": \"Sweet and juicy tomato variety\",\n        \"origin\": \"Japan\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "get page fruits",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/fruits/__page?page=1&size=3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"fruits",
+						"__page"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "size",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get all fruits Copy",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/fruits/__page?page=1&size=3",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"fruits",
+								"__page"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 18 Feb 2024 16:49:29 GMT"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=60"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"content\": [\n        {\n            \"id\": \"4\",\n            \"name\": \"Starfruit\",\n            \"description\": \"Tangy and refreshing\",\n            \"origin\": \"Southeast Asia\"\n        },\n        {\n            \"id\": \"5\",\n            \"name\": \"Horned Melon\",\n            \"description\": \"Exotic and vibrant\",\n            \"origin\": \"Sub-Saharan Africa\"\n        },\n        {\n            \"id\": \"6\",\n            \"name\": \"Persimmon\",\n            \"description\": \"Sweet and tangy\",\n            \"origin\": \"East Asia\"\n        }\n    ],\n    \"size\": 3,\n    \"totalElements\": 60,\n    \"totalPages\": 20,\n    \"number\": 1\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "wire-host",
+			"value": "localhost:8080",
+			"type": "string"
+		}
+	]
+}
