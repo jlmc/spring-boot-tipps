@@ -1,0 +1,422 @@
+[
+  {
+    "id": 1,
+    "name": "Durian",
+    "description": "Rich and creamy tropical delight",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Durian.JPG/800px-Durian.JPG"
+  },
+  {
+    "id": 2,
+    "name": "Guava",
+    "description": "Sweet tropical fruit",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Guava_whole_and_halved.jpg/800px-Guava_whole_and_halved.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Lychee",
+    "description": "Sweet and fragrant",
+    "origin": "China",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Lychees_%28Lychee_chinensis%29.jpg/800px-Lychees_%28Lychee_chinensis%29.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Starfruit",
+    "description": "Tangy and refreshing",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Carambolas.jpg/800px-Carambolas.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Horned Melon",
+    "description": "Exotic and vibrant",
+    "origin": "Sub-Saharan Africa",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Kiwano_Melons.jpg/800px-Kiwano_Melons.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Persimmon",
+    "description": "Sweet and tangy",
+    "origin": "East Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Fuyu_persimmon2.jpg/800px-Fuyu_persimmon2.jpg"
+  },
+  {
+    "id": 7,
+    "name": "Longan",
+    "description": "Sweet and succulent",
+    "origin": "Southern China",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Longan_%28Dimocarpus_longan%29.JPG/800px-Longan_%28Dimocarpus_longan%29.JPG"
+  },
+  {
+    "id": 8,
+    "name": "Pawpaw",
+    "description": "Tropical sweetness",
+    "origin": "North America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Asimina_triloba2.jpg/800px-Asimina_triloba2.jpg"
+  },
+  {
+    "id": 9,
+    "name": "Pomelo",
+    "description": "Sweet and tangy citrus",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Pomelo_Fruit_Yucaipa_CA_2.jpg/800px-Pomelo_Fruit_Yucaipa_CA_2.jpg"
+  },
+  {
+    "id": 10,
+    "name": "Ugli Fruit",
+    "description": "Sweet and tangy",
+    "origin": "Jamaica",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Ugli_fruit_split_on_white_background.jpg/800px-Ugli_fruit_split_on_white_background.jpg"
+  },
+  {
+    "id": 11,
+    "name": "Feijoa",
+    "description": "Sweet and aromatic",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Feijoa.jpg/800px-Feijoa.jpg"
+  },
+  {
+    "id": 12,
+    "name": "Jabuticaba",
+    "description": "Unique and sweet",
+    "origin": "Brazil",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Jabuticaba_bud_and_blossom_2.jpg/800px-Jabuticaba_bud_and_blossom_2.jpg"
+  },
+  {
+    "id": 13,
+    "name": "Salak",
+    "description": "Sweet and tangy",
+    "origin": "Indonesia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Salak_%28Salacca_zalacca%29_2.jpg/800px-Salak_%28Salacca_zalacca%29_2.jpg"
+  },
+  {
+    "id": 14,
+    "name": "Miracle Fruit",
+    "description": "Unique and berry-like",
+    "origin": "West Africa",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Miracle_Fruit_%28Synsepalum_dulcificum%29_fruit_001.jpg/800px-Miracle_Fruit_%28Synsepalum_dulcificum%29_fruit_001.jpg"
+  },
+  {
+    "id": 15,
+    "name": "Rambutan",
+    "description": "Sweet and juicy",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Rambutan_white_bg.jpg/800px-Rambutan_white_bg.jpg"
+  },
+  {
+    "id": 16,
+    "name": "Mangosteen",
+    "description": "Exotic and sweet",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Mangosteen_%28whole%29.jpg/800px-Mangosteen_%28whole%29.jpg"
+  },
+  {
+    "id": 17,
+    "name": "Acerola",
+    "description": "Tart and tangy",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Acerola_buchananii_AtlasofLivingAustralia.jpg/800px-Acerola_buchananii_AtlasofLivingAustralia.jpg"
+  },
+  {
+    "id": 18,
+    "name": "Soursop",
+    "description": "Creamy and tropical",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Soursop_Seedless.jpg/800px-Soursop_Seedless.jpg"
+  },
+  {
+    "id": 19,
+    "name": "Tamarillo",
+    "description": "Tart and tangy",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Tamarillo_fruit.jpg/800px-Tamarillo_fruit.jpg"
+  },
+  {
+    "id": 20,
+    "name": "Physalis",
+    "description": "Tangy and exotic",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Physalis_sp.jpg/800px-Physalis_sp.jpg"
+  },
+  {
+    "id": 21,
+    "name": "Kiwano",
+    "description": "Refreshing and exotic",
+    "origin": "Africa",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Kiwano_Melons.jpg/800px-Kiwano_Melons.jpg"
+  },
+  {
+    "id": 22,
+    "name": "Pepino",
+    "description": "Sweet and juicy",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Pepino_melon.jpg/800px-Pepino_melon.jpg"
+  },
+  {
+    "id": 23,
+    "name": "Maracuya",
+    "description": "Tangy and tropical",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Maracuy%C3%A1_cortado.jpg/800px-Maracuy%C3%A1_cortado.jpg"
+  },
+  {
+    "id": 24,
+    "name": "Pitaya",
+    "description": "Dragon fruit with a sweet taste",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Dragonfruit--Eden_Project--Cornwall%2C_England.jpg/800px-Dragonfruit--Eden_Project--Cornwall%2C_England.jpg"
+  },
+  {
+    "id": 25,
+    "name": "Jujube",
+    "description": "Sweet and chewy with a crisp texture",
+    "origin": "China",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Jujube_berries_%28Ziziphus_jujuba%29.JPG/800px-Jujube_berries_%28Ziziphus_jujuba%29.JPG"
+  },
+  {
+    "id": 26,
+    "name": "Passion Fruit",
+    "description": "Tangy and tropical",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Passiflora_edulis1.jpg/800px-Passiflora_edulis1.jpg"
+  },
+  {
+    "id": 27,
+    "name": "Quince",
+    "description": "Aromatic and tart",
+    "origin": "Western Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Quince_fruit.jpg/800px-Quince_fruit.jpg"
+  },
+  {
+    "id": 28,
+    "name": "Pomegranate",
+    "description": "Juicy and vibrant",
+    "origin": "Middle East",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Pomegranate_Punica_granatum_Linn.jpg/800px-Pomegranate_Punica_granatum_Linn.jpg"
+  },
+  {
+    "id": 29,
+    "name": "Kumquat",
+    "description": "Tiny citrus with a sweet peel",
+    "origin": "Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Kumquat_cross_section_edit.jpg/800px-Kumquat_cross_section_edit.jpg"
+  },
+  {
+    "id": 30,
+    "name": "Papaya",
+    "description": "Sweet and tropical",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Papayas%2C_Hydribarb_%2848140807057%29.jpg/800px-Papayas%2C_Hydribarb_%2848140807057%29.jpg"
+  },
+  {
+    "id": 31,
+    "name": "Sapote",
+    "description": "Rich and creamy tropical fruit",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Black_Sapote%2C_Diospyros_digyna_%285804256890%29.jpg/800px-Black_Sapote%2C_Diospyros_digyna_%285804256890%29.jpg"
+  },
+  {
+    "id": 32,
+    "name": "Mango",
+    "description": "Juicy and sweet tropical fruit",
+    "origin": "South Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Ambersweet_mangoes.JPG/800px-Ambersweet_mangoes.JPG"
+  },
+  {
+    "id": 33,
+    "name": "Pineapple",
+    "description": "Sweet and tangy tropical fruit",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Pineapple_and_cross_section.jpg/800px-Pineapple_and_cross_section.jpg"
+  },
+  {
+    "id": 34,
+    "name": "Jackfruit",
+    "description": "Sweet and tropical",
+    "origin": "India",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Jackfruit_hanging.JPG/800px-Jackfruit_hanging.JPG"
+  },
+  {
+    "id": 35,
+    "name": "Custard Apple",
+    "description": "Sweet and creamy tropical fruit",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Custard_apple_%28cropped%29.jpg/800px-Custard_apple_%28cropped%29.jpg"
+  },
+  {
+    "id": 36,
+    "name": "Star Apple",
+    "description": "Sweet and juicy",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Chrysophyllum_cainito_Starr_020803-0003_Chrysophyllum_cainito.jpg/800px-Chrysophyllum_cainito_Starr_020803-0003_Chrysophyllum_cainito.jpg"
+  },
+  {
+    "id": 37,
+    "name": "Cherimoya",
+    "description": "Sweet and creamy with a hint of banana",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Cherimoya-cross_section.jpg/800px-Cherimoya-cross_section.jpg"
+  },
+  {
+    "id": 38,
+    "name": "Loquat",
+    "description": "Sweet and tangy",
+    "origin": "China",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Eriobotrya_japonica0.jpg/800px-Eriobotrya_japonica0.jpg"
+  },
+  {
+    "id": 39,
+    "name": "Carambola",
+    "description": "Sweet and tangy",
+    "origin": "Malaysia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Carambolas.jpg/800px-Carambolas.jpg"
+  },
+  {
+    "id": 40,
+    "name": "Tamarind",
+    "description": "Tangy and sweet tropical fruit",
+    "origin": "Africa",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/43/Tamarindus_indica_MS4088.jpg/800px-Tamarindus_indica_MS4088.jpg"
+  },
+  {
+    "id": 41,
+    "name": "Date",
+    "description": "Sweet and chewy",
+    "origin": "Middle East",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Date-fruit-cluster.jpg/800px-Date-fruit-cluster.jpg"
+  },
+  {
+    "id": 42,
+    "name": "Longan",
+    "description": "Sweet and floral",
+    "origin": "Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Longan_on_tree.jpg/800px-Longan_on_tree.jpg"
+  },
+  {
+    "id": 43,
+    "name": "Soursop",
+    "description": "Tangy and creamy tropical fruit",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Soursop.jpg/800px-Soursop.jpg"
+  },
+  {
+    "id": 44,
+    "name": "Guava",
+    "description": "Sweet and tropical",
+    "origin": "Central America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Red_guava._Mumbai_2014-06-01_05-46.jpg/800px-Red_guava._Mumbai_2014-06-01_05-46.jpg"
+  },
+  {
+    "id": 45,
+    "name": "Durian",
+    "description": "Foul-smelling but sweet and creamy",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Durian.jpg/800px-Durian.jpg"
+  },
+  {
+    "id": 46,
+    "name": "Feijoa",
+    "description": "Tangy and aromatic",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Acca_sellowiana.jpg/800px-Acca_sellowiana.jpg"
+  },
+  {
+    "id": 47,
+    "name": "Rambutan",
+    "description": "Sweet and juicy with a hairy exterior",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Rambutan_%28Nephelium_lappaceum%29_-_Bangkok%2C_Thailand_%2828241233322%29.jpg/800px-Rambutan_%28Nephelium_lappaceum%29_-_Bangkok%2C_Thailand_%2828241233322%29.jpg"
+  },
+  {
+    "id": 48,
+    "name": "Mangosteen",
+    "description": "Sweet and tangy with a floral aroma",
+    "origin": "Southeast Asia",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Mangosteen_%28Garcinia_mangostana%29.jpg/800px-Mangosteen_%28Garcinia_mangostana%29.jpg"
+  },
+  {
+    "id": 49,
+    "name": "Pepino Dulce",
+    "description": "Sweet and refreshing",
+    "origin": "South America",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Solanum_muricatum3.jpg/800px-Solanum_muricatum3.jpg"
+  },
+  {
+    "id": 50,
+    "name": "Tangelo",
+    "description": "Tangy and sweet hybrid citrus fruit",
+    "origin": "United States",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Tangelo_white_background.jpg/800px-Tangelo_white_background.jpg"
+  },
+  {
+    "id": 401,
+    "name": "Yuzu",
+    "description": "Citrus fruit with tangy flavor",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Yuzu_from_Kochi_Prefecture.jpg/220px-Yuzu_from_Kochi_Prefecture.jpg"
+  },
+  {
+    "id": 402,
+    "name": "Nashi Pear",
+    "description": "Crisp and juicy pear variety",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Nashi_pear.jpg/220px-Nashi_pear.jpg"
+  },
+  {
+    "id": 403,
+    "name": "Ume",
+    "description": "Small, sour plum used in Japanese cuisine",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Ume_plum.jpg/220px-Ume_plum.jpg"
+  },
+  {
+    "id": 404,
+    "name": "Shiso",
+    "description": "Herb commonly used in Japanese cooking",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/%E7%B4%AB%E8%98%87_L%28%E7%B4%AB%E8%98%87%E8%91%89%29%E5%AF%8C%E5%9D%8A%E5%B1%B1%E9%BA%93%E5%B8%82%E3%81%AE%E3%82%AA%E3%82%A4%E3%82%B9%E3%82%BF%E3%83%BC%E5%B8%82%E5%A0%B4%E3%81%AE%E7%94%9F%E7%89%A9%E5%B1%95%E3%81%AE%E3%82%B7%E3%82%BE%E3%82%B7%E3%83%A4%E3%83%99%E3%83%AB%E3%82%AE%E3%83%A3%E3%83%AB.jpg/220px-%E7%B4%AB%E8%98%87_L%28%E7%B4%AB%E8%98%87%E8%91%89%29%E5%AF%8C%E5%9D%8A%E5%B1%B1%E9%BA%93%E5%B8%82%E3%81%AE%E3%82%AA%E3%82%A4%E3%82%B9%E3%82%BF%E3%83%BC%E5%B8%82%E5%A0%B4%E3%81%AE%E7%94%9F%E7%89%A9%E5%B1%95%E3%81%AE%E3%82%B7%E3%82%BE%E3%82%B7%E3%83%A4%E3%83%99%E3%83%AB%E3%82%AE%E3%83%A3%E3%83%AB.jpg"
+  },
+  {
+    "id": 405,
+    "name": "Sudachi",
+    "description": "Small citrus fruit with tart flavor",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Sudachi.jpg/220px-Sudachi.jpg"
+  },
+  {
+    "id": 406,
+    "name": "Daikon",
+    "description": "Large, white radish with mild flavor",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Daikon.jpg/220px-Daikon.jpg"
+  },
+  {
+    "id": 407,
+    "name": "Mikan",
+    "description": "Seedless mandarin orange variety",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Mikan_of_Kunohe_Iwate02.jpg/220px-Mikan_of_Kunohe_Iwate02.jpg"
+  },
+  {
+    "id": 500,
+    "name": "Yubari Melon",
+    "description": "High-quality cantaloupe melon",
+    "origin": "Yubari, Hokkaido, Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Yubari_melon2.jpg/220px-Yubari_melon2.jpg"
+  },
+  {
+    "id": 501,
+    "name": "Akebi",
+    "description": "Purple-skinned fruit with white, jelly-like interior",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Akebi_Monosashi.jpg/220px-Akebi_Monosashi.jpg"
+  },
+  {
+    "id": 502,
+    "name": "Momotaro Tomato",
+    "description": "Sweet and juicy tomato variety",
+    "origin": "Japan",
+    "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Momotar%C5%8D_tomato.jpg/220px-Momotar%C5%8D_tomato.jpg"
+  }
+]

@@ -1,0 +1,61 @@
+server:
+  shutdown: graceful
+
+spring:
+  application:
+    name: "using-open-feign-service"
+
+
+
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-ignored-properties: true
+    default-property-inclusion: non_null
+    # PropertyNamingStrategy[*LOWER_CAMEL_CASE*, SNAKE_CASE, UPPER_CAMEL_CASE, LOWER_CASE, KEBAB_CASE, LOWER_DOT_CASE]
+    property-naming-strategy: LOWER_CAMEL_CASE
+
+
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+#  resources:
+#    add-mappings: false
+
+## #####
+## cloud
+## #####
+
+  cloud:
+    openfeign:
+      lazy-attributes-resolution: true # If you need the attributes to be resolved lazily, set the spring.cloud.openfeign.lazy-attributes-resolution property value to true. Tip: For Spring Cloud Contract test integration, lazy attribute resolution should be used.
+      client:
+        config:
+          marketplaceRequester:
+            url: http://localhost:8081/marketplace
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
+            dismiss404: false
+            #retryer:
+            micrometer:
+              enabled: false
+  mvc:
+    problemdetails:
+      enabled: true
+
+
+app:
+  marketplace:
+    authentication-token: "${spring.application.name}-example-token-123"
+
+
+## #####
+## Logging
+## #####
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+        cloud:
+          openfeign: debug

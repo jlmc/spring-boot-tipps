@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPattern": "/marketplace/reservations"
+  },
+
+  "response": {
+    "status": 201,
+    "bodyFileName": "marketplace-reservations-1-201-response.json",
+    "headers": {
+      "Content-Type": "application/json",
+      "X-Ticket-ID": "00000-{{randomValue length=33 type='ALPHANUMERIC'}}",
+      "X-Ticket-Date": "{{now}}",
+      "Location": "/marketplace/reservations/{{randomValue type='UUID'}}"
+    }
+  }
+}

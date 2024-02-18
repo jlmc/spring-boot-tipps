@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  wiremock-1:
+    # docker pull wiremock/wiremock
+    image: wiremock/wiremock:3.3.1
+    container_name: wiremock-1
+    ports:
+      - "8081:8081"
+      - "8443:8443"
+    volumes:
+      - ./src/test/resources/wiremock/wm1/__files:/home/wiremock/__files
+      - ./src/test/resources/wiremock/wm1/mappings:/home/wiremock/mappings
+    #entrypoint: [ "/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose", "--https-port 8443" ]
+    entrypoint: [ "/docker-entrypoint.sh", "--global-response-templating", "--disable-gzip", "--verbose", "--port", "8081" ]

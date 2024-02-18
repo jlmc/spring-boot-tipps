@@ -1,0 +1,3 @@
+{
+  "reservationId": "{{randomValue type='UUID'}}"
+}

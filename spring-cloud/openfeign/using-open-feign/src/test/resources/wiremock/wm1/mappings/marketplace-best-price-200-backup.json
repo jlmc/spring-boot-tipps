@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPattern": "/marketplace/v0/products/[a-zA-Z0-9_-]+/best-price"
+  },
+
+  "response": {
+    "status": 200,
+    "bodyFileName": "marketplace-best-price-200-response.json",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
