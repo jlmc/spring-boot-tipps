@@ -1,0 +1,105 @@
+spring:
+  application:
+    name: cwr-service
+
+  data:
+    redis:
+      database: 0
+      timeout: 60000
+      password: "redis"
+      #use-key-prefix: true
+      sentinel:
+        master: mymaster
+        password: "redis"
+        nodes: localhost:26379
+  cache:
+    type: redis
+    redis:
+      enable-statistics: true
+      #key-prefix: ${spring.application.name}'::'
+      cache-null-values: false
+      time-to-live: PT3M
+    cache-names: x1,x2
+
+
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cwr
+    username: postgres
+    password: postgres
+
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 5
+      minimum-idle: 3
+      idle-timeout: 10000
+      connection-test-query: select 1
+      #schema: sgoa
+
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: none
+        jdbc:
+          time_zone: UTC
+        connection:
+          # this is a way to improve the performance of the application,
+          # this way the hibernate knows that the connections are already autocommit = false (default value for this property is false)
+          provider_disables_autocommit: true
+          autocommit: false
+        format_sql: true
+        generate_statistics: true
+        hbm2ddl:
+          auto:
+    open-in-view: false
+    show-sql: false
+    generate-ddl: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    #default-schema: ${spring.datasource.hikari.schema}
+    validate-migration-naming: true
+    validate-on-migrate: true
+    clean-disabled: false
+    #locations: "/db/migration,classpath:/db/testdata"
+
+  jackson:
+    ## PropertyNamingStrategy[*LOWER_CAMEL_CASE*, SNAKE_CASE, UPPER_CAMEL_CASE, LOWER_CASE, KEBAB_CASE, LOWER_DOT_CASE]
+    property-naming-strategy: LOWER_CAMEL_CASE
+    default-property-inclusion: non_null
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-ignored-properties: true
+    serialization:
+      fail-on-empty-beans: true
+
+  mvc:
+    log-request-details: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: info
+    io.github.jlmc.cwr: debug
+    org.springframework.web: debug
+    org.springframework.cache: debug
+    org.hibernate: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE # TRACE
+    org.hibernate.type.descriptor.sql.BasicExtractor: INFO # TRACE
+    org.hibernate.cache: DEBUG
+    org.hibernate.engine.transaction.internal.TransactionImpl: DEBUG
+    org.hibernate.engine.jdbc.batch: DEBUG
+    # to hibernate 6, is important to add the following
+    org.hibernate.stat: DEBUG
+    org.hibernate.SQL_SLOW: INFO
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE
