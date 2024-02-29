@@ -37,6 +37,7 @@ services:
     ports:
       - "6379:6379"
     healthcheck:
+      # redis-cli -p 6379 ping
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 1s
       timeout: 3s
@@ -52,6 +53,14 @@ services:
       - REDIS_MASTER_PASSWORD=redis
     ports:
       - "26379:26379"
+    networks:
+      - cwr
+    healthcheck:
+      # redis-cli -p 26379 SENTINEL sentinels MASTERSET
+      test: [ "CMD", "redis-cli", "-p", "26379", "SENTINEL", "sentinels", "MASTERSET" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
     depends_on:
       redis:
         condition: service_healthy
@@ -64,6 +73,8 @@ services:
       - REDISINSIGHT__REDIS__HOSTS=redis:6379
     ports:
       - "8001:8001"
+    networks:
+      - cwr
     depends_on:
       redis:
         condition: service_healthy
