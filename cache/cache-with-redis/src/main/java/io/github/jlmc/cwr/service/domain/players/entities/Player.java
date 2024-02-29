@@ -22,17 +22,13 @@ public class Player {
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
-
     @Column(name = "birthdate")
     private LocalDate birthdate;
-
     @Column(name = "country_code", nullable = false)
     private String countryCode;
-
     @Version
     @Column(nullable = false)
     private int version;
-
     @Embedded
     private AuditingData auditingData = new AuditingData();
 
@@ -63,5 +59,9 @@ public class Player {
 
     public LocalDate getBirthdate() {
         return birthdate;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 }

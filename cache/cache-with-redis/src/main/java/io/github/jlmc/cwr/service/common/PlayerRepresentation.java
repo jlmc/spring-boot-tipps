@@ -10,11 +10,10 @@ import java.time.LocalDate;
 public record PlayerRepresentation(Long id,
                                    @NotBlank String name,
                                    @NotNull LocalDate birthdate,
-                                   @NotBlank String countryCode) implements Serializable {
+                                   @NotBlank String countryCode
+) implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
-
 
 }
