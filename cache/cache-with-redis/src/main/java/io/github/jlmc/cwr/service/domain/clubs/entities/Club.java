@@ -3,6 +3,7 @@ package io.github.jlmc.cwr.service.domain.clubs.entities;
 import io.github.jlmc.cwr.service.domain.common.AuditingData;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "clubs")
+@EntityListeners(AuditingEntityListener.class)
 public class Club implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -33,7 +35,6 @@ public class Club implements Serializable {
     private short version;
     @Embedded
     private AuditingData auditingData = new AuditingData();
-
     @OneToMany(
             mappedBy = "club",
             orphanRemoval = true, // when the orphanRemoval is set with true the CascadeType.REMOVE is redundant
@@ -45,6 +46,17 @@ public class Club implements Serializable {
                     CascadeType.MERGE
             })
     private Set<Team> teams = new HashSet<>();
+
+    Club() {}
+
+    private Club(String name) {
+        this.name = name;
+    }
+
+    public static Club createClub(String name) {
+        Objects.requireNonNull(name);
+        return new Club(name);
+    }
 
     public Long getId() {
         return id;

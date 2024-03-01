@@ -28,15 +28,17 @@ public class Team implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "club_id", nullable = false, updatable = false)
     private Club club;
+
+    @Column(name = "season", nullable = false, updatable = false)
+    private Season season;
+
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @JoinTable(
-            name = "teams_players",
-            joinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "player_id", referencedColumnName = "id", nullable = false)
-    )
+    @JoinTable(name = "teams_players",
+            joinColumns = @JoinColumn(name = "team_id"),
+            inverseJoinColumns = @JoinColumn(name = "player_id"))
     private Set<Player> players = new HashSet<>();
 
     public Set<Player> getPlayers() {
