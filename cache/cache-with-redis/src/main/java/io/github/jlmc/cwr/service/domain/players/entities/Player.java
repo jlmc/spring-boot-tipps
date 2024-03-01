@@ -4,13 +4,18 @@ import io.github.jlmc.cwr.service.domain.common.AuditingData;
 import jakarta.persistence.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
 @Table(name = "players")
 @EntityListeners(AuditingEntityListener.class)
-public class Player {
+public class Player implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -28,7 +33,7 @@ public class Player {
     private String countryCode;
     @Version
     @Column(nullable = false)
-    private int version;
+    private short version;
     @Embedded
     private AuditingData auditingData = new AuditingData();
 
