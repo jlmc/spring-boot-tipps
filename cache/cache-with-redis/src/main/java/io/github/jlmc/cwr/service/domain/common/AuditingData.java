@@ -7,10 +7,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Instant;
 
 @Embeddable
-public class AuditingData {
+public class AuditingData implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

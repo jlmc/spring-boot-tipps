@@ -1,4 +1,4 @@
-package io.github.jlmc.cwr.service.api.clubs;
+package io.github.jlmc.cwr.service.api.clubs.requests;
 
 import jakarta.validation.constraints.NotBlank;
 

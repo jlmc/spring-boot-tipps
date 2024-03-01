@@ -1,5 +1,6 @@
 package io.github.jlmc.cwr.service.domain.clubs.entities;
 
+import io.github.jlmc.cwr.service.domain.clubs.repository.SeasonConverter;
 import io.github.jlmc.cwr.service.domain.players.entities.Player;
 import jakarta.persistence.*;
 
@@ -29,6 +30,7 @@ public class Team implements Serializable {
     @JoinColumn(name = "club_id", nullable = false, updatable = false)
     private Club club;
 
+    @Convert(converter = SeasonConverter.class)
     @Column(name = "season", nullable = false, updatable = false)
     private Season season;
 
@@ -43,6 +45,17 @@ public class Team implements Serializable {
 
     public Set<Player> getPlayers() {
         return Collections.unmodifiableSet(this.players);
+    }
+
+    Team() {}
+
+    private Team(Season season) {
+        this.season = season;
+    }
+
+    public static Team createTeam(Season season) {
+        Objects.requireNonNull(season);
+        return new Team(season);
     }
 
     public Team addPlayer(Player issue) {
@@ -78,5 +91,9 @@ public class Team implements Serializable {
 
     public void setClub(Club club) {
         this.club = club;
+    }
+
+    public Season getSeason() {
+        return season;
     }
 }
