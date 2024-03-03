@@ -3,6 +3,7 @@ package io.github.jlmc.cwr.service.domain.clubs.entities;
 import io.github.jlmc.cwr.service.domain.clubs.repository.SeasonConverter;
 import io.github.jlmc.cwr.service.domain.players.entities.Player;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +14,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "teams")
+
+@org.hibernate.annotations.Cache(region = "TeamEntityCache", usage = CacheConcurrencyStrategy.READ_WRITE)
+//Cache(region = "planetCache", usage = CacheConcurrencyStrategy.READ_WRITE)
+
 public class Team implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

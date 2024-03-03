@@ -22,7 +22,6 @@ spring:
     cache-names: x1,x2
 
 
-
   datasource:
     url: jdbc:postgresql://localhost:5432/cwr
     username: postgres
@@ -51,6 +50,11 @@ spring:
         generate_statistics: true
         hbm2ddl:
           auto:
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          redisson.config: redisson-sentinel.yaml
+        #         hibernate.cache.redisson.config:
     open-in-view: false
     show-sql: false
     generate-ddl: false
