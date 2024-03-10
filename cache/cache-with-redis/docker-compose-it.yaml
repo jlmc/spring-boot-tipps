@@ -15,8 +15,8 @@ services:
     command: postgres --max_prepared_transactions=100
     ports:
       - "5432:5432"
-    volumes:
-      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+    #volumes:
+    #  - .volumes/postgres/pgdata:/var/lib/postgresql/data
     networks:
       - cwr
     healthcheck:

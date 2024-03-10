@@ -80,6 +80,8 @@ spring:
 
   mvc:
     log-request-details: true
+    problemdetails:
+      enabled: true
 
 
 management:
