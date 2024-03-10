@@ -1,0 +1,82 @@
+version: '3.8'
+
+networks:
+  cwr:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=cwr"
+    command: postgres --max_prepared_transactions=100
+    ports:
+      - "5432:5432"
+    volumes:
+      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+    networks:
+      - cwr
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d cwr -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+
+
+  redis:
+    #container_name: redis
+    image: bitnami/redis:7.2.0
+    environment:
+      - REDIS_PASSWORD=redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      # redis-cli -p 6379 ping
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    networks:
+      - cwr
+
+  redis-sentinel:
+    #container_name: redis-sentinel
+    image: bitnami/redis-sentinel:7.2.0
+    environment:
+      - REDIS_MASTER_HOST=localhost
+      - REDIS_MASTER_PASSWORD=redis
+    ports:
+      - "26379:26379"
+    networks:
+      - cwr
+    healthcheck:
+      # redis-cli -p 26379 SENTINEL sentinels MASTERSET
+      test: [ "CMD", "redis-cli", "-p", "26379", "SENTINEL", "sentinels", "MASTERSET" ]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis-insight:
+    #container_name: redis-insight
+    image: redislabs/redisinsight:1.14.0
+    environment:
+      - REDISINSIGHT__REDIS__PASSWORD=redis
+      - REDISINSIGHT__REDIS__HOSTS=redis:6379
+    ports:
+      - "8001:8001"
+    networks:
+      - cwr
+    depends_on:
+      redis:
+        condition: service_healthy
+      redis-sentinel:
+        condition: service_started
