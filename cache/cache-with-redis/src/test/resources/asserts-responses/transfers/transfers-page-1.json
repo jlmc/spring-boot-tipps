@@ -1,0 +1,58 @@
+{
+  "content": [
+    {
+      "id": "11",
+      "value": 11,
+      "details": ""
+    },
+    {
+      "id": "12",
+      "value": 12,
+      "details": ""
+    },
+    {
+      "id": "13",
+      "value": 13,
+      "details": ""
+    },
+    {
+      "id": "14",
+      "value": 14,
+      "details": ""
+    },
+    {
+      "id": "15",
+      "value": 15,
+      "details": ""
+    },
+    {
+      "id": "16",
+      "value": 16,
+      "details": ""
+    },
+    {
+      "id": "17",
+      "value": 17,
+      "details": ""
+    },
+    {
+      "id": "18",
+      "value": 18,
+      "details": ""
+    },
+    {
+      "id": "19",
+      "value": 19,
+      "details": ""
+    },
+    {
+      "id": "20",
+      "value": 20,
+      "details": ""
+    }
+  ],
+  "size": 10,
+  "totalElements": 95,
+  "totalPages": 10,
+  "number": 1
+}
