@@ -1,0 +1,8 @@
+{
+  "id": 3,
+  "name": "orange",
+  "price": "{{randomDecimal lower=2.1 upper=5.9}}",
+  "description": "This product is orange named.",
+  "more": "This response has a random delay based on a lognormal distribution.",
+  "self": "{{request.path}}"
+}

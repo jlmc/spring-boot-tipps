@@ -1,0 +1,39 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/api/example"
+      },
+      "response": {
+        "status": 200,
+        "body": "{\"message\": \"Hello, this is a mocked response!\"}",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPattern": "/ping"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "transformers": ["response-template"],
+        "jsonBody": {
+          "message": "pong",
+          "time": "{{now}}",
+          "content": "{{base64 'Hello, WireMock!' 'encode'}}",
+          "x-time": "{{now format='yyyy-MM-dd HH:mm:ss'}}",
+          "x-timestamp": "{{now format='epoch'}}",
+          "x-text": "{{randomValue length=8 type='ALPHANUMERIC'}}",
+          "x-uuid": "{{randomValue type='UUID'}}"
+        }
+      }
+    }
+  ]
+}

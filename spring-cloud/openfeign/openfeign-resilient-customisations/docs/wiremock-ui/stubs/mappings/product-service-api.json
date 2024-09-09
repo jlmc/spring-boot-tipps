@@ -1,0 +1,113 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "urlPath": "/api/products",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/products.json",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "urlPath": "/api/products",
+        "method": "POST",
+        "bodyPatterns": [
+          {
+            "matchesJsonPath": "$.name"
+          },
+          {
+            "matchesJsonPath": "$.description"
+          }
+        ]
+      },
+      "response": {
+        "status": 201,
+        "bodyFileName": "product-service-api/product-by-x.json",
+        "headers": {
+          "Content-Type": "application/json",
+          "Location": "{{request.path}}/{{jsonPath response.body '$.id'}}"
+        },
+        "transformers": ["response-template"],
+        "fixedDelayMilliseconds": 4000
+      },
+      "priority": 1
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/[0-9]+"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-id.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "transformers": ["response-template"]
+      },
+      "priority": 5
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/1"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-1.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 7000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/2"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-2.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "delayDistribution": {
+          "type": "uniform",
+          "lower": 1000,
+          "upper": 10000
+        },
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/3"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-3.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "delayDistribution": {
+          "type": "lognormal",
+          "median": 2000,
+          "sigma": 0.5
+        },
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    }
+  ]
+}
