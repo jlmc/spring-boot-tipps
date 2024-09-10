@@ -12,6 +12,6 @@ public class OrderCreatorService {
     ProductProvider productProvider;
 
     public Product createOrder() {
-        return productProvider.getProduct(1);
+        return productProvider.getProduct(5);
     }
 }

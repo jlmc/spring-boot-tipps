@@ -10,10 +10,22 @@ spring:
         config:
           products-service-client:
             url: http://localhost:8089
-            #connect-timeout: 5000
-            #read-timeout: 5000
+            #retryer: io.github.jlmc.poc.adapters.ProductsServiceClientRetryer
+            connect-timeout: 15000
+            read-timeout: 15000
             logger-level: full
             #dismiss404: false
-            #retryer:
+            follow-redirects: true
+
             micrometer:
               enabled: false
+
+
+logging:
+  level:
+    io.github.jlmc: debug
+    org:
+      springframework:
+        web: debug
+        cloud:
+          openfeign: debug

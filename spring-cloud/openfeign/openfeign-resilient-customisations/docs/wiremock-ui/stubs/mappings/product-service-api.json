@@ -108,6 +108,92 @@
         "transformers": ["response-template"]
       },
       "priority": 1
+    },
+
+    {
+      "scenarioName": "Retry Scenario",
+      "requiredScenarioState": "Started",
+      "newScenarioState": "First Failure",
+      "request": {
+        "method": "GET",
+        "urlPath": "/api/products/5"
+      },
+      "response": {
+        "status": 500,
+        "jsonBody": {
+          "error": "first attend"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 10000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+    {
+      "scenarioName": "Retry Scenario",
+      "requiredScenarioState": "First Failure",
+      "newScenarioState": "Second Failure",
+      "request": {
+        "method": "GET",
+        "urlPath": "/api/products/5"
+      },
+      "response": {
+        "status": 500,
+        "jsonBody": {
+          "error": "Second attend"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 8000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+
+    {
+      "scenarioName": "Retry Scenario",
+      "requiredScenarioState": "Second Failure",
+      "newScenarioState": "Success",
+      "request": {
+        "method": "GET",
+        "urlPath": "/api/products/5"
+      },
+      "response": {
+        "status": 500,
+        "jsonBody": {
+          "error": "Thirty attend"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 7000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+
+
+    {
+      "scenarioName": "Retry Scenario",
+      "requiredScenarioState": "Success",
+      "newScenarioState": "Started",
+      "request": {
+        "method": "GET",
+        "urlPath": "/api/products/5"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-5.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 1000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
     }
   ]
 }
