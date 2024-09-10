@@ -1,0 +1,19 @@
+#spring.application.name=openfeign-resilient-customisations
+spring:
+  application:
+    name: openfeign-resilient-customisations
+
+  cloud:
+    openfeign:
+      lazy-attributes-resolution: true # If you need the attributes to be resolved lazily, set the spring.cloud.openfeign.lazy-attributes-resolution property value to true. Tip: For Spring Cloud Contract test integration, lazy attribute resolution should be used.
+      client:
+        config:
+          products-service-client:
+            url: http://localhost:8089
+            #connect-timeout: 5000
+            #read-timeout: 5000
+            logger-level: full
+            #dismiss404: false
+            #retryer:
+            micrometer:
+              enabled: false
