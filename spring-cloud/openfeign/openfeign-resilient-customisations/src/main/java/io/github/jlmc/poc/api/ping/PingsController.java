@@ -1,4 +1,4 @@
-package io.github.jlmc.poc.api;
+package io.github.jlmc.poc.api.ping;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ public class PingsController {
     @Autowired
     Clock clock;
 
-    @GetMapping(path = "/ping")
+    @GetMapping
     public String ping() {
         return "pong - " + ZonedDateTime.now(clock);
     }

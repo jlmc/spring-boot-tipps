@@ -4,12 +4,13 @@ import io.github.jlmc.poc.domain.orders.commands.CreateOrderCommand;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Valid
 public record CreateOrderRequest(
-        @NotEmpty Set<@Valid Item> items
+        @NotEmpty List<@Valid Item> items
 ) {
     public CreateOrderCommand toCommand() {
         if (items == null) {
