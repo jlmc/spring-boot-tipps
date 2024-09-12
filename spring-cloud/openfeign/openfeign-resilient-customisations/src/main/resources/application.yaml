@@ -3,6 +3,10 @@ spring:
   application:
     name: openfeign-resilient-customisations
 
+  mvc:
+    problemdetails:
+      enabled: true
+
   cloud:
     openfeign:
       lazy-attributes-resolution: true # If you need the attributes to be resolved lazily, set the spring.cloud.openfeign.lazy-attributes-resolution property value to true. Tip: For Spring Cloud Contract test integration, lazy attribute resolution should be used.

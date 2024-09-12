@@ -2,19 +2,18 @@ package io.github.jlmc.poc.domain.orders.commands;
 
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 
-import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 @Valid
 public record CreateOrderCommand(
-        @NotNull @NotEmpty Set<@Valid Item> items) implements Iterable<CreateOrderCommand.Item> {
-
-    @Override
-    public Iterator<Item> iterator() {
-        return items.iterator();
-    }
+        @Valid
+        @NotEmpty List<Item> items) {
 
     public record Item(@NotBlank @Pattern(regexp = "^\\d+$") String productId, @NotNull @Positive Integer quantity) {
     }

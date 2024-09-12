@@ -1,4 +1,4 @@
-package io.github.jlmc.poc.adapters;
+package io.github.jlmc.poc.adapters.products;
 
 import io.github.jlmc.poc.domain.orders.entities.Product;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.ProductProvider;

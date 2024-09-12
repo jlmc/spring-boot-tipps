@@ -89,6 +89,45 @@
       },
       "priority": 1
     },
+
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/99"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "product-service-api/product-by-99.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 10000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+
+    {
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/api/products/98"
+      },
+      "response": {
+        "status": 500,
+        "jsonBody": {
+            "error": "xxx500",
+            "message": "try again in some moment"
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "Retry-After": "20000"
+        },
+        "fixedDelayMilliseconds": 1000,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    },
+
     {
       "request": {
         "method": "GET",
@@ -109,7 +148,6 @@
       },
       "priority": 1
     },
-
     {
       "scenarioName": "Retry Scenario",
       "requiredScenarioState": "Started",
@@ -119,14 +157,14 @@
         "urlPath": "/api/products/5"
       },
       "response": {
-        "status": 500,
+        "status": 502,
         "jsonBody": {
           "error": "first attend"
         },
         "headers": {
           "Content-Type": "application/json"
         },
-        "fixedDelayMilliseconds": 10000,
+        "fixedDelayMilliseconds": 2000,
         "transformers": ["response-template"]
       },
       "priority": 1
@@ -140,19 +178,18 @@
         "urlPath": "/api/products/5"
       },
       "response": {
-        "status": 500,
+        "status": 503,
         "jsonBody": {
           "error": "Second attend"
         },
         "headers": {
           "Content-Type": "application/json"
         },
-        "fixedDelayMilliseconds": 8000,
+        "fixedDelayMilliseconds": 1000,
         "transformers": ["response-template"]
       },
       "priority": 1
     },
-
     {
       "scenarioName": "Retry Scenario",
       "requiredScenarioState": "Second Failure",
@@ -162,20 +199,18 @@
         "urlPath": "/api/products/5"
       },
       "response": {
-        "status": 500,
+        "status": 504,
         "jsonBody": {
           "error": "Thirty attend"
         },
         "headers": {
           "Content-Type": "application/json"
         },
-        "fixedDelayMilliseconds": 7000,
+        "fixedDelayMilliseconds": 1000,
         "transformers": ["response-template"]
       },
       "priority": 1
     },
-
-
     {
       "scenarioName": "Retry Scenario",
       "requiredScenarioState": "Success",

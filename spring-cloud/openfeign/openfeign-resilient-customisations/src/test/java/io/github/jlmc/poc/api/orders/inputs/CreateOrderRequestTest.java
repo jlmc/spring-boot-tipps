@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,7 +38,7 @@ class CreateOrderRequestTest {
         @Test
         void when_request_is_valid() {
             CreateOrderRequest request = new CreateOrderRequest(
-                    Set.of(new Item("1", 2), new Item("3", 4))
+                    List.of(new Item("1", 2), new Item("3", 4))
             );
 
             Set<ConstraintViolation<CreateOrderRequest>> violations = validator.validate(request);
@@ -46,7 +47,7 @@ class CreateOrderRequestTest {
 
         @Test
         void when_request_items_is_empty_it_have_one_violation() {
-            CreateOrderRequest request = new CreateOrderRequest(Set.of());
+            CreateOrderRequest request = new CreateOrderRequest(List.of());
 
             Set<ConstraintViolation<CreateOrderRequest>> violations = validator.validate(request);
             assertEquals(1, violations.size());
@@ -62,7 +63,7 @@ class CreateOrderRequestTest {
 
         @Test
         void when_request_items_id_is_not_integer_it_have_one_violation() {
-            CreateOrderRequest request = new CreateOrderRequest(Set.of(new Item("not-integer", 2)));
+            CreateOrderRequest request = new CreateOrderRequest(List.of(new Item("not-integer", 2)));
 
             Set<ConstraintViolation<CreateOrderRequest>> violations = validator.validate(request);
             assertEquals(1, violations.size());
@@ -70,7 +71,7 @@ class CreateOrderRequestTest {
 
         @Test
         void when_request_items_quantity_is_not_positive_integer_it_have_one_violation() {
-            CreateOrderRequest request = new CreateOrderRequest(Set.of(new Item("1", -2)));
+            CreateOrderRequest request = new CreateOrderRequest(List.of(new Item("1", -2)));
 
             Set<ConstraintViolation<CreateOrderRequest>> violations = validator.validate(request);
             assertEquals(1, violations.size());
@@ -91,7 +92,7 @@ class CreateOrderRequestTest {
         @Test
         void when_convert_to_command_without_items__it_throws_exception() {
             CreateOrderRequest createOrderRequest = new CreateOrderRequest(
-                    Set.of()
+                    List.of()
             );
 
             assertThrows(IllegalArgumentException.class, createOrderRequest::toCommand);
@@ -100,7 +101,7 @@ class CreateOrderRequestTest {
         @Test
         void when_convert_to_command__it_convert_all_fields_as_expected() {
             CreateOrderRequest createOrderRequest = new CreateOrderRequest(
-                    Set.of(new Item("1", 2), new Item("3", 4))
+                    List.of(new Item("1", 2), new Item("3", 4))
             );
 
             CreateOrderCommand command = createOrderRequest.toCommand();
@@ -108,7 +109,7 @@ class CreateOrderRequestTest {
             assertNotNull(command);
             assertEquals(
                     new CreateOrderCommand(
-                            Set.of(new CreateOrderCommand.Item("1", 2), new CreateOrderCommand.Item("3", 4))
+                            List.of(new CreateOrderCommand.Item("1", 2), new CreateOrderCommand.Item("3", 4))
                     ), command
             );
         }

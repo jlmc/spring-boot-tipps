@@ -20,35 +20,6 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
     private final ErrorDecoder defaultErrorDecode = new ErrorDecoder.Default();
 
-    /**
-     * By default, only ioexception make the retry process trigger,
-     * this implementation makes them tack some server exceptions to get the retry process.
-     *
-     * @param methodKey {@link feign.Feign#configKey} of the java method that invoked the request. ex.
-     *        {@code IAM#getUser()}
-     * @param response HTTP response where {@link Response#status() status} is greater than or equal
-     *        to {@code 300}.
-     */
-    @Override
-    public Exception decode(String methodKey, Response response) {
-
-        Exception exception = defaultErrorDecode.decode(methodKey, response);
-
-        if (isServerError(response.status())) {
-            // 501 Not Implemented
-            // 502 Bad Gateway
-            // 503 Service Unavailable
-            // 504 Gateway Timeout
-
-            if (502 == response.status() || 503 == response.status() || 504 == response.status()) {
-                LOGGER.error("*****************> START of Retry *****> Feign status: {} ***> Feign status: {}", response.status(), response.reason());
-                return errorRetryExecuting(response.status(), response.request(), exception);
-            }
-        }
-
-        return exception;
-    }
-
     private static FeignException errorRetryExecuting(int status, Request request, Exception cause) {
         final Long nonRetryable = null;
         return new RetryableException(
@@ -62,6 +33,42 @@ public class CustomErrorDecoder implements ErrorDecoder {
 
     private static boolean isServerError(int status) {
         return status >= 500 && status <= 599;
+    }
+
+    /**
+     * By default, only ioexception make the retry process trigger,
+     * this implementation makes them tack some server exceptions to get the retry process.
+     *
+     * @param methodKey {@link feign.Feign#configKey} of the java method that invoked the request. ex.
+     *                  {@code IAM#getUser()}
+     * @param response  HTTP response where {@link Response#status() status} is greater than or equal
+     *                  to {@code 300}.
+     */
+    @Override
+    public Exception decode(String methodKey, Response response) {
+
+        Exception exception = defaultErrorDecode.decode(methodKey, response);
+
+        if (isOneOfCustomRetryableHandledStates(response)) {
+            // 501 Not Implemented
+            // 502 Bad Gateway
+            // 503 Service Unavailable
+            // 504 Gateway Timeout
+
+            LOGGER.error("*****************> START of Retry *****> Feign status: {} ***> Feign status: {}", response.status(), response.reason());
+
+            if (isServerError(response.status())) {
+                LOGGER.debug("Is one server error...");
+            }
+
+            return errorRetryExecuting(response.status(), response.request(), exception);
+        }
+
+        return exception;
+    }
+
+    private boolean isOneOfCustomRetryableHandledStates(Response response) {
+        return 502 == response.status() || 503 == response.status() || 504 == response.status();
     }
 
 }

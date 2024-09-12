@@ -1,4 +1,4 @@
-package io.github.jlmc.poc.adapters;
+package io.github.jlmc.poc.adapters.products;
 
 import org.springframework.context.annotation.Configuration;
 

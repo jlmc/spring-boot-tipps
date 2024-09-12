@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -67,7 +67,7 @@ class OrdersControllerTest {
         verify(createOrderReservation, times(1)).createOrder(captor.capture());
         CreateOrderCommand command = captor.getValue();
         assertNotNull(command);
-        assertEquals(new CreateOrderCommand(Set.of(new CreateOrderCommand.Item("1", 2))), command);
+        assertEquals(new CreateOrderCommand(List.of(new CreateOrderCommand.Item("1", 2))), command);
     }
 
     @Test
