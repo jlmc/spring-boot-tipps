@@ -1,0 +1,20 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "urlPath": "/api/orders/id",
+        "method": "POST"
+      },
+      "response": {
+        "status": 200,
+        "bodyFileName": "order-id.json",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 100,
+        "transformers": ["response-template"]
+      },
+      "priority": 1
+    }
+  ]
+}

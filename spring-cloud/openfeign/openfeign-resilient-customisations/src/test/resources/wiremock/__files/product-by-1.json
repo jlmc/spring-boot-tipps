@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "apple",
+  "price": "7.5",
+  "description": "This product is apple named.",
+  "more": "This response is delayed by 7 seconds.",
+  "self": "{{request.path}}"
+
+}
