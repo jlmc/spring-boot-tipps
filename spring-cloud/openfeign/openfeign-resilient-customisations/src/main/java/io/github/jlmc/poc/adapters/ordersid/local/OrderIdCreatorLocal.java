@@ -1,17 +1,17 @@
-package io.github.jlmc.poc.domain.orders.control;
+package io.github.jlmc.poc.adapters.ordersid.local;
 
 import io.github.jlmc.poc.domain.orders.entities.OrderId;
+import io.github.jlmc.poc.domain.orders.ports.outgoing.OrderIdCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
-public class OrderIdCreator {
+public class OrderIdCreatorLocal implements OrderIdCreator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderIdCreator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderIdCreatorLocal.class);
 
+    @Override
     public OrderId generateOrderId() {
         LOGGER.info("Generating order ID");
         String id = UUID.randomUUID().toString();

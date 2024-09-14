@@ -1,11 +1,11 @@
 package io.github.jlmc.poc.domain.orders.boundary;
 
 import io.github.jlmc.poc.domain.orders.commands.CreateOrderCommand;
-import io.github.jlmc.poc.domain.orders.control.OrderIdCreator;
 import io.github.jlmc.poc.domain.orders.entities.Order;
 import io.github.jlmc.poc.domain.orders.entities.OrderId;
 import io.github.jlmc.poc.domain.orders.entities.Product;
 import io.github.jlmc.poc.domain.orders.ports.incoming.CreateOrderReservation;
+import io.github.jlmc.poc.domain.orders.ports.outgoing.OrderIdCreator;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.OrderRepository;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.ProductProvider;
 import jakarta.validation.Valid;
