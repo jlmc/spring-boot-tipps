@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
@@ -92,6 +93,46 @@ public class CreateOrderIT {
                 .contentType(ContentType.JSON)
                 .body("id", notNullValue())
                 .body("id", matchesPattern(UUID_REGEX_PATTERN));  // Assert that 'id' matches UUID regex
+        //@formatter:on
+    }
+
+    @Test
+    void when_create_order_of_a_non_existing_product() {
+        LOGGER.info("Testing create order of a non existing product");
+
+        @Language("JSON") String jsonBody = """
+                {
+                  "items": [
+                    {
+                      "productId": "2",
+                      "quantity": 1
+                    }
+                  ]
+                }
+                """;
+
+        //@formatter:off
+        given()
+                .log().all() // Log the full request (headers, body, etc.)
+                .contentType(ContentType.JSON)
+                .body(jsonBody)
+        .when()
+                .post("/api/orders")
+        .then()
+                .log().all()  // Log the full response (headers, body, etc.)
+                .statusCode(HttpStatus.PRECONDITION_FAILED.value())
+                .contentType(ContentType.JSON)
+                .body(JsonMatches.jsonEqualsTo(
+                        """
+                            {
+                              "type": "about:blank",
+                              "title": "Precondition Failed",
+                              "status": 412,
+                              "detail": "Product with the id [2] not found.",
+                              "instance": "/api/orders"
+                            }
+                            """, false
+                ));
         //@formatter:on
     }
 

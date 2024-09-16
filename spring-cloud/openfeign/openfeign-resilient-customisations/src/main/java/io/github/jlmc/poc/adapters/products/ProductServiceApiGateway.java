@@ -1,5 +1,7 @@
 package io.github.jlmc.poc.adapters.products;
 
+import feign.FeignException;
+import io.github.jlmc.poc.api.orders.ex.ProductNotFoundException;
 import io.github.jlmc.poc.domain.orders.entities.Product;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.ProductProvider;
 import org.slf4j.Logger;
@@ -17,6 +19,10 @@ public class ProductServiceApiGateway implements ProductProvider {
     @Override
     public Product getProduct(Integer productId) {
         LOGGER.info("Retrieving product with id {}", productId);
-        return productsServiceClient.product(productId);
+        try {
+            return productsServiceClient.product(productId);
+        } catch (FeignException.NotFound e) {
+            throw new ProductNotFoundException("Product with the id [%s] not found.".formatted(productId), e);
+        }
     }
 }
