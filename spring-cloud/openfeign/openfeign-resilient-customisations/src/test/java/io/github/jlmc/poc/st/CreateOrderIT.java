@@ -5,6 +5,7 @@ import io.restassured.http.ContentType;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +26,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Testcontainers
+@ExtendWith({TestResultLoggerExtension.class})
 public class CreateOrderIT {
 
     private static final String UUID_REGEX = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
@@ -35,6 +37,7 @@ public class CreateOrderIT {
     @Container
     static WireMockContainer wiremockServer = new WireMockContainer("wiremock/wiremock:3.9.1")
             .withFileFromResource("product-by-1.json", "/wiremock/__files/product-by-1.json")
+            .withFileFromResource("product-by-5.json", "/wiremock/__files/product-by-5.json")
             .withFileFromResource("order-id.json", "/wiremock/__files/order-id.json")
             .withMappingFromResource("products-service-api.json", CreateOrderIT.class, "/wiremock/mappings/products-service-api.json")
             .withMappingFromResource("order-id-generator-service-api.json", CreateOrderIT.class, "/wiremock/mappings/order-id-generator-service-api.json")
@@ -97,6 +100,37 @@ public class CreateOrderIT {
     }
 
     @Test
+    void when_create_order_with_retry_fetch_product_details_successfully_it_returns_201() {
+        LOGGER.info("testing retry fetch product details");
+
+        @Language("JSON") String jsonBody = """
+                {
+                  "items": [
+                    {
+                      "productId": "5",
+                      "quantity": 3
+                    }
+                  ]
+                }
+                """;
+
+        //@formatter:off
+        given()
+                .log().all() // Log the full request (headers, body, etc.)
+                .contentType(ContentType.JSON)
+                .body(jsonBody)
+        .when()
+                .post("/api/orders")
+        .then()
+                .log().all()  // Log the full response (headers, body, etc.)
+                .statusCode(201)
+                .contentType(ContentType.JSON)
+                .body("id", notNullValue())
+                .body("id", matchesPattern(UUID_REGEX_PATTERN));  // Assert that 'id' matches UUID regex
+        //@formatter:on
+    }
+
+    @Test
     void when_create_order_of_a_non_existing_product() {
         LOGGER.info("Testing create order of a non existing product");
 
@@ -135,5 +169,7 @@ public class CreateOrderIT {
                 ));
         //@formatter:on
     }
+
+
 
 }

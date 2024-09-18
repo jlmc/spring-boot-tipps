@@ -18,8 +18,9 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -72,19 +73,14 @@ public class OrderCreatorService implements CreateOrderReservation {
         LOGGER.debug("Getting product map");
         Instant startup = Instant.now(clock);
 
-
-        Map<String, Product> productMap = new HashMap<>();
-
-        for (CreateOrderCommand.Item item : createOrderCommand.items()) {
-            if (productMap.containsKey(item.productId())) {
-                continue;
-            }
-
-            Integer productId = Integer.valueOf(item.productId());
-            Product product = productProvider.getProduct(productId);
-
-            productMap.put(item.productId(), product);
-        }
+        Map<String, Product> productMap =
+                createOrderCommand.items()
+                        .stream()
+                        .map(CreateOrderCommand.Item::productId)
+                        .distinct()
+                        .map(Integer::valueOf)
+                        .map(productProvider::getProduct)
+                        .collect(Collectors.toMap(it -> "" + it.id(), Function.identity()));
 
         Instant ends = Instant.now(clock);
 

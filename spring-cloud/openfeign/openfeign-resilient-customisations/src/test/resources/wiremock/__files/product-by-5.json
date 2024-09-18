@@ -1,0 +1,9 @@
+{
+  "id": 5,
+  "name": "Cucumber",
+  "price": "7.5",
+  "description": "This product is Cucumber named.",
+  "more": "Cucumber or Pepino",
+  "self": "{{request.path}}"
+
+}
