@@ -20,3 +20,27 @@ services:
       WIREMOCK_OPTIONS: "--port=8089 --https-port=8088 --verbose --max-request-journal=1000 --local-response-templating"
       #WIREMOCK_OPTIONS: "--port=8089 --https-port=8088 --verbose --max-request-journal=1000 --local-response-templating --root-dir=/home/wiremock/storage"
      # WIREMOCK_OPTIONS: "--port=8089,--https-port=8088,--max-request-journal=1000,--local-response-templating,--root-dir=/home/wiremock/storage"
+
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=poc"
+    command: postgres --max_prepared_transactions=100 --log_statement=all
+    #command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
+    ports:
+      - "5432:5432"
+    volumes:
+      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+#    networks:
+#      - cwr
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d poc -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
