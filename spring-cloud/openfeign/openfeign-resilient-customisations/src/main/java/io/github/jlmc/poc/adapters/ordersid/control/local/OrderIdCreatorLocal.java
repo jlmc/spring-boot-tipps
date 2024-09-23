@@ -1,4 +1,4 @@
-package io.github.jlmc.poc.adapters.ordersid.local;
+package io.github.jlmc.poc.adapters.ordersid.control.local;
 
 import io.github.jlmc.poc.domain.orders.entities.OrderId;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.OrderIdCreator;

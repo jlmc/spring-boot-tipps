@@ -1,4 +1,4 @@
-package io.github.jlmc.poc.adapters.products;
+package io.github.jlmc.poc.adapters.products.control;
 
 import io.github.jlmc.poc.domain.orders.entities.Product;
 import org.springframework.cloud.openfeign.FeignClient;

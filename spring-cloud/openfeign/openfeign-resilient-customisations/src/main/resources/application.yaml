@@ -6,6 +6,40 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+    log-request-details: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/poc
+    username: postgres
+    password: postgres
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 5
+      minimum-idle: 3
+      idle-timeout: 10000
+      connection-test-query: select 1
+      #schema: sgoa
+  jpa:
+    open-in-view: false
+    show-sql: false
+    generate-ddl: false
+    properties:
+      hibernate:
+        ddl-auto: none
+        connection:
+          provider_disables_autocommit: true
+          autocommit: false
+        format_sql: true
+        generate_statistics: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    #default-schema: ${spring.datasource.hikari.schema}
+    validate-migration-naming: true
+    validate-on-migrate: true
+    clean-disabled: false
+      #locations: "/db/migration,classpath:/db/testdata"
 
   cloud:
     openfeign:

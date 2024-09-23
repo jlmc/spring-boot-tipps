@@ -1,6 +1,7 @@
-package io.github.jlmc.poc.adapters.products;
+package io.github.jlmc.poc.adapters.products.boundary;
 
 import feign.FeignException;
+import io.github.jlmc.poc.adapters.products.control.ProductsServiceClient;
 import io.github.jlmc.poc.api.orders.ex.ProductNotFoundException;
 import io.github.jlmc.poc.domain.orders.entities.Product;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.ProductProvider;

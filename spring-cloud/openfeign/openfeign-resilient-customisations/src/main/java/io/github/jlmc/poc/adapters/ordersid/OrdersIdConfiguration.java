@@ -1,8 +1,8 @@
 package io.github.jlmc.poc.adapters.ordersid;
 
-import io.github.jlmc.poc.adapters.ordersid.local.OrderIdCreatorLocal;
-import io.github.jlmc.poc.adapters.ordersid.remote.OrderIdCreatorRemote;
-import io.github.jlmc.poc.adapters.ordersid.remote.OrderIdGeneratorServiceApiClient;
+import io.github.jlmc.poc.adapters.ordersid.control.local.OrderIdCreatorLocal;
+import io.github.jlmc.poc.adapters.ordersid.control.remote.OrderIdCreatorRemote;
+import io.github.jlmc.poc.adapters.ordersid.control.remote.OrderIdGeneratorServiceApiClient;
 import io.github.jlmc.poc.domain.orders.ports.outgoing.OrderIdCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,5 +1,8 @@
 package io.github.jlmc.poc.st;
 
+import io.github.jlmc.poc.Containers;
+import io.github.jlmc.poc.adapters.auditing.entity.ExternalRequestAudit;
+import io.github.jlmc.poc.adapters.auditing.control.ExternalRequestAuditRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.intellij.lang.annotations.Language;
@@ -8,20 +11,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.wiremock.integrations.testcontainers.WireMockContainer;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
@@ -35,31 +42,39 @@ public class CreateOrderIT {
 
     //@formatter:off
     @Container
-    static WireMockContainer wiremockServer = new WireMockContainer("wiremock/wiremock:3.9.1")
-            .withFileFromResource("product-by-1.json", "/wiremock/__files/product-by-1.json")
-            .withFileFromResource("product-by-5.json", "/wiremock/__files/product-by-5.json")
-            .withFileFromResource("order-id.json", "/wiremock/__files/order-id.json")
-            .withMappingFromResource("products-service-api.json", CreateOrderIT.class, "/wiremock/mappings/products-service-api.json")
-            .withMappingFromResource("order-id-generator-service-api.json", CreateOrderIT.class, "/wiremock/mappings/order-id-generator-service-api.json")
-            .withBanner()
+    static WireMockContainer wiremockServer =
+            new WireMockContainer(Containers.WIREMOCK)
+                .withFileFromResource("product-by-1.json", "/wiremock/__files/product-by-1.json")
+                .withFileFromResource("product-by-5.json", "/wiremock/__files/product-by-5.json")
+                .withFileFromResource("order-id.json", "/wiremock/__files/order-id.json")
+                .withMappingFromResource("products-service-api.json", CreateOrderIT.class, "/wiremock/mappings/products-service-api.json")
+                .withMappingFromResource("order-id-generator-service-api.json", CreateOrderIT.class, "/wiremock/mappings/order-id-generator-service-api.json")
+                .withBanner()
             ;
+    //@formatter:on
+
+    //@formatter:off
+    @SuppressWarnings("resource")
+    @Container
+    static final PostgreSQLContainer<?> postgreSQLContainer =
+            new PostgreSQLContainer<>(Containers.POSTGRES)
+                    .withDatabaseName("poc");
     //@formatter:on
 
     @LocalServerPort
     private Integer port;
 
+    @Autowired
+    ExternalRequestAuditRepository externalRequestAuditRepository;
+
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.cloud.openfeign.client.config.products-service-client.url", CreateOrderIT::getBaseUrl);
-        registry.add("spring.cloud.openfeign.client.config.order-id-generator-service-client.url", CreateOrderIT::getBaseUrl);
-    }
+        registry.add("spring.cloud.openfeign.client.config.products-service-client.url", wiremockServer::getBaseUrl);
+        registry.add("spring.cloud.openfeign.client.config.order-id-generator-service-client.url", wiremockServer::getBaseUrl);
 
-    static String getBaseUrl() {
-        String baseUrl = wiremockServer.getBaseUrl();
-
-        LOGGER.info("X -> Wiremock Base URL: [{}]", baseUrl);
-
-        return baseUrl;
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
 
     @BeforeEach
@@ -128,6 +143,25 @@ public class CreateOrderIT {
                 .body("id", notNullValue())
                 .body("id", matchesPattern(UUID_REGEX_PATTERN));  // Assert that 'id' matches UUID regex
         //@formatter:on
+
+        List<ExternalRequestAudit> all = externalRequestAuditRepository.findAll();
+        assertEquals(1,
+                all.stream()
+                        .map(it -> "%s %s".formatted(it.getHttpMethod(), it.getUrl()))
+                        .distinct()
+                        .count()
+        );
+        assertEquals(3,
+                all.stream()
+                        .filter(it -> it.getResponseStatus() >= 500)
+                        .count()
+        );
+        assertEquals(1,
+                all.stream()
+                        .filter(it -> it.getResponseStatus() == 200)
+                        .count()
+        );
+
     }
 
     @Test
