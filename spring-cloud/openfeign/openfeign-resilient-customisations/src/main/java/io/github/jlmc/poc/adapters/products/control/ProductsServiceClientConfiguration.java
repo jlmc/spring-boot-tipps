@@ -1,6 +1,8 @@
 package io.github.jlmc.poc.adapters.products.control;
 
 import feign.Logger;
+import feign.RequestInterceptor;
+import feign.auth.BasicAuthRequestInterceptor;
 import io.github.jlmc.poc.configurations.openfeign.logger.AuditorLogger;
 import io.github.jlmc.poc.configurations.openfeign.logger.Auditor;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +14,11 @@ public class ProductsServiceClientConfiguration {
     @Bean
     public Logger auditFeignLogger(Auditor auditor) {
         return new AuditorLogger(auditor);
+    }
+
+    @Bean
+    public RequestInterceptor basicAuthRequestInterceptor() {
+        return new BasicAuthRequestInterceptor("X-POP-USER", "X-POP-PASSWORD");
     }
 
 }
