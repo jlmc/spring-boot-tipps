@@ -1,0 +1,8 @@
+{
+  "id": "{{randomInt lower=100 upper=199}}",
+  "name": "{{jsonPath request.body '$.name'}}",
+  "price": "{{randomDecimal lower=2.1 upper=5.9}}",
+  "description": "{{jsonPath request.body '$.description'}}",
+  "more": "This response is delayed by 7 seconds.",
+  "self": "{{request.path}}/{{jsonPath response.body '$.id'}}"
+}

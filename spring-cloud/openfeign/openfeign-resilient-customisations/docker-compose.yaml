@@ -1,0 +1,46 @@
+
+services:
+  wiremock:
+    image: "holomekc/wiremock-gui:3.8.23"
+    container_name: my_wiremock
+    ports:
+      # This is just an example of a port mapping
+      - "8089:8089" # http requests interface: http://localhost:8088/__admin/webapp/
+      # - "8088:8088" # http ui interface: http://localhost:8088/__admin/webapp/
+    healthcheck:
+      test: curl --fail http://localhost:8089/__admin/health || exit 1
+      interval: 40s
+      timeout: 30s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ./docs/wiremock-ui/stubs:/home/wiremock:rw  # Explicitly stating read-write mode
+      #- .volume/wiremock-ui/storage:/home/wiremock:rw  # Explicitly stating read-write mode
+    environment:
+      WIREMOCK_OPTIONS: "--port=8089 --https-port=8088 --verbose --max-request-journal=1000 --local-response-templating"
+      #WIREMOCK_OPTIONS: "--port=8089 --https-port=8088 --verbose --max-request-journal=1000 --local-response-templating --root-dir=/home/wiremock/storage"
+     # WIREMOCK_OPTIONS: "--port=8089,--https-port=8088,--max-request-journal=1000,--local-response-templating,--root-dir=/home/wiremock/storage"
+
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=poc"
+    command: postgres --max_prepared_transactions=100 --log_statement=all
+    #command: [ "postgres", "-c", "log_statement=all", "-c", "log_destination=stderr" ]
+    ports:
+      - "5432:5432"
+    volumes:
+      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+#    networks:
+#      - cwr
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d poc -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+#    depends_on:
+#      postgres:
+#        condition: service_healthy

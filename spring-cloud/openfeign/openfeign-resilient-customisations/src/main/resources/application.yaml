@@ -1,0 +1,85 @@
+#spring.application.name=openfeign-resilient-customisations
+spring:
+  application:
+    name: openfeign-resilient-customisations
+
+  mvc:
+    problemdetails:
+      enabled: true
+    log-request-details: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/poc
+    username: postgres
+    password: postgres
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 5
+      minimum-idle: 3
+      idle-timeout: 10000
+      connection-test-query: select 1
+      #schema: sgoa
+  jpa:
+    open-in-view: false
+    show-sql: false
+    generate-ddl: false
+    properties:
+      hibernate:
+        ddl-auto: none
+        connection:
+          provider_disables_autocommit: true
+          autocommit: false
+        format_sql: true
+        generate_statistics: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    #default-schema: ${spring.datasource.hikari.schema}
+    validate-migration-naming: true
+    validate-on-migrate: true
+    clean-disabled: false
+      #locations: "/db/migration,classpath:/db/testdata"
+
+  cloud:
+    openfeign:
+      lazy-attributes-resolution: true # If you need the attributes to be resolved lazily, set the spring.cloud.openfeign.lazy-attributes-resolution property value to true. Tip: For Spring Cloud Contract test integration, lazy attribute resolution should be used.
+      client:
+        config:
+          products-service-client:
+            url: http://localhost:8089
+            #retryer: io.github.jlmc.poc.adapters.ProductsServiceClientRetryer
+            connect-timeout: 15000
+            read-timeout: 15000
+            logger-level: full
+            #dismiss404: false
+            follow-redirects: true
+
+            micrometer:
+              enabled: false
+          order-id-generator-service-client:
+            url: http://localhost:8089
+            #retryer: io.github.jlmc.poc.adapters.ProductsServiceClientRetryer
+            connect-timeout: 15000
+            read-timeout: 15000
+            logger-level: full
+            #dismiss404: false
+            follow-redirects: true
+
+            micrometer:
+              enabled: false
+
+
+logging:
+  level:
+    io.github.jlmc: debug
+    org:
+      springframework:
+        web: debug
+        cloud:
+          openfeign: debug
+
+
+poc:
+  orders-id:
+    type: REMOTE

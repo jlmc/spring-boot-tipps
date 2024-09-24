@@ -1,0 +1,23 @@
+<FindBugsFilter>
+    <!-- Excluir todos os bugs do tipo "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD" -->
+    <Match>
+        <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    </Match>
+    <Match>
+        <Bug pattern="DM_CONVERT_CASE"/>
+    </Match>
+    <Match>
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+
+    <!-- Excluir bugs específicos em uma classe -->
+    <Match>
+        <Class name="io.github.jlmc.xgxservice.api.exceptions.ProblemDetailResource">
+          <!--  <Method name="someMethod"/>-->
+        </Class>
+    </Match>
+
+    <Match>
+        <Package name="o.github.jlmc.xgxservice.api.exceptions"/>
+    </Match>
+</FindBugsFilter>
