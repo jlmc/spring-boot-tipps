@@ -7,6 +7,7 @@ import feign.Util;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
 import java.util.Map;
@@ -18,10 +19,12 @@ public class AuditorLogger extends Logger {
 
     public static final String X_AUDIT_ID = "x-audit-id";
     private final Auditor auditor;
+    private final Clock clock;
 
-    public AuditorLogger(Auditor auditor) {
+    public AuditorLogger(Auditor auditor, Clock clock) {
         super();
         this.auditor = auditor;
+        this.clock = clock;
     }
 
 
@@ -44,7 +47,8 @@ public class AuditorLogger extends Logger {
 
         Map<String, Collection<String>> requestHeaders = Map.copyOf(request.headers());
 
-        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders);
+
+        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders, Instant.now(clock));
 
         String id = auditor.request(auditRequestLog);// Save initial request info
 
@@ -67,8 +71,9 @@ public class AuditorLogger extends Logger {
         AuditResponseLog auditResponseLog = new AuditResponseLog(
                 response.status(),
                 Optional.ofNullable(bodyData).map(String::new).orElse(null),
-                Instant.now(),
-                responseHeaders
+                Instant.now(clock),
+                responseHeaders,
+                elapsedTime
         );
 
         auditor.response(xAuditId, auditResponseLog);

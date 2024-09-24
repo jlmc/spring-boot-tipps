@@ -24,10 +24,13 @@ public class ExternalRequestAudit {
     )
     private Long id;
 
+
+    private Instant requestInstant;
     private String url;
     private String httpMethod;
     //@Lob // For larger texts
     private String requestBody;
+
 
 
     @JdbcTypeCode(SqlTypes.JSON)
@@ -37,11 +40,12 @@ public class ExternalRequestAudit {
     //@Lob
     private String responseBody;
     private Integer responseStatus;
-    private Instant timestamp;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb", name = "response_headers")
     private Map<String, Collection<String>> responseHeaders;
+    private Instant responseInstant;
+    private Long elapsedTime;
 
     public ExternalRequestAudit() {
     }
@@ -51,6 +55,7 @@ public class ExternalRequestAudit {
         this.httpMethod = auditRequestLog.httpMethod();
         this.requestBody = auditRequestLog.requestBody();
         this.requestHeaders = auditRequestLog.requestHeaders();
+        this.requestInstant = auditRequestLog.requestInstant();
 
     }
 
@@ -73,7 +78,8 @@ public class ExternalRequestAudit {
     public void withResponse(AuditResponseLog auditResponseLog) {
         this.responseStatus = auditResponseLog.responseStatus();
         this.responseBody = auditResponseLog.responseBody();
-        this.timestamp = Instant.now();
         this.responseHeaders = auditResponseLog.responseHeaders();
+        this.responseInstant = auditResponseLog.responseInstant();
+        this.elapsedTime = auditResponseLog.elapsedTime();
     }
 }

@@ -7,7 +7,8 @@ import java.util.Map;
 public record AuditResponseLog(
     int responseStatus,
     String responseBody,
-    Instant timestamp,
-    Map<String, Collection<String>> responseHeaders
+    Instant responseInstant,
+    Map<String, Collection<String>> responseHeaders,
+    Long elapsedTime
 ) {
 }

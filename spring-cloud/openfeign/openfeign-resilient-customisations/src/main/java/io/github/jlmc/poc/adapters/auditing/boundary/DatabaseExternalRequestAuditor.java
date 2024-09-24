@@ -24,8 +24,11 @@ public class DatabaseExternalRequestAuditor implements Auditor {
     public String request(AuditRequestLog auditRequestLog) {
         ExternalRequestAudit entity = new ExternalRequestAudit(auditRequestLog);
 
-        repository.saveAndFlush(entity);
-
+        try {
+            repository.saveAndFlush(entity);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         return "" + entity.getId();
     }
 

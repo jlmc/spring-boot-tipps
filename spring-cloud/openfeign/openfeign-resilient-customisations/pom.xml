@@ -33,7 +33,7 @@
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <spotbugs-maven-plugin.version>4.8.6.2</spotbugs-maven-plugin.version>
         <maven-site-plugin.version>4.0.0-M16</maven-site-plugin.version>
-        <maven-pmd-plugin.version>3.24.0</maven-pmd-plugin.version>
+        <maven-pmd-plugin.version>3.25.0</maven-pmd-plugin.version>
     </properties>
     <dependencies>
         <dependency>
