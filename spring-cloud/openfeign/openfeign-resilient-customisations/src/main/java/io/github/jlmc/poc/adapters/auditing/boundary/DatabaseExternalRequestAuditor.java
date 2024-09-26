@@ -19,27 +19,16 @@ public class DatabaseExternalRequestAuditor implements Auditor {
         this.repository = repository;
     }
 
+
+
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public String request(AuditRequestLog auditRequestLog) {
-        ExternalRequestAudit entity = new ExternalRequestAudit(auditRequestLog);
-
+    public void audit(AuditRequestLog auditRequestLog, AuditResponseLog auditResponseLog) {
         try {
+            ExternalRequestAudit entity = new ExternalRequestAudit(auditRequestLog).withResponse(auditResponseLog);
             repository.saveAndFlush(entity);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        return "" + entity.getId();
-    }
-
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void response(String id, AuditResponseLog auditResponseLog) {
-        if (id == null) {
-            throw new IllegalArgumentException("id cannot be null");
-        }
-
-        repository.findById(Long.parseLong(id))
-                .ifPresent(it -> it.withResponse(auditResponseLog));
     }
 }

@@ -14,7 +14,7 @@ import java.time.Clock;
 public class ProductsServiceClientConfiguration {
 
     @Bean
-    public Logger auditFeignLogger(Auditor auditor, Clock clock) {
+    public Logger productsServiceClientAuditFeignLogger(Auditor auditor, Clock clock) {
         return new AuditorLogger(auditor, clock);
     }
 
