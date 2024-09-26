@@ -56,7 +56,6 @@ public class ExternalRequestAudit {
         this.requestBody = auditRequestLog.requestBody();
         this.requestHeaders = auditRequestLog.requestHeaders();
         this.requestInstant = auditRequestLog.requestInstant();
-
     }
 
     public Long getId() {
@@ -75,11 +74,12 @@ public class ExternalRequestAudit {
         return responseStatus;
     }
 
-    public void withResponse(AuditResponseLog auditResponseLog) {
+    public ExternalRequestAudit withResponse(AuditResponseLog auditResponseLog) {
         this.responseStatus = auditResponseLog.responseStatus();
         this.responseBody = auditResponseLog.responseBody();
         this.responseHeaders = auditResponseLog.responseHeaders();
         this.responseInstant = auditResponseLog.responseInstant();
         this.elapsedTime = auditResponseLog.elapsedTime();
+        return this;
     }
 }

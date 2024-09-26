@@ -17,7 +17,6 @@ public class AuditorLogger extends Logger {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuditorLogger.class);
 
-    public static final String X_AUDIT_ID = "x-audit-id";
     private final Auditor auditor;
     private final Clock clock;
 
@@ -26,7 +25,6 @@ public class AuditorLogger extends Logger {
         this.auditor = auditor;
         this.clock = clock;
     }
-
 
     @Override
     protected void log(String configKey, String format, Object... args) {
@@ -39,46 +37,49 @@ public class AuditorLogger extends Logger {
     @Override
     protected void logRequest(String configKey, Level logLevel, Request request) {
         super.logRequest(configKey, logLevel, request);
-
-        String url = request.url();
-        String httpMethod = request.httpMethod().name();
-
-        String requestBody = Optional.ofNullable(request.body()).map(String::new).orElse(null);
-
-        Map<String, Collection<String>> requestHeaders = Map.copyOf(request.headers());
-
-
-        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders, Instant.now(clock));
-
-        String id = auditor.request(auditRequestLog);// Save initial request info
-
-        request.header(X_AUDIT_ID, id);
     }
 
     @Override
     protected Response logAndRebufferResponse(String configKey, Level logLevel, Response response, long elapsedTime) throws IOException {
+        Instant now = Instant.now(clock);
+
         var resp =  super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
 
-        byte[] bodyData = null;
-        Response.Body body = resp.body();
-        if (body != null) {
-            bodyData = Util.toByteArray(body.asInputStream());
-        }
+        Instant requestInstant = now.minusMillis(elapsedTime);
 
+        Request request = resp.request();
+        String url = request.url();
+        String httpMethod = request.httpMethod().name();
+        String requestBody = asString(request.body());
+        Map<String, Collection<String>> requestHeaders = Map.copyOf(request.headers());
+        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders, requestInstant);
+
+        byte[] responseBodyData = responseBodyDataOrNull(resp);
         Map<String, Collection<String>> responseHeaders = Map.copyOf(resp.headers());
 
-        String xAuditId = resp.request().headers().get(X_AUDIT_ID).stream().findFirst().orElse(null);
         AuditResponseLog auditResponseLog = new AuditResponseLog(
                 response.status(),
-                Optional.ofNullable(bodyData).map(String::new).orElse(null),
-                Instant.now(clock),
+                asString(responseBodyData),
+                now,
                 responseHeaders,
                 elapsedTime
         );
 
-        auditor.response(xAuditId, auditResponseLog);
+        auditor.audit(auditRequestLog, auditResponseLog);
 
-        return resp.toBuilder().body(bodyData).build();
+        return resp.toBuilder().body(responseBodyData).build();
     }
 
+    private static String asString(byte[] responseBodyData) {
+        return Optional.ofNullable(responseBodyData).map(String::new).orElse(null);
+    }
+
+    private byte[] responseBodyDataOrNull(Response resp) throws IOException {
+        byte[] responseBodyData = null;
+        Response.Body body = resp.body();
+        if (body != null) {
+            responseBodyData = Util.toByteArray(body.asInputStream());
+        }
+        return responseBodyData;
+    }
 }
