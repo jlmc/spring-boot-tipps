@@ -45,29 +45,36 @@ public class AuditorLogger extends Logger {
 
         var resp =  super.logAndRebufferResponse(configKey, logLevel, response, elapsedTime);
 
-        Instant requestInstant = now.minusMillis(elapsedTime);
-
-        Request request = resp.request();
-        String url = request.url();
-        String httpMethod = request.httpMethod().name();
-        String requestBody = asString(request.body());
-        Map<String, Collection<String>> requestHeaders = Map.copyOf(request.headers());
-        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders, requestInstant);
+        AuditRequestLog auditRequestLog = getAuditRequestLog(elapsedTime, resp, now);
 
         byte[] responseBodyData = responseBodyDataOrNull(resp);
-        Map<String, Collection<String>> responseHeaders = Map.copyOf(resp.headers());
 
-        AuditResponseLog auditResponseLog = new AuditResponseLog(
+        AuditResponseLog auditResponseLog = getAuditResponseLog(elapsedTime, resp, responseBodyData, now);
+
+        auditor.audit(auditRequestLog, auditResponseLog);
+
+        return resp.toBuilder().body(responseBodyData).build();
+    }
+
+    private static AuditResponseLog getAuditResponseLog(Long elapsedTime, Response response, byte[] responseBodyData, Instant now) {
+        Map<String, Collection<String>> responseHeaders = Map.copyOf(response.headers());
+        return new AuditResponseLog(
                 response.status(),
                 asString(responseBodyData),
                 now,
                 responseHeaders,
                 elapsedTime
         );
+    }
 
-        auditor.audit(auditRequestLog, auditResponseLog);
-
-        return resp.toBuilder().body(responseBodyData).build();
+    private static AuditRequestLog getAuditRequestLog(long elapsedTime, Response resp, Instant now) {
+        Request request = resp.request();
+        String url = request.url();
+        String httpMethod = request.httpMethod().name();
+        String requestBody = asString(request.body());
+        Map<String, Collection<String>> requestHeaders = Map.copyOf(request.headers());
+        AuditRequestLog auditRequestLog = new AuditRequestLog(url, httpMethod, requestBody, requestHeaders, now.minusMillis(elapsedTime));
+        return auditRequestLog;
     }
 
     private static String asString(byte[] responseBodyData) {
