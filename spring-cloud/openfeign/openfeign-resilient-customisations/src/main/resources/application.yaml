@@ -54,7 +54,9 @@ spring:
             logger-level: full
             #dismiss404: false
             follow-redirects: true
-
+            default-request-headers:
+              X-API-KEY: "1234-abcde"
+              X-SPAN-Y: "5432"
             micrometer:
               enabled: false
           order-id-generator-service-client:

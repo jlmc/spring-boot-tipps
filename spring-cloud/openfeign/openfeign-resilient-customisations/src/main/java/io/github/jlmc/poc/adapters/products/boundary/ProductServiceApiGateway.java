@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ProductServiceApiGateway implements ProductProvider {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceApiGateway.class);
@@ -21,7 +23,7 @@ public class ProductServiceApiGateway implements ProductProvider {
     public Product getProduct(Integer productId) {
         LOGGER.info("Retrieving product with id {}", productId);
         try {
-            return productsServiceClient.product(productId);
+            return productsServiceClient.product(UUID.randomUUID().toString(), productId);
         } catch (FeignException.NotFound e) {
             throw new ProductNotFoundException("Product with the id [%s] not found.".formatted(productId), e);
         }
