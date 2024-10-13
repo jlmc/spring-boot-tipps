@@ -1,3 +1,22 @@
+# actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+    prometheus:
+      enabled: true
+    heapdump:
+      enabled: true
+    logfile:
+      enabled: true
+
+
 #spring.application.name=openfeign-resilient-customisations
 spring:
   application:
@@ -67,7 +86,6 @@ spring:
             logger-level: full
             #dismiss404: false
             follow-redirects: true
-
             micrometer:
               enabled: false
 
