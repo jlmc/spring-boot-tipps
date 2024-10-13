@@ -1,5 +1,10 @@
 # actuator
 management:
+  health:
+    ping:
+      enabled: true
+    external-service-health:
+      enabled: false
   endpoints:
     web:
       exposure:

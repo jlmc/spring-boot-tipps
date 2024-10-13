@@ -1,6 +1,28 @@
 {
   "mappings": [
     {
+      "name": "Flip flop mapping",
+      "request": {
+        "urlPath": "/flip-flop",
+        "method": "POST"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "id": "{{randomValue type='UUID'}}",
+          "x-timestamp": "{{now format='epoch'}}",
+          "self": "{{request.path}}"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "fixedDelayMilliseconds": 350,
+        "transformers": [
+          "response-template"
+        ]
+      }
+    },
+    {
       "request": {
         "method": "GET",
         "urlPathPattern": "/api/products/1"
