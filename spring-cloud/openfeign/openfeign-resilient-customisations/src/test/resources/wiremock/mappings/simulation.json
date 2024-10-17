@@ -1,0 +1,259 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "urlPathPattern": "/api/technicalsheets/([A-Za-z0-9-_]*)",
+        "method": "GET",
+        "queryParameters": {
+          "loadParticipantData": {
+            "matches": "^.*$"
+          }
+        }
+      },
+      "priority": 50,
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "clientNumber": "clientNumber",
+          "clientName": "clientName",
+          "decision": {
+            "sublimit": {
+              "code": "sublimitCode"
+            },
+            "product": {
+              "code": "206",
+              "productFamilyCode": "301"
+            }
+          },
+          "operationParticipants": {
+            "debtor": [
+              {
+                "name": "debtorName",
+                "clientNumber": "debtorNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "acceptor": [
+              {
+                "name": "acceptorName",
+                "clientNumber": "acceptorNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "evaluatorSgm": [
+              {
+                "name": "evaluatorSgmName",
+                "clientNumber": "evaluatorSgmNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "evaluatorFEI": [
+              {
+                "name": "evaluatorFEIName",
+                "clientNumber": "evaluatorFEINumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "evaluator": [
+              {
+                "name": "evaluatorName",
+                "clientNumber": "evaluatorNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "evaluatorSpouse": [
+              {
+                "name": "evaluatorSpouseName",
+                "clientNumber": "evaluatorSpouseNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "guarantor": [
+              {
+                "name": "guarantorName",
+                "clientNumber": "guarantorNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "guarantorSpouse": [
+              {
+                "name": "guarantorSpouseName",
+                "clientNumber": "guarantorSpouseNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "creditCardHolder": [
+              {
+                "name": "creditCardHolderName",
+                "clientNumber": "creditCardHolderNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "mortgageList": [
+              {
+                "mortgageCode": "mortgageCodeA",
+                "mortgageDetails": [
+                  {
+                    "mortgagePawn": [
+                      {
+                        "name": "mortgagePawnAName",
+                        "clientNumber": "mortgagePawnANumber"
+                      },
+                      {
+                        "name": "random",
+                        "clientNumber": "random"
+                      }
+                    ],
+                    "mortgagePawnSpouse": [
+                      {
+                        "name": "mortgagePawnSpouseAName",
+                        "clientNumber": "mortgagePawnSpouseANumber"
+                      },
+                      {
+                        "name": "random",
+                        "clientNumber": "random"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "mortgageCode": "mortgageCodeB",
+                "mortgageDetails": [
+                  {
+                    "mortgagePawn": [
+                      {
+                        "name": "mortgagePawnBName",
+                        "clientNumber": "mortgagePawnBNumber"
+                      },
+                      {
+                        "name": "random",
+                        "clientNumber": "random"
+                      }
+                    ],
+                    "mortgagePawnSpouse": [
+                      {
+                        "name": "mortgagePawnSpouseBName",
+                        "clientNumber": "mortgagePawnSpouseBNumber"
+                      },
+                      {
+                        "name": "random",
+                        "clientNumber": "random"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "pawnBroker": [
+              {
+                "name": "pawnBrokerName",
+                "clientNumber": "pawnBrokerNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "pawnBrokerSpouse": [
+              {
+                "name": "pawnBrokerSpouseName",
+                "clientNumber": "pawnBrokerSpouseNumber"
+              },
+              {
+                "name": "random",
+                "clientNumber": "random"
+              }
+            ],
+            "pawnBrokerData": {
+              "pawnBrokerDetails": [
+                {
+                  "pawnBroker": {
+                    "name": "pawnBrokerAName",
+                    "clientNumber": "pawnBrokerANumber"
+                  },
+                  "pawnBrokerSpouse": {
+                    "name": "pawnBrokerASpouseName",
+                    "clientNumber": "pawnBrokerASpouseNumber"
+                  }
+                },
+                {
+                  "pawnBroker": {
+                    "name": "pawnBrokerBName",
+                    "clientNumber": "pawnBrokerBNumber"
+                  },
+                  "pawnBrokerSpouse": {
+                    "name": "pawnBrokerBSpouseName",
+                    "clientNumber": "pawnBrokerBSpouseNumber"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "urlPathPattern": "/api/technicalsheets/([A-Za-z0-9-_]*)/utilization-term",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "value": 0
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "request": {
+        "urlPathPattern": "/api/technicalsheets/([A-Za-z0-9-_]*)/situation",
+        "method": "GET"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "code": "GENERATE_MANUAL_PROTOCOL"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
+  ]
+}
+
+
