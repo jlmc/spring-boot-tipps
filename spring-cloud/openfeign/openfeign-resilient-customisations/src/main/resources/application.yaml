@@ -93,6 +93,15 @@ spring:
             follow-redirects: true
             micrometer:
               enabled: false
+          exodus-service-client:
+            url: http://localhost:8089
+            #retryer: io.github.jlmc.poc.adapters.ProductsServiceClientRetryer
+            connect-timeout: 15000
+            read-timeout: 15000
+            logger-level: full
+            #dismiss404: false
+            follow-redirects: true
+
 
 
 logging:

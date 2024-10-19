@@ -48,7 +48,9 @@ public class CreateOrderIT {
                 .withFileFromResource("product-by-5.json", "/wiremock/__files/product-by-5.json")
                 .withFileFromResource("order-id.json", "/wiremock/__files/order-id.json")
                 .withMappingFromResource("products-service-api.json", CreateOrderIT.class, "/wiremock/mappings/products-service-api.json")
+                .withFileFromResource("invoice-x.json", "/wiremock/__files/invoice-x.json")
                 .withMappingFromResource("order-id-generator-service-api.json", CreateOrderIT.class, "/wiremock/mappings/order-id-generator-service-api.json")
+                .withMappingFromResource("exodus-api.json", InvoicesIT.class, "/wiremock/mappings/exodus-api.json")
                 .withBanner()
             ;
     //@formatter:on
@@ -71,6 +73,7 @@ public class CreateOrderIT {
     static void configureProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.cloud.openfeign.client.config.products-service-client.url", wiremockServer::getBaseUrl);
         registry.add("spring.cloud.openfeign.client.config.order-id-generator-service-client.url", wiremockServer::getBaseUrl);
+        registry.add("spring.cloud.openfeign.client.config.exodus-service-client.url", wiremockServer::getBaseUrl);
 
         registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
         registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
