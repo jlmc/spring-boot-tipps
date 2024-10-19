@@ -14,7 +14,8 @@ services:
       retries: 3
       start_period: 10s
     volumes:
-      - ./docs/wiremock-ui/stubs:/home/wiremock:rw  # Explicitly stating read-write mode
+      #- ./docs/wiremock-ui/stubs:/home/wiremock:rw  # Explicitly stating read-write mode
+      - ./src/test/resources/wiremock:/home/wiremock:rw  # Explicitly stating read-write mode
       #- .volume/wiremock-ui/storage:/home/wiremock:rw  # Explicitly stating read-write mode
     environment:
       WIREMOCK_OPTIONS: "--port=8089 --https-port=8088 --verbose --max-request-journal=1000 --local-response-templating"
