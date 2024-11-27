@@ -1,0 +1,71 @@
+type Query {
+    helloworld: String
+    greet(name: String!): String!
+    gerRandomNumbers: [Int!]!
+    getBook: BookResource!
+    getPosts: [PostResource!]!
+    mostPopularPosts(page: Int!, size: Int!): [PostResource!]!
+    getUsers(page: Int!, size: Int!): UsersPage!
+    getComments(authorId: ID, postId: ID): [CommentResource!]!
+
+    scalarTest(date: Date, bornAt: DateTime, phoneNumber: PhoneNumber) : String!
+}
+
+type CommentResource {
+    id: ID!
+    text: String!
+    author: UserResource!
+    post: PostResource!
+}
+
+type BookResource {
+    id: ID,
+    title: String
+}
+
+type PostResource {
+    id: ID
+    title: String!
+    description: String
+    votes: Int!
+    author: UserResource
+    comments: [CommentResource!]
+}
+
+type UserResource {
+    id: ID!
+    name: String!
+    posts: [PostResource!]!
+    totalPosts: Int!
+}
+
+type Mutation {
+    addUser(addUserInput: AddUserInput!) :ID
+    addPost(addPostInput: AddPostInput!): PostResource!
+    addComment(addCommentInput: AddCommentInput!): CommentResource!
+}
+
+input AddCommentInput {
+    authorId: ID!
+    postId: ID!
+    text: String!
+}
+
+input AddUserInput {
+    name: String!
+}
+
+input AddPostInput {
+    title: String!
+    description: String
+    authorId: ID
+}
+
+type UsersPage {
+    content: [UserResource!]!
+    pageNumber: Int!
+    pageSize: Int!
+    totalPages: Int!
+    isFirst: Boolean!
+    isLast: Boolean!
+}
