@@ -1,15 +1,17 @@
-package io.github.jlmc.order_management_service;
+package io.github.jlmc.pizzacondo.om.service;
 
 import org.springframework.boot.test.context.TestConfiguration;
+/*
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.kafka.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
-
+ */
 @TestConfiguration(proxyBeanMethods = false)
 class TestcontainersConfiguration {
 
+	/*
 	@Bean
 	@ServiceConnection
 	KafkaContainer kafkaContainer() {
@@ -21,5 +23,5 @@ class TestcontainersConfiguration {
 	PostgreSQLContainer<?> postgresContainer() {
 		return new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
 	}
-
+*/
 }

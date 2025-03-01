@@ -1,4 +1,4 @@
-package io.github.jlmc.order_management_service;
+package io.github.jlmc.pizzacondo.om.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
