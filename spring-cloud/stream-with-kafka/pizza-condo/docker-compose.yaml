@@ -1,0 +1,28 @@
+networks:
+  pizza-condo-backend-network:
+    driver: bridge
+
+
+services:
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=pizza_condo_oms_db"
+    command: postgres --max_prepared_transactions=100
+    ports:
+      - "5432:5432"
+    volumes:
+      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+    networks:
+      - pizza-condo-backend-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d cwr -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  #    depends_on:
+  #      postgres:
+  #        condition: service_healthy
