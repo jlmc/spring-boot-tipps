@@ -1,6 +1,7 @@
 package io.github.jlmc.pizzacondo.om.service.application.services;
 
 import io.github.jlmc.pizzacondo.om.service.application.port.input.PlaceOrderUseCase;
+import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.OrderRepository;
 import io.github.jlmc.pizzacondo.om.service.domain.model.Order;
 import io.github.jlmc.pizzacondo.om.service.domain.model.OrderStatus;
@@ -19,6 +20,7 @@ public class OrderService implements PlaceOrderUseCase {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
+    private final NotificationService notificationService;
 
     @Override
     public Order placeOrder(PlaceOrderCommand command) {
@@ -34,6 +36,8 @@ public class OrderService implements PlaceOrderUseCase {
 
         Order added = orderRepository.add(build);
         LOGGER.info("Added order {}", added.getPlacedAt());
+
+        notificationService.orderPlaced(added);
 
         return added;
     }
