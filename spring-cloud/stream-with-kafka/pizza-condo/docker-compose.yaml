@@ -10,7 +10,7 @@ services:
     environment:
       - "POSTGRES_USER=postgres"
       - "POSTGRES_PASSWORD=postgres"
-      - "POSTGRES_DB=pizza_condo_oms_db"
+      - "POSTGRES_DB=pizza_condo_db"
     command: postgres --max_prepared_transactions=100
     ports:
       - "5432:5432"
@@ -103,6 +103,10 @@ services:
       
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-received-events --replication-factor 1 --partitions 3
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-received-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-validated-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-validated-events-dlq --replication-factor 1 --partitions 3
+      
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events --replication-factor 1 --partitions 3
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events-dlq --replication-factor 1 --partitions 3
       
