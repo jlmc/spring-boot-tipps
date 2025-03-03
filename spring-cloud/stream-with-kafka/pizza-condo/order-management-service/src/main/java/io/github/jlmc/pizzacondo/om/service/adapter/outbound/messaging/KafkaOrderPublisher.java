@@ -26,4 +26,16 @@ public class KafkaOrderPublisher implements NotificationService {
 
         streamBridge.send("orderReceived-out-0", message);
     }
+
+    @Override
+    public void orderAccepted(Order order) {
+        OrderAcceptedEvent payload = new OrderAcceptedEvent(order);
+
+        Message<OrderAcceptedEvent> message = MessageBuilder
+                .withPayload(payload)
+                .setHeader(KafkaHeaders.KEY, order.getId())
+                .build();
+
+        streamBridge.send("orderAccepted-out-0", message);
+    }
 }

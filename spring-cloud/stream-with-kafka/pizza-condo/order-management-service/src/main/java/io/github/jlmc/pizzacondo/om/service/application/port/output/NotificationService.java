@@ -6,4 +6,6 @@ public interface NotificationService {
 
     void orderPlaced(Order order);
 
+    void orderAccepted(Order order);
+
 }

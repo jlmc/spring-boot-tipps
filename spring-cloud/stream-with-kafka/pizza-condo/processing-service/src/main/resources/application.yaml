@@ -1,0 +1,67 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: processing-service
+
+  mvc:
+    log-request-details: true
+
+
+  cloud:
+    stream:
+      function:
+        definition: scheduleOrderPreparationProcessor
+      kafka:
+        binder:
+          brokers: kafka1:9092
+        bindings:
+          scheduleOrderPreparationProcessor-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: schedule-order-preparation-dlq
+              #dlq-name: order-received-events-dlq
+          scheduleOrderPreparationProcessor-out-0:
+            producer.configuration:
+              key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      bindings:
+        scheduleOrderPreparationProcessor-in-0:
+          destination: schedule-order-preparation
+          group: ${spring.application.name}
+        #scheduleOrderPreparationProcessor-out-0:
+        #  destination: order-validated-events
+
+
+
+
+
+
+
+###
+# logging
+logging:
+  level:
+    root: info
+    io:
+      github:
+        jlmc: debug
+    org:
+      springframework:
+        web: debug
+      hibernate: info
+      hibernate.SQL: debug
+      hibernate.type.descriptor.sql: trace
+      hibernate.type.descriptor.sql.BasicBinder: trace
+      hibernate.type.descriptor.sql.BasicExtractor: trace
+      hibernate.engine.transaction.internal.TransactionImpl: debug
+      hibernate.engine.jdbc.batch: debug
+      hibernate.stat: debug
+      hibernate.SQL_SLOW: info
+      hibernate.orm.jdbc.bind: trace
+      hibernate.orm.jdbc.extract: trace
+      flywaydb: debug
+    com:
+      zaxxer.hikari: debug
+
+

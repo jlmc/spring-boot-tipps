@@ -17,5 +17,6 @@
     <modules>
         <module>order-management-service</module>
         <module>inventory-service</module>
+        <module>processing-service</module>
     </modules>
 </project>

@@ -51,7 +51,10 @@ spring:
         bindings:
           orderReceived-out-0:
             producer:
-              #topic: order-events,order-received-events
+              configuration:
+                key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          orderAccepted-out-0:
+            producer:
               configuration:
                 key.serializer: org.apache.kafka.common.serialization.StringSerializer
           orderValidatedProcessor-in-0:
@@ -61,6 +64,8 @@ spring:
       bindings:
         orderReceived-out-0:
           destination: order-received-events
+        orderAccepted-out-0:
+          destination: order-accepted-events
         orderValidatedProcessor-in-0:
           destination: order-validated-events
           group: ${spring.application.name}
