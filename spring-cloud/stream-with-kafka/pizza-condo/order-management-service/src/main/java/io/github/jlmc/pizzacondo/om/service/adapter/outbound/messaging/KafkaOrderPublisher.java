@@ -24,6 +24,6 @@ public class KafkaOrderPublisher implements NotificationService {
                 .setHeader(KafkaHeaders.KEY, order.getId())
                 .build();
 
-        streamBridge.send("flightFinished-out-0", message);
+        streamBridge.send("orderReceived-out-0", message);
     }
 }

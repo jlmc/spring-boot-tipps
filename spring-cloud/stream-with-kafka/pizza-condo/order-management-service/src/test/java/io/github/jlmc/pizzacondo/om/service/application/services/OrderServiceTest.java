@@ -1,6 +1,7 @@
 package io.github.jlmc.pizzacondo.om.service.application.services;
 
 import io.github.jlmc.pizzacondo.om.service.application.port.input.PlaceOrderUseCase;
+import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.OrderRepository;
 import io.github.jlmc.pizzacondo.om.service.domain.model.Order;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,10 +34,14 @@ class OrderServiceTest {
     @MockitoBean
     OrderRepository orderRepository;
 
+    @MockitoBean
+    NotificationService notificationService;
+
     @Test
     void whenPlaceOrder() {
         Order savedOrder = mock(Order.class);
         when(orderRepository.add(any(Order.class))).thenReturn(savedOrder);
+        doNothing().when(notificationService).orderPlaced(savedOrder);
 
         PlaceOrderUseCase.PlaceOrderCommand command = new PlaceOrderUseCase.PlaceOrderCommand("1", 2, List.of("CHEESE"));
 

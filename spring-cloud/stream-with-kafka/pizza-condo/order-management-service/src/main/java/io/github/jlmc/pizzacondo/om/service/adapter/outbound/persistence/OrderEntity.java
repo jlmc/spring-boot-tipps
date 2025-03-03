@@ -42,8 +42,6 @@ public class OrderEntity {
     @Column(name = "toppings", columnDefinition = "jsonb", updatable = false)
     private List<Topping> toppings = new ArrayList<>();
 
-
-   // @org.springframework.data.annotation.CreatedDate
     @CreationTimestamp
     @Column(name = "placed_at")
     private Instant placedAt;
@@ -60,6 +58,9 @@ public class OrderEntity {
     @LastModifiedBy
     String lastUpdatedBy;
 
+    @Version
+    int version;
+
     public OrderEntity() {
     }
 
@@ -68,11 +69,27 @@ public class OrderEntity {
         this.customerId = order.getCustomerId();
         this.status = order.getStatus();
         this.size = order.getSize();
-        var toppings1  = Optional.ofNullable(order.getToppings())
+        var toppings1 = Optional.ofNullable(order.getToppings())
                 .stream()
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
                 .toList();
         this.toppings.addAll(toppings1);
+    }
+
+    Order toOrder() {
+        return Order.builder()
+                .id("" + id)
+                .customerId(customerId)
+                .toppings(List.copyOf(toppings))
+                .placedAt(placedAt)
+                .status(status)
+                .size(size)
+                .build();
+
+    }
+
+    public void update(Order order) {
+        this.status = order.getStatus();
     }
 }

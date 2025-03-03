@@ -43,21 +43,51 @@ spring:
 ## could
   cloud:
     stream:
+      function:
+        definition: orderValidatedProcessor
       kafka:
         binder:
           brokers: localhost:9092
         bindings:
-          flightFinished-out-0:
+          orderReceived-out-0:
             producer:
               #topic: order-events,order-received-events
-
               configuration:
                 key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          orderValidatedProcessor-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order-validated-events-dlq
       bindings:
-        flightFinished-out-0:
+        orderReceived-out-0:
           destination: order-received-events
+        orderValidatedProcessor-in-0:
+          destination: order-validated-events
+          group: ${spring.application.name}
 
 
+
+
+#   cloud:
+#    stream:
+#      function.definition: validateOrderProcessor;
+#      kafka:
+#        binder:
+#          brokers: kafka1:9092
+#        bindings:
+#          validateOrderProcessor-in-0:
+#            consumer:
+#              enableDlq: true
+#              dlqName: order-received-events-dlq
+#          validateOrderProcessor-out-0:
+#            producer.configuration:
+#              key.serializer: org.apache.kafka.common.serialization.StringSerializer
+#      bindings:
+#        validateOrderProcessor-in-0:
+#          destination: order-received-events
+#          group: ${spring.application.name}
+#        validateOrderProcessor-out-0:
+#          destination: order-validated-events
 
 
 
@@ -92,7 +122,7 @@ spring:
 #      flightArrivedConsumer-in-0:
 #        destination: flight-arrived-v1
 #        group: flight-api
-#      flightFinished-out-0:
+#      orderReceived-out-0:
 #        destination: flight-finished-v1
 
 

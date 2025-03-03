@@ -18,4 +18,12 @@ public class Order {
     private int size;
     private List<Topping> toppings;
     private OrderStatus status;
+
+    public void cancel() {
+        this.status = OrderStatus.CANCELLED;
+    }
+
+    public void dispatch() {
+        this.status = OrderStatus.VALIDATED;
+    }
 }

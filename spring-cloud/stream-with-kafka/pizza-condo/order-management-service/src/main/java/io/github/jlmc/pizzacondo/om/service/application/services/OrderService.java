@@ -1,5 +1,7 @@
 package io.github.jlmc.pizzacondo.om.service.application.services;
 
+import io.github.jlmc.pizzacondo.om.service.application.port.input.CancelOrderUseCase;
+import io.github.jlmc.pizzacondo.om.service.application.port.input.DispatchOrderUseCase;
 import io.github.jlmc.pizzacondo.om.service.application.port.input.PlaceOrderUseCase;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.OrderRepository;
@@ -10,12 +12,14 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
-public class OrderService implements PlaceOrderUseCase {
+@Transactional
+public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, DispatchOrderUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
@@ -40,5 +44,34 @@ public class OrderService implements PlaceOrderUseCase {
         notificationService.orderPlaced(added);
 
         return added;
+    }
+
+    @Override
+    public void canselOrder(String orderId) {
+        Order order = orderRepository.lookup(orderId).orElse(null);
+
+        if (order == null) {
+            LOGGER.warn("Order with id {} not found", orderId);
+            return;
+        }
+
+        order.cancel();
+
+        orderRepository.update(order);
+    }
+
+    @Override
+    public void dispatchOrder(String orderId) {
+        Order order = orderRepository.lookup(orderId).orElse(null);
+
+        if (order == null) {
+            LOGGER.warn("Order with id {} not found", orderId);
+            return;
+        }
+
+        order.dispatch();
+
+        orderRepository.update(order);
+
     }
 }
