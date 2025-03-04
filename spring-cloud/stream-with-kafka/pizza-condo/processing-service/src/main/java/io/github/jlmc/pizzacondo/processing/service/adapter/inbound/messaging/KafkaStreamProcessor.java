@@ -1,8 +1,8 @@
 package io.github.jlmc.pizzacondo.processing.service.adapter.inbound.messaging;
 
+import io.github.jlmc.pizzacondo.common.messages.OrderAcceptedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
 
 import java.util.function.Consumer;
 
@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 public class KafkaStreamProcessor {
 
     @Bean
-    public Consumer<ScheduleOrderPreparationEvent> scheduleOrderPreparationProcessor(ScheduleOrderPreparationConsumer consumer) {
-        return consumer::consume;
+    public Consumer<OrderAcceptedEvent> orderAcceptedProcessor(OrderAcceptedEventConsumer consumer) {
+        return consumer::handler;
     }
 }

@@ -110,6 +110,13 @@ services:
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events --replication-factor 1 --partitions 3
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events-dlq --replication-factor 1 --partitions 3
       
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-started-preparation-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-finished-preparation-events --replication-factor 1 --partitions 3
+      
+      
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events --replication-factor 1 --partitions 3
       kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events-dlq --replication-factor 1 --partitions 3
       

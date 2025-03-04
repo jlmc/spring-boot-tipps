@@ -10,27 +10,37 @@ spring:
 
 
   cloud:
+    function:
+      definition: orderAcceptedProcessor
     stream:
-      function:
-        definition: scheduleOrderPreparationProcessor
       kafka:
         binder:
           brokers: kafka1:9092
         bindings:
-          scheduleOrderPreparationProcessor-in-0:
+          orderAcceptedProcessor-in-0:
             consumer:
               enable-dlq: true
-              dlq-name: schedule-order-preparation-dlq
-              #dlq-name: order-received-events-dlq
-          scheduleOrderPreparationProcessor-out-0:
-            producer.configuration:
-              key.serializer: org.apache.kafka.common.serialization.StringSerializer
+              dlq-name: order-accepted-events-dlq
+          orderStartedPreparation-out-0:
+            producer:
+              configuration:
+                key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          orderFinishedPreparation-out-0:
+            producer:
+              configuration:
+                key.serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
       bindings:
-        scheduleOrderPreparationProcessor-in-0:
-          destination: schedule-order-preparation
+        orderAcceptedProcessor-in-0:
+          destination: order-accepted-events
           group: ${spring.application.name}
-        #scheduleOrderPreparationProcessor-out-0:
-        #  destination: order-validated-events
+        orderStartedPreparation-out-0:
+          destination: order-started-preparation-events
+        orderFinishedPreparation-out-0:
+          destination: order-finished-preparation-events
+
+
 
 
 
