@@ -41,6 +41,7 @@ spring:
     validate-migration-naming: true
 
 ## could
+  # # spring.cloud.function.definition
   cloud:
     stream:
       function:

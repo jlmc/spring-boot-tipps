@@ -1,9 +1,9 @@
-package io.github.jlmc.pizzacondo.inventory.service.adapter.inbound.messaging;
+package io.github.jlmc.pizzacondo.common.messages;
 
 import java.time.Instant;
 import java.util.List;
 
-public record OrderPlacedEvent(
+public record OrderAcceptedEvent(
         String orderId,
         Instant placedAt,
         String customerId,

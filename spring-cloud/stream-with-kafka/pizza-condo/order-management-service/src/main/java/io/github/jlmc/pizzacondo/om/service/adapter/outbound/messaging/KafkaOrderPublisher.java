@@ -1,5 +1,7 @@
 package io.github.jlmc.pizzacondo.om.service.adapter.outbound.messaging;
 
+import io.github.jlmc.pizzacondo.common.messages.OrderAcceptedEvent;
+import io.github.jlmc.pizzacondo.common.messages.OrderPlacedEvent;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.domain.model.Order;
 import lombok.AllArgsConstructor;
@@ -17,7 +19,14 @@ public class KafkaOrderPublisher implements NotificationService {
 
     @Override
     public void orderPlaced(Order order) {
-        OrderPlacedEvent payload = new OrderPlacedEvent(order);
+        OrderPlacedEvent payload =
+                new OrderPlacedEvent(
+                        order.getId(),
+                        order.getPlacedAt(),
+                        order.getCustomerId(),
+                        order.getSize(),
+                        order.toppingsAsString(),
+                        order.getStatus().toString());
 
         Message<OrderPlacedEvent> message = MessageBuilder
                 .withPayload(payload)
@@ -29,7 +38,14 @@ public class KafkaOrderPublisher implements NotificationService {
 
     @Override
     public void orderAccepted(Order order) {
-        OrderAcceptedEvent payload = new OrderAcceptedEvent(order);
+        OrderAcceptedEvent payload =
+                new OrderAcceptedEvent(
+                        order.getId(),
+                        order.getPlacedAt(),
+                        order.getCustomerId(),
+                        order.getSize(),
+                        order.toppingsAsString(),
+                        order.getStatus().toString());
 
         Message<OrderAcceptedEvent> message = MessageBuilder
                 .withPayload(payload)

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder(toBuilder = true)
@@ -25,5 +26,9 @@ public class Order {
 
     public void dispatch() {
         this.status = OrderStatus.VALIDATED;
+    }
+
+    public List<String> toppingsAsString() {
+        return toppings.stream().map(Topping::toString).collect(Collectors.toList());
     }
 }

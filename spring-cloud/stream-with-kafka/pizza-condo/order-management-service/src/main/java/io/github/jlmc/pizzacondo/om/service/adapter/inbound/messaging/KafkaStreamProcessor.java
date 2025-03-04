@@ -1,5 +1,6 @@
 package io.github.jlmc.pizzacondo.om.service.adapter.inbound.messaging;
 
+import io.github.jlmc.pizzacondo.common.messages.OrderValidatedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

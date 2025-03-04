@@ -1,5 +1,7 @@
 package io.github.jlmc.pizzacondo.inventory.service.adapter.inbound.messaging;
 
+import io.github.jlmc.pizzacondo.common.messages.OrderPlacedEvent;
+import io.github.jlmc.pizzacondo.common.messages.OrderValidatedEvent;
 import io.github.jlmc.pizzacondo.inventory.service.application.port.input.ValidateOrderUseCase;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;

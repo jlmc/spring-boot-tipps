@@ -1,5 +1,7 @@
 package io.github.jlmc.pizzacondo.inventory.service.adapter.inbound.messaging;
 
+import io.github.jlmc.pizzacondo.common.messages.OrderPlacedEvent;
+import io.github.jlmc.pizzacondo.common.messages.OrderValidatedEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;

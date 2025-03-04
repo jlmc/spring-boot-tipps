@@ -1,4 +1,4 @@
-package io.github.jlmc.pizzacondo.inventory.service.adapter.inbound.messaging;
+package io.github.jlmc.pizzacondo.common.messages;
 
 public record OrderValidatedEvent(
         String orderId,
