@@ -1,9 +1,6 @@
 package io.github.jlmc.pizzacondo.om.service.application.services;
 
-import io.github.jlmc.pizzacondo.om.service.application.port.input.CancelOrderUseCase;
-import io.github.jlmc.pizzacondo.om.service.application.port.input.DispatchOrderUseCase;
-import io.github.jlmc.pizzacondo.om.service.application.port.input.InProcessOrderUseCase;
-import io.github.jlmc.pizzacondo.om.service.application.port.input.PlaceOrderUseCase;
+import io.github.jlmc.pizzacondo.om.service.application.port.input.*;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.OrderRepository;
 import io.github.jlmc.pizzacondo.om.service.domain.model.Order;
@@ -20,7 +17,12 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 @Transactional
-public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, DispatchOrderUseCase, InProcessOrderUseCase {
+public class OrderService
+        implements PlaceOrderUseCase,
+                   CancelOrderUseCase,
+                   DispatchOrderUseCase,
+                   InProcessOrderUseCase,
+                   InDeliveryOrderUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
@@ -82,6 +84,15 @@ public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, Disp
         Order order = orderRepository.lookup(orderId).orElse(null);
         if (order != null) {
             order.inProcess();
+            orderRepository.update(order);
+        }
+    }
+
+    @Override
+    public void inDelivery(String orderId) {
+        Order order = orderRepository.lookup(orderId).orElse(null);
+        if (order != null) {
+            order.inDelivery();
             orderRepository.update(order);
         }
     }

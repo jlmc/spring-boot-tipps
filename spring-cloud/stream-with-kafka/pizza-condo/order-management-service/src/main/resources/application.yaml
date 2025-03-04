@@ -44,7 +44,7 @@ spring:
   # # spring.cloud.function.definition
   cloud:
     function:
-      definition: orderValidatedProcessor;orderStartedPreparationProcessor
+      definition: orderValidatedProcessor;orderStartedPreparationProcessor;orderFinishedPreparationEventProcessor
     stream:
 #      function:
 #        definition: orderValidatedProcessor
@@ -68,6 +68,10 @@ spring:
             consumer:
                enable-dlq: true
                dlq-name: order-started-preparation-events-dlq
+          orderFinishedPreparationEventProcessor-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order-finished-preparation-events-dq
       bindings:
         orderReceived-out-0:
           destination: order-received-events
@@ -78,6 +82,9 @@ spring:
           group: ${spring.application.name}
         orderStartedPreparationProcessor-in-0:
           destination: order-started-preparation-events
+          group: ${spring.application.name}
+        orderFinishedPreparationEventProcessor-in-0:
+          destination: order-finished-preparation-events
           group: ${spring.application.name}
 
 ###

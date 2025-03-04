@@ -35,4 +35,8 @@ public class Order {
     public void inProcess() {
         this.status = OrderStatus.IN_PROGRESS;
     }
+
+    public void inDelivery() {
+        this.status = OrderStatus.IN_DELIVERY;
+    }
 }
