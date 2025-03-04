@@ -2,6 +2,7 @@ package io.github.jlmc.pizzacondo.om.service.application.services;
 
 import io.github.jlmc.pizzacondo.om.service.application.port.input.CancelOrderUseCase;
 import io.github.jlmc.pizzacondo.om.service.application.port.input.DispatchOrderUseCase;
+import io.github.jlmc.pizzacondo.om.service.application.port.input.InProcessOrderUseCase;
 import io.github.jlmc.pizzacondo.om.service.application.port.input.PlaceOrderUseCase;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.NotificationService;
 import io.github.jlmc.pizzacondo.om.service.application.port.output.OrderRepository;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Service
 @Transactional
-public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, DispatchOrderUseCase {
+public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, DispatchOrderUseCase, InProcessOrderUseCase {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
@@ -74,5 +75,14 @@ public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, Disp
         orderRepository.update(order);
 
         notificationService.orderAccepted(order);
+    }
+
+    @Override
+    public void inProcess(String orderId) {
+        Order order = orderRepository.lookup(orderId).orElse(null);
+        if (order != null) {
+            order.inProcess();
+            orderRepository.update(order);
+        }
     }
 }

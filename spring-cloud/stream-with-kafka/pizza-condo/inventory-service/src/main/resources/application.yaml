@@ -43,8 +43,10 @@ spring:
 
 
   cloud:
+    function:
+      definition: validateOrderProcessor;orderStartedPreparationProcessor
     stream:
-      function.definition: validateOrderProcessor;
+      #function.definition: validateOrderProcessor;
       kafka:
         binder:
           brokers: kafka1:9092
@@ -59,6 +61,9 @@ spring:
       bindings:
         validateOrderProcessor-in-0:
           destination: order-received-events
+          group: ${spring.application.name}
+        orderStartedPreparationProcessor-in-0:
+          destination: order-started-preparation-events
           group: ${spring.application.name}
         validateOrderProcessor-out-0:
           destination: order-validated-events

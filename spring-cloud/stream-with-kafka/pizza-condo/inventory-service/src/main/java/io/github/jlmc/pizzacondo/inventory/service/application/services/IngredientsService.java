@@ -7,12 +7,14 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Transactional(readOnly = true)
 @AllArgsConstructor
 @Service
 public class IngredientsService implements ValidateOrderUseCase {
@@ -20,7 +22,6 @@ public class IngredientsService implements ValidateOrderUseCase {
     private static final Logger LOG = LoggerFactory.getLogger(IngredientsService.class);
 
     private final IngredientRepository ingredientRepository;
-
 
     @Override
     public boolean canBeSatisfied(ValidateOrderCommand command) {
@@ -68,4 +69,10 @@ public class IngredientsService implements ValidateOrderUseCase {
         return result;
     }
 
+    @Transactional
+    public void suppressIngredients(Map<IngredientType, Long> ingredients) {
+        for (Map.Entry<IngredientType, Long> entry : ingredients.entrySet()) {
+            ingredientRepository.suppressQty(entry.getKey().name(), entry.getValue());
+        }
+    }
 }

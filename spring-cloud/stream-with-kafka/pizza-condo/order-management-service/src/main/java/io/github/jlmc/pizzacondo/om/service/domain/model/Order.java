@@ -31,4 +31,8 @@ public class Order {
     public List<String> toppingsAsString() {
         return toppings.stream().map(Topping::toString).collect(Collectors.toList());
     }
+
+    public void inProcess() {
+        this.status = OrderStatus.IN_PROGRESS;
+    }
 }

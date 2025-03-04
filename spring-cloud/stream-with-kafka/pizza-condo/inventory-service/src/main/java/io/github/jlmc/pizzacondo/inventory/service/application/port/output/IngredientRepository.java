@@ -8,4 +8,5 @@ public interface IngredientRepository {
 
     Map<IngredientType, Long> getQuantities();
 
+    void suppressQty(String name, Long value);
 }
