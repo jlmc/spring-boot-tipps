@@ -43,9 +43,11 @@ spring:
 ## could
   # # spring.cloud.function.definition
   cloud:
+    function:
+      definition: orderValidatedProcessor
     stream:
-      function:
-        definition: orderValidatedProcessor
+#      function:
+#        definition: orderValidatedProcessor
       kafka:
         binder:
           brokers: localhost:9092
@@ -70,6 +72,7 @@ spring:
         orderValidatedProcessor-in-0:
           destination: order-validated-events
           group: ${spring.application.name}
+
 
 
 

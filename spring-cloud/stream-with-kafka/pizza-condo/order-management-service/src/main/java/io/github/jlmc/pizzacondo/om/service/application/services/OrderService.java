@@ -74,6 +74,5 @@ public class OrderService implements PlaceOrderUseCase, CancelOrderUseCase, Disp
         orderRepository.update(order);
 
         notificationService.orderAccepted(order);
-
     }
 }
