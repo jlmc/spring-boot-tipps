@@ -1,0 +1,145 @@
+networks:
+  pizza-condo-backend-network:
+    driver: bridge
+
+
+services:
+  postgres:
+    image: postgres:13.3-alpine
+    restart: always
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=pizza_condo_db"
+    command: postgres --max_prepared_transactions=100
+    ports:
+      - "5432:5432"
+    volumes:
+      - .volumes/postgres/pgdata:/var/lib/postgresql/data
+    networks:
+      - pizza-condo-backend-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d cwr -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  #    depends_on:
+  #      postgres:
+  #        condition: service_healthy
+
+  zookeeper:
+    #image: confluentinc/cp-zookeeper:7.0.1
+    image: confluentinc/cp-zookeeper:7.8.1-2-ubi8
+    container_name: zookeeper
+    networks:
+      - pizza-condo-backend-network
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - .volumes/zookeeper/secrets:/etc/zookeeper/secrets
+      - .volumes/zookeeper/data:/var/lib/zookeeper/data
+      - .volumes/zookeeper/log:/var/lib/zookeeper/log
+
+
+  kafka1:
+    #image: confluentinc/cp-kafka:7.0.1
+    #image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:7.8.1-2-ubi8
+    ports:
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+      #- "9091:9091"
+    depends_on:
+      - zookeeper
+    networks:
+      - pizza-condo-backend-network
+    volumes:
+      - .volumes/kafka1/secrets:/etc/kafka/secrets
+      - .volumes/kafka1/data:/var/lib/kafka/data
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      start_period: 15s
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    environment:
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka1:9092
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_BROKER_ID=1
+      - BOOTSTRAP_SERVERS=kafka1:9092
+      - ZOOKEEPER=zookeeper:2181
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+  #      KAFKA_BROKER_ID: 1
+  #      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  #      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+  #      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_INTERNAL://kafka1:29092
+  #      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+
+  # this service is used only to create the topics
+  init-kafka:
+    #image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:7.8.1-2-ubi8
+    networks:
+      - pizza-condo-backend-network
+    depends_on:
+      kafka1:
+        condition: service_healthy
+      zookeeper:
+        condition: service_started
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka1:9092 --list
+
+      echo -e 'Creating kafka topics'
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-received-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-received-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-validated-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-validated-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-accepted-events-dlq --replication-factor 1 --partitions 3
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-started-preparation-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-started-preparation-events-dlq --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-finished-preparation-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-finished-preparation-events-dql --replication-factor 1 --partitions 3
+      
+      
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events --replication-factor 1 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic order-events-dlq --replication-factor 1 --partitions 3
+      
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka1:9092 --list
+      "
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:master
+    hostname: kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8085:8080"
+    depends_on:
+      kafka1:
+        condition: service_healthy
+      zookeeper:
+        condition: service_started
+    networks:
+      - pizza-condo-backend-network
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181

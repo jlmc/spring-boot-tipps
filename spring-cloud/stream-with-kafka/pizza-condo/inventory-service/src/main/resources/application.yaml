@@ -1,0 +1,103 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: inventory-service
+
+  mvc:
+    log-request-details: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pizza_condo_db
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 10000
+      auto-commit: false
+      schema: inventory_service
+  jpa:
+    properties:
+      hibernate:
+        connection:
+          autocommit: false
+        generate_statistics: true
+        format_sql: true
+        default_schema: ${spring.datasource.hikari.schema}
+        order_updates: true
+        query:
+          in_clause_parameter_padding: true
+          plan_cache_max_size: 4096
+    open-in-view: false
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0.0.0_0
+    default-schema: ${spring.datasource.hikari.schema}
+    validate-migration-naming: true
+
+
+  cloud:
+    function:
+      definition: validateOrderProcessor;orderStartedPreparationProcessor
+    stream:
+      #function.definition: validateOrderProcessor;
+      kafka:
+        binder:
+          brokers: kafka1:9092
+        bindings:
+          validateOrderProcessor-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: order-received-events-dlq
+          validateOrderProcessor-out-0:
+            producer.configuration:
+              key.serializer: org.apache.kafka.common.serialization.StringSerializer
+      bindings:
+        validateOrderProcessor-in-0:
+          destination: order-received-events
+          group: ${spring.application.name}
+        orderStartedPreparationProcessor-in-0:
+          destination: order-started-preparation-events
+          group: ${spring.application.name}
+        validateOrderProcessor-out-0:
+          destination: order-validated-events
+
+
+
+
+
+
+
+###
+# logging
+logging:
+  level:
+    root: info
+    io:
+      github:
+        jlmc: debug
+    org:
+      springframework:
+        web: debug
+      hibernate: info
+      hibernate.SQL: debug
+      hibernate.type.descriptor.sql: trace
+      hibernate.type.descriptor.sql.BasicBinder: trace
+      hibernate.type.descriptor.sql.BasicExtractor: trace
+      hibernate.engine.transaction.internal.TransactionImpl: debug
+      hibernate.engine.jdbc.batch: debug
+      hibernate.stat: debug
+      hibernate.SQL_SLOW: info
+      hibernate.orm.jdbc.bind: trace
+      hibernate.orm.jdbc.extract: trace
+      flywaydb: debug
+    com:
+      zaxxer.hikari: debug
+
+

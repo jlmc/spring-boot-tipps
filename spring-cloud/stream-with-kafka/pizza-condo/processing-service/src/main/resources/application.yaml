@@ -1,0 +1,77 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: processing-service
+
+  mvc:
+    log-request-details: true
+
+
+  cloud:
+    function:
+      definition: orderAcceptedProcessor
+    stream:
+      kafka:
+        binder:
+          brokers: kafka1:9092
+        bindings:
+          orderAcceptedProcessor-in-0:
+            consumer:
+              enable-dlq: true
+              dlq-name: order-accepted-events-dlq
+          orderStartedPreparation-out-0:
+            producer:
+              configuration:
+                key.serializer: org.apache.kafka.common.serialization.StringSerializer
+          orderFinishedPreparation-out-0:
+            producer:
+              configuration:
+                key.serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
+      bindings:
+        orderAcceptedProcessor-in-0:
+          destination: order-accepted-events
+          group: ${spring.application.name}
+        orderStartedPreparation-out-0:
+          destination: order-started-preparation-events
+        orderFinishedPreparation-out-0:
+          destination: order-finished-preparation-events
+
+
+
+
+
+
+
+
+
+###
+# logging
+logging:
+  level:
+    root: info
+    io:
+      github:
+        jlmc: debug
+    org:
+      springframework:
+        web: debug
+      hibernate: info
+      hibernate.SQL: debug
+      hibernate.type.descriptor.sql: trace
+      hibernate.type.descriptor.sql.BasicBinder: trace
+      hibernate.type.descriptor.sql.BasicExtractor: trace
+      hibernate.engine.transaction.internal.TransactionImpl: debug
+      hibernate.engine.jdbc.batch: debug
+      hibernate.stat: debug
+      hibernate.SQL_SLOW: info
+      hibernate.orm.jdbc.bind: trace
+      hibernate.orm.jdbc.extract: trace
+      flywaydb: debug
+    com:
+      zaxxer.hikari: debug
+
+
