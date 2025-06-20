@@ -2,9 +2,9 @@ package io.github.jlmc.jackson.serialization.api.movies.control;
 
 import io.github.jlmc.jackson.serialization.api.movies.entity.Director;
 import io.github.jlmc.jackson.serialization.api.movies.entity.Movie;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
