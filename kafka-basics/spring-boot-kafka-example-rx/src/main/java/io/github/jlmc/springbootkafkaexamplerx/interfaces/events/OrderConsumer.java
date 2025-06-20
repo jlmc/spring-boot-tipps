@@ -13,6 +13,9 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 @Service
 public class OrderConsumer {
 
@@ -34,9 +37,17 @@ public class OrderConsumer {
         billingEvent.setItemName(event.getItem() + " -> " + event.getId());
 
         this.billingEvents.send("BILLING_TOPIC", event.getId(), billingEvent)
-                          .addCallback(
-                                  (SendResult<String, BillingEvent> result) -> System.out.printf("Event Success Sent: %s%n", result.getRecordMetadata()),
-                                  (Throwable ex) -> System.out.printf("Event Not Sent: %s%n", ex)
-                          );
+                .thenAccept(new Consumer<SendResult<String, BillingEvent>>() {
+                    @Override
+                    public void accept(SendResult<String, BillingEvent> result) {
+                        LOGGER.info("Event Success Sent: [{}]", result.getRecordMetadata());
+                    }
+                }).exceptionally(new Function<Throwable, Void>() {
+                    @Override
+                    public Void apply(Throwable throwable) {
+                        LOGGER.error("Event Not Sent {}", throwable.getMessage(), throwable);
+                        return null;
+                    }
+                });
     }
 }
