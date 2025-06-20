@@ -12,7 +12,7 @@
     </properties>
 
     <modules>
-        <module>web</module>
+        <!--<module>web</module>-->
         <module>qualifiers</module>
         <module>aop</module>
         <module>jackson</module>
