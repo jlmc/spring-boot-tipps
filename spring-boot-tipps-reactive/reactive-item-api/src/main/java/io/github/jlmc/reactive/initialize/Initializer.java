@@ -5,7 +5,6 @@ import io.github.jlmc.reactive.domain.model.ItemCapped;
 import io.github.jlmc.reactive.domain.repository.ItemCappedReactiveRepository;
 import io.github.jlmc.reactive.domain.repository.ItemReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.CollectionOptions;
@@ -21,18 +20,19 @@ import java.util.List;
 @Component
 public class Initializer implements CommandLineRunner {
 
-    @Autowired
-    ItemReactiveRepository repository;
-    @Autowired
-    ReactiveMongoOperations mongoOperations;
+    private final ItemReactiveRepository repository;
+    private final ReactiveMongoOperations mongoOperations;
+    private final ItemCappedReactiveRepository itemCappedReactiveRepository;
 
-    @Autowired
-    ItemCappedReactiveRepository itemCappedReactiveRepository;
+    public Initializer(ItemReactiveRepository repository, ReactiveMongoOperations mongoOperations, ItemCappedReactiveRepository itemCappedReactiveRepository) {
+        this.repository = repository;
+        this.mongoOperations = mongoOperations;
+        this.itemCappedReactiveRepository = itemCappedReactiveRepository;
+    }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         initDataSetup();
-
 
         createCoppedCollection();
         dataSetupCoppedCollection();
@@ -43,11 +43,7 @@ public class Initializer implements CommandLineRunner {
                   .thenMany(Flux.fromIterable(data()))
                   .flatMap(repository::save)
                   .thenMany(repository.findAll())
-                  .subscribe(item -> {
-
-                      System.out.println("Item inserted from Const:  " + item.toString());
-
-                  });
+                  .subscribe(item -> log.info("Item inserted from Const:  {}", item.toString()));
     }
 
     private List<Item> data() {
@@ -73,10 +69,7 @@ public class Initializer implements CommandLineRunner {
 
         itemCappedReactiveRepository
                 .insert(itemCappedFlux)
-                .subscribe(itemCapped -> {
-
-                    log.info("ItemCapped inserted : {}", itemCapped);
-                })
+                .subscribe(itemCapped -> log.info("ItemCapped inserted : {}", itemCapped))
         ;
     }
 }

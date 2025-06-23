@@ -1,18 +1,21 @@
-package io.github.jlmc.reactive.api.v1;
+package io.github.jlmc.reactive.api;
 
-import io.github.jlmc.reactive.ItemConstants;
 import io.github.jlmc.reactive.domain.model.Item;
 import io.github.jlmc.reactive.domain.repository.ItemReactiveRepository;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+
 @RestController
 @Slf4j
-@RequestMapping(path = ItemConstants.ITEM_END_POINT_V1)
+@RequestMapping(path = "/v1/items")
 
 public class ItemController {
 
@@ -25,28 +28,33 @@ public class ItemController {
     @GetMapping
     public Flux<Item> getAllItems() {
 
-        System.out.println("In controller: ");
+        log.info("In controller: ");
         return repository.findAll();
     }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<Item>> getOneItem(@PathVariable("id") String id) {
-        Mono<ResponseEntity<Item>> mono =
-                repository.findById(id)
-                          .map(ResponseEntity::ok)
-                          .defaultIfEmpty(ResponseEntity.notFound().build());
-        return mono;
+        return repository.findById(id)
+                  .map(ResponseEntity::ok)
+                  .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<Item> create(@RequestBody Item item) {
-        return repository.save(item);
+    public Mono<ResponseEntity<Item>> create(@RequestBody @Valid Item item, ServerHttpRequest request) {
+        return repository.save(item)
+                .map(savedItem -> {
+                    URI location = URI.create("/v1/items/" + savedItem.getId());
+                    URI xLocation = URI.create(request.getURI() + "/" + savedItem.getId());
+                    return ResponseEntity
+                            .created(location)
+                            .header("X-Location", xLocation.toString())
+                            .body(savedItem);
+                });
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> create(@PathVariable("id") String id) {
+    public Mono<Void> delete(@PathVariable("id") String id) {
         return repository.deleteById(id);
     }
 
@@ -67,18 +75,6 @@ public class ItemController {
 
     @GetMapping("/runtime-exception")
     public Flux<Item> runtimeException() {
-        return repository.findAll()
-                         .concatWith(Mono.error(new RuntimeException("some error!")));
+        throw new RuntimeException("example");
     }
-
-    /*
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handlerRuntimeException(RuntimeException exception) {
-        log.error("Exception caught in handlerRuntimeException : {}", exception.getMessage(), exception );
-        return ResponseEntity
-                .status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(exception.getMessage());
-    }
-
-     */
 }

@@ -1,4 +1,4 @@
-package io.github.jlmc.reactive.api.v1;
+package io.github.jlmc.reactive.api;
 
 import io.github.jlmc.reactive.ItemConstants;
 import io.github.jlmc.reactive.domain.model.ItemCapped;
@@ -24,9 +24,8 @@ public class ItemCappedController {
 
     /**
      * curl -i localhost:8080:/v1/items-capped
-     * @return
      */
-    @GetMapping(produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(produces = MediaType.APPLICATION_NDJSON_VALUE)
     public Flux<ItemCapped> getAll() {
         return repository.findAllBy();
     }

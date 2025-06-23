@@ -1,4 +1,4 @@
-package io.github.jlmc.reactive.core.router;
+package io.github.jlmc.reactive.router;
 
 import io.github.jlmc.reactive.handler.ItemsHandler;
 import org.springframework.context.annotation.Bean;

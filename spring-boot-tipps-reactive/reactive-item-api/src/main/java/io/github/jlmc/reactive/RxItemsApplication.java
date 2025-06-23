@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LearnReactiveSpringApplication {
+public class RxItemsApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(LearnReactiveSpringApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(RxItemsApplication.class, args);
+	}
 
 }
