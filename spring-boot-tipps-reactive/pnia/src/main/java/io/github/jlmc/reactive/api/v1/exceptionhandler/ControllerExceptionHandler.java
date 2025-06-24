@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ServerWebInputException;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
+
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -20,7 +21,7 @@ public class ControllerExceptionHandler {
         log.error("Attention: handler Unhatched Exception: {}", exception.getMessage(), exception);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body(Problem.of("123-500", exception.getMessage()));
+                .body(Problem.of("123-500", exception.getMessage()));
 
     }
 
@@ -45,6 +46,6 @@ public class ControllerExceptionHandler {
         log.error("Exception caught in handlerForbiddenInputValuesException : {}", exception.getMessage(), exception);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(Problem.of("400", "Unaccepted input values " + exception.getInvalidValues().stream().collect(Collectors.joining(",", "[", "]")) ));
+                .body(Problem.of("400", "Unaccepted input values " + exception.getInvalidValues().stream().collect(Collectors.joining(",", "[", "]"))));
     }
 }

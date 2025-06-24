@@ -92,16 +92,13 @@ class MoviesControllerTest {
                          .expectBody()
                          .json("""
                                  {
-                                   "x": "X",
-                                   "timestamp": "2023-01-01T21:30:01Z",
                                    "path": "/movies",
                                    "status": 400,
                                    "error": "Bad request",
                                    "message": "Request cannot be processed due to validation errors",
-                                   "fields":
-                                   [
+                                   "fields": [
                                      {
-                                       "field": "director",
+                                       "field": "$.director",
                                        "message": "must not be empty"
                                      }
                                    ]

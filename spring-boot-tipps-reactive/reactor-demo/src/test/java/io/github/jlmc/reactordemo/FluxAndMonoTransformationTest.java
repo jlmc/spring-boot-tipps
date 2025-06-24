@@ -67,7 +67,7 @@ public class FluxAndMonoTransformationTest {
         try {
             Thread.sleep(1_000L);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            System.err.println(e.getMessage());
         }
 
         return List.of(s, "New Value");

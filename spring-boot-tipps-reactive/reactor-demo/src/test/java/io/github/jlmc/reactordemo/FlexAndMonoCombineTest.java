@@ -1,5 +1,6 @@
 package io.github.jlmc.reactordemo;
 
+import io.github.jlmc.reactordemo.models.*;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -107,12 +108,12 @@ public class FlexAndMonoCombineTest {
                             Map<String, Department> deps = maps.getT1();
                             Map<String, Provider> providers = maps.getT2();
 
-                            return t1.events.stream()
+                            return t1.getEvents().stream()
                                             .map(event -> new EventSummary(
-                                                    event.id,
-                                                    event.title,
-                                                    Optional.ofNullable(deps.get(event.departmentId)).map(d -> d.name).orElse(""),
-                                                    Optional.ofNullable(providers.get(event.providerId)).map(d -> d.name).orElse("")
+                                                    event.id(),
+                                                    event.title(),
+                                                    Optional.ofNullable(deps.get(event.departmentId())).map(Department::name).orElse(""),
+                                                    Optional.ofNullable(providers.get(event.providerId())).map(Provider::name).orElse("")
                                             )).collect(Collectors.toList());
 
                         });
@@ -123,28 +124,26 @@ public class FlexAndMonoCombineTest {
 
         StepVerifier.create(fuxo.log())
                     .expectSubscription()
-                    .assertNext(result -> {
-                        System.out.println(result);
-                    })
+                    .assertNext(System.out::println)
                     .verifyComplete();
 
     }
 
     private Mono<Tuple2<Map<String, Department>, Map<String, Provider>>> fetchDependencies(EventsPage eventsPage) {
 
-        Set<String> departmentIds = eventsPage.events.stream().map(it -> it.departmentId).collect(Collectors.toSet());
-        Set<String> providerIds = eventsPage.events.stream().map(it -> it.providerId).collect(Collectors.toSet());
+        Set<String> departmentIds = eventsPage.getEvents().stream().map(Event::departmentId).collect(Collectors.toSet());
+        Set<String> providerIds = eventsPage.getEvents().stream().map(Event::providerId).collect(Collectors.toSet());
 
         var deps =
                 Flux.fromIterable(departmentIds)
                     .flatMap(this::fetchDepartment)
-                    .collectMap(it -> it.id);
+                    .collectMap(Department::id);
 
 
         var provs =
                 Flux.fromIterable(providerIds)
                     .flatMap(this::fetchProvider)
-                    .collectMap(it -> it.id);
+                    .collectMap(Provider::id);
 
         return Mono.zip(deps, provs);
     }
@@ -209,71 +208,4 @@ public class FlexAndMonoCombineTest {
 
     }
 
-    static class Department {
-        final String id;
-        final String name;
-
-        Department(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-    }
-
-    static class Provider {
-        final String id;
-        final String name;
-
-        Provider(String id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-    }
-
-    static class EventsPage {
-        final int total;
-        final List<Event> events;
-
-        EventsPage(List<Event> events) {
-            this.events = events;
-            this.total = events.size();
-        }
-    }
-
-    static class Event {
-        final String id;
-        final String title;
-        final String providerId;
-        final String departmentId;
-
-        public Event(String id, String title, String providerId, String departmentId) {
-            this.id = id;
-            this.title = title;
-            this.providerId = providerId;
-            this.departmentId = departmentId;
-        }
-    }
-
-    static class EventSummary {
-        final String id;
-        final String title;
-        final String departmentName;
-        final String providerName;
-
-        public EventSummary(String id, String title, String departmentName, String providerName) {
-            this.id = id;
-            this.title = title;
-            this.departmentName = departmentName;
-            this.providerName = providerName;
-        }
-
-        @Override
-        public String toString() {
-            return "EventSummary{" +
-                    "id='" + id + '\'' +
-                    ", title='" + title + '\'' +
-                    ", departmentName='" + departmentName + '\'' +
-                    ", providerName='" + providerName + '\'' +
-                    '}';
-        }
-    }
 }
