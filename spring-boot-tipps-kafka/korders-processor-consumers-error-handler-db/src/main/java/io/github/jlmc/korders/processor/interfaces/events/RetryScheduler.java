@@ -36,7 +36,7 @@ public class RetryScheduler {
     public void retryFailedRecords() {
                 Flux.fromIterable(failureRecordRepository.findAllByStatus(FailureRecord.Status.TO_RETRY))
                     .map(failureRecord -> orderEventCommandAssembler.toCommand(this.buildConsumerRecord(failureRecord)))
-                    .subscribeOn(Schedulers.fromExecutor())
+                    .subscribeOn(Schedulers.boundedElastic())
                     .subscribe(this::accept);
     }
 

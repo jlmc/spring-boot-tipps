@@ -45,21 +45,20 @@ public class FluxAndMonoTransformationTest {
         List<String> letters = List.of("A", "B", "C", "D");
         Flux<String> flux =
                 Flux.fromIterable(letters)
-                    .window(2)
-
-                    .flatMap(it -> {
-                        return it.map(this::convertToList)
-                                 .subscribeOn(Schedulers.parallel())
-                                 .flatMap(Flux::fromIterable);
-                    })
-                    .log();
+                        .window(2)
+                        .flatMapSequential(it ->
+                                it.map(this::convertToList)
+                                        .subscribeOn(Schedulers.parallel()) // parallel execution within window
+                                        .flatMap(Flux::fromIterable)
+                        )
+                        .log();
 
         StepVerifier.create(flux)
-                    .expectNext("A", "New Value")
-                    .expectNext("B", "New Value")
-                    .expectNext("C", "New Value")
-                    .expectNext("D", "New Value")
-                    .verifyComplete();
+                .expectNext("A", "New Value") // first window: A, B
+                .expectNext("B", "New Value")
+                .expectNext("C", "New Value") // second window: C, D
+                .expectNext("D", "New Value")
+                .verifyComplete();
     }
 
 

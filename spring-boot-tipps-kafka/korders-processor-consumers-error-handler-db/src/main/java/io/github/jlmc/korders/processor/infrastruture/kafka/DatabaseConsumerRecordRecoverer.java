@@ -29,12 +29,12 @@ public class DatabaseConsumerRecordRecoverer implements ConsumerRecordRecoverer 
 
             // recovery logic
             ConsumerRecord<String, String> cr = (ConsumerRecord<String, String>) consumerRecord;
-            service.add(cr, mostSpecificCause, "RETRY");
+            service.add(cr, mostSpecificCause);
 
         } else {
             // non recovery logic
             ConsumerRecord<String, String> cr = (ConsumerRecord<String, String>) consumerRecord;
-            service.add(cr, mostSpecificCause, "DL");
+            service.add(cr, mostSpecificCause);
         }
     }
 }
