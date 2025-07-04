@@ -32,6 +32,7 @@ public class LocationsCsvWriter implements CsvWriter<Location> {
                 .withOrderedResults(true)
                 .withThrowExceptions(false)
                 .withApplyQuotesToAll(false)
+               // .withApplyQuotesToAll(true)
                 .build();
     }
 

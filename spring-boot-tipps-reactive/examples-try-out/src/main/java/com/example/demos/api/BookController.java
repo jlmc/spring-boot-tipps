@@ -3,6 +3,7 @@ package com.example.demos.api;
 
 import com.example.demos.providers.Book;
 import com.example.demos.providers.BookProvider;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Optional;
