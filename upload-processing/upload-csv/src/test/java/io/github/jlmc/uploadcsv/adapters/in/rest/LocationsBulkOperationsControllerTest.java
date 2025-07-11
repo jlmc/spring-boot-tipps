@@ -6,10 +6,10 @@ import io.github.jlmc.uploadcsv.adapters.in.rest.csv.LocationsCsvWriter;
 import io.github.jlmc.uploadcsv.adapters.in.rest.errors.ApiErrorsConfigurationProperties;
 import io.github.jlmc.uploadcsv.adapters.in.rest.errors.ControllerAdvice;
 import io.github.jlmc.uploadcsv.adapters.in.rest.errors.handlers.*;
-import io.github.jlmc.uploadcsv.application.services.BulkUpsertAccountLocationsInteractor;
-import io.github.jlmc.uploadcsv.application.services.GetAllAccountLocationsInteractor;
 import io.github.jlmc.uploadcsv.application.port.LocationRepository;
 import io.github.jlmc.uploadcsv.application.port.LocationRepositoryImpl;
+import io.github.jlmc.uploadcsv.application.services.BulkUpsertAccountLocationsInteractor;
+import io.github.jlmc.uploadcsv.application.services.GetAllAccountLocationsInteractor;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +21,9 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveRepositori
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -66,15 +66,13 @@ import static org.mockito.Mockito.*;
         MongoReactiveRepositoriesAutoConfiguration.class
 })
 class LocationsBulkOperationsControllerTest {
-    @MockBean
+    @MockitoBean
     private BulkUpsertAccountLocationsInteractor bulkUpsertAccountLocationsInteractor;
-    @MockBean
+    @MockitoBean
     private GetAllAccountLocationsInteractor getAllAccountLocationsInteractor;
-
-    @MockBean
+    @MockitoBean
     LocationRepository locationRepository;
-
-    @MockBean
+    @MockitoBean
     LocationRepositoryImpl locationRepositoryImpl;
 
     @Autowired

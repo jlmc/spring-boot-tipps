@@ -33,8 +33,10 @@ class UploadAndDownloadCsvFileIT {
     private static final ParameterizedTypeReference<List<Map<String, Object>>> LIST_PARAMETERIZED_TYPE_REFERENCE =
             new ParameterizedTypeReference<>() {
             };
+
     @Container
     static MongoDBContainer mongoDBContainer = Containers.getMongoDBContainer();
+
     @Autowired
     private WebTestClient webClient;
 
