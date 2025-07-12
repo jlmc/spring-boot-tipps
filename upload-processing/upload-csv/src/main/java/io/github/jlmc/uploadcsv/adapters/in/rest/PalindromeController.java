@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("palindromes")
@@ -21,15 +22,20 @@ public class PalindromeController {
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<PalindromeResponse> verify(@RequestBody @Valid PalindromeRequest request) {
-        if (request == null || request.text() == null) {
-            return ResponseEntity.badRequest().body(new PalindromeResponse(false, "Text is required."));
-        }
+    public Mono<ResponseEntity<PalindromeResponse>> verify(@RequestBody @Valid Mono<PalindromeRequest> requestMono) {
+        return requestMono
+                .map(request -> {
+                    String text = request.text();
+                    if (text == null) {
+                        return ResponseEntity.badRequest()
+                                .body(new PalindromeResponse(false, "Text is required."));
+                    }
 
-        boolean result = verifier.isPalindrome(request.text());
+                    boolean isPalindrome = verifier.isPalindrome(text);
 
-        return ResponseEntity.ok(new PalindromeResponse(result, result ? "It's a palindrome!" : "Not a palindrome."));
+                    return ResponseEntity.ok(new PalindromeResponse(isPalindrome, isPalindrome ? "It's a palindrome!" : "Not a palindrome."));
+                })
+                .onErrorResume(Mono::error);
     }
 }
-
 

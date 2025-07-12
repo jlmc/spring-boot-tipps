@@ -37,7 +37,7 @@ public class OrderEventsConsumer {
             //containerFactory = "kafkaListenerContainerFactoryConcurrentConsumerThreads"
     )
     public void onMessage(ConsumerRecord<String, String> consumerRecord) {
-        LOGGER.info("On Message < " + Thread.currentThread().getName() + "> " + consumerRecord);
+        LOGGER.info("On Message < {}> {}", Thread.currentThread().getName(), consumerRecord);
 
         RegisterNewOrderCommand command = orderEventCommandAssembler.toCommand(consumerRecord);
 

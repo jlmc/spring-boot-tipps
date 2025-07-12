@@ -15,7 +15,7 @@ public class TraceAspect {
 
     @Before(value = "execution(* io.github.jlmc.aop.api.*.*(..))")
     public void logStatementBefore(JoinPoint joinPoint) {
-        LOGGER.info("Executing: " + joinPoint);
+        LOGGER.info("Executing: {}", joinPoint);
     }
 
 
