@@ -39,11 +39,14 @@ import static io.github.jlmc.sbvalidation.api.errorhandlers.ConstraintViolationE
 @RestControllerAdvice
 public class ConstraintViolationExceptionAdvice {
 
-    @Autowired
-    Clock clock;
+    final Clock clock;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    final ObjectMapper objectMapper;
+
+    public ConstraintViolationExceptionAdvice(Clock clock, ObjectMapper objectMapper) {
+        this.clock = clock;
+        this.objectMapper = objectMapper;
+    }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Problem> handler(ConstraintViolationException ex,
@@ -66,26 +69,23 @@ public class ConstraintViolationExceptionAdvice {
     List<Problem.Field> toFieldErrors(Collection<ConstraintViolation<?>> constraintViolations) {
 
         return constraintViolations.stream()
-                                   .map(constraintViolation -> {
-                                       Path.Node leafNode = getLeafNode(constraintViolation.getPropertyPath()).get();
+                .map(constraintViolation -> {
+                    Path.Node leafNode = getLeafNode(constraintViolation.getPropertyPath()).get();
 
-                                       if (ElementKind.PARAMETER == leafNode.getKind()) {
-                                           return handleInvalidParameter(constraintViolation);
-                                       }
+                    if (ElementKind.PARAMETER == leafNode.getKind()) {
+                        return handleInvalidParameter(constraintViolation);
+                    }
 
-                                       if (ElementKind.PROPERTY == leafNode.getKind()) {
-                                           return handleInvalidProperty(constraintViolation);
-                                       }
+                    if (ElementKind.PROPERTY == leafNode.getKind()) {
+                        return handleInvalidProperty(constraintViolation);
+                    }
 
-                                       if (ElementKind.BEAN == leafNode.getKind()) {
-                                           return handleInvalidBean(constraintViolation);
-                                       }
-
-
-                                       else {
-                                           return handleUnknownSource(constraintViolation);
-                                       }
-                                   }).toList();
+                    if (ElementKind.BEAN == leafNode.getKind()) {
+                        return handleInvalidBean(constraintViolation);
+                    } else {
+                        return handleUnknownSource(constraintViolation);
+                    }
+                }).toList();
     }
 
     /**
@@ -99,7 +99,7 @@ public class ConstraintViolationExceptionAdvice {
         constraintViolation.getPropertyPath().iterator().forEachRemaining(nodes::add);
 
         Path.Node parent = nodes.get(nodes.size() - 2);
-        Path.Node child = nodes.get(nodes.size() - 1);
+        Path.Node child = nodes.getLast();
 
         if (ElementKind.METHOD == parent.getKind()) {
 
@@ -109,20 +109,16 @@ public class ConstraintViolationExceptionAdvice {
             try {
                 // Can be an invalid request parameter (annotated method parameter)
                 Class<?> beanClass = constraintViolation.getLeafBean().getClass();
-                Method method = beanClass.getMethod(methodNode.getName(), methodNode.getParameterTypes().stream().toArray(Class[]::new));
+                Method method = beanClass.getMethod(methodNode.getName(), methodNode.getParameterTypes().toArray(Class[]::new));
 
                 List<Annotation> parameterAnnotations = getParameterAnnotations(method, beanClass, parameterNode.getParameterIndex());
 
                 Optional<ParameterDetails> parameterDetails = getParameterDetails(parameterAnnotations);
 
 
-                var result =
-                        parameterDetails
-                                .map(it -> new Problem.Field(it.name, "%s %s %s".formatted(it.type.name(), it.name, constraintViolation.getMessage())))
-                                .orElseGet(() -> new Problem.Field(child.getName(), constraintViolation.getMessage()));
-
-
-                return result;
+                return parameterDetails
+                        .map(it -> new Problem.Field(it.name, "%s %s %s".formatted(it.type.name(), it.name, constraintViolation.getMessage())))
+                        .orElseGet(() -> new Problem.Field(child.getName(), constraintViolation.getMessage()));
 
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
@@ -136,7 +132,7 @@ public class ConstraintViolationExceptionAdvice {
         return new Problem.Field(parameterDetails.name, "%s %s %s".formatted(parameterDetails.type.name(), parameterDetails.name, constraintViolation.getMessage()));
     }
 
-    private Problem.Field handleUnknownSource(ConstraintViolation constraintViolation) {
+    private Problem.Field handleUnknownSource(ConstraintViolation<?> constraintViolation) {
         return new Problem.Field(
                 constraintViolation.getPropertyPath().toString(),
                 constraintViolation.getMessage()
@@ -153,19 +149,14 @@ public class ConstraintViolationExceptionAdvice {
     }
 
     private Optional<ParameterDetails> getParameterDetails(Annotation annotation) {
-        if (annotation instanceof RequestParam a) {
-            return Optional.of(new ParameterDetails(RequestFieldType.QUERY_PARAMETER, a.value()));
-        } else if (annotation instanceof PathVariable a) {
-            return Optional.of(new ParameterDetails(RequestFieldType.PATH_PARAMETER, a.value()));
-        } else if (annotation instanceof RequestHeader a) {
-            return Optional.of(new ParameterDetails(RequestFieldType.HEADER_PARAMETER, a.value()));
-        } else if (annotation instanceof CookieValue a) {
-            return Optional.of(new ParameterDetails(RequestFieldType.COOKIE_PARAMETER, a.value()));
-        } else if (annotation instanceof MatrixVariable a) {
-            return Optional.of(new ParameterDetails(RequestFieldType.MATRIX_PARAMETER, a.value()));
-        } else {
-            return Optional.empty();
-        }
+        return switch (annotation) {
+            case RequestParam a -> Optional.of(new ParameterDetails(RequestFieldType.QUERY_PARAMETER, a.value()));
+            case PathVariable a -> Optional.of(new ParameterDetails(RequestFieldType.PATH_PARAMETER, a.value()));
+            case RequestHeader a -> Optional.of(new ParameterDetails(RequestFieldType.HEADER_PARAMETER, a.value()));
+            case CookieValue a -> Optional.of(new ParameterDetails(RequestFieldType.COOKIE_PARAMETER, a.value()));
+            case MatrixVariable a -> Optional.of(new ParameterDetails(RequestFieldType.MATRIX_PARAMETER, a.value()));
+            case null, default -> Optional.empty();
+        };
     }
 
     /**
@@ -230,8 +221,6 @@ public class ConstraintViolationExceptionAdvice {
      * Handle an invalid bean. Can be:
      * <p>
      * 1. Invalid request bean (annotated bean class)
-     *
-     * @param constraintViolation
      */
     private Problem.Field handleInvalidBean(ConstraintViolation<?> constraintViolation) {
         return new Problem.Field(constraintViolation.getPropertyPath().toString(), constraintViolation.getMessage());
@@ -239,22 +228,26 @@ public class ConstraintViolationExceptionAdvice {
 
     private String getJsonPropertyName(ObjectMapper mapper, Class<?> beanClass, String nodeName) {
 
-        JavaType javaType = mapper.getTypeFactory().constructType(beanClass);
+        JavaType javaType = getJavaType(mapper, beanClass);
         BeanDescription introspection = mapper.getSerializationConfig().introspect(javaType);
         List<BeanPropertyDefinition> properties = introspection.findProperties();
 
         return properties.stream()
-                         .filter(propertyDefinition -> nodeName.equals(propertyDefinition.getField().getName()))
-                         .map(BeanPropertyDefinition::getName)
-                         .findFirst()
-                         .orElse(null);
+                .filter(propertyDefinition -> nodeName.equals(propertyDefinition.getField().getName()))
+                .map(BeanPropertyDefinition::getName)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static JavaType getJavaType(ObjectMapper mapper, Class<?> beanClass) {
+        return mapper.getTypeFactory().constructType(beanClass);
     }
 
     private Field getField(String fieldName, Class<?> beanClass) {
         return Arrays.stream(beanClass.getDeclaredFields())
-                     .filter(field -> field.getName().equals(fieldName))
-                     .findFirst()
-                     .orElse(null);
+                .filter(field -> field.getName().equals(fieldName))
+                .findFirst()
+                .orElse(null);
     }
 
 

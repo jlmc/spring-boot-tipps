@@ -33,7 +33,6 @@ public class ItemsHandler {
         return
                 item.flatMap((Item i) -> ServerResponse.ok()
                                                        .contentType(MediaType.APPLICATION_JSON)
-                                                       //.body(BodyInserters.fromObject(item)))
                                                        .body(fromValue(i)))
                     .switchIfEmpty(NOT_FOUND);
     }

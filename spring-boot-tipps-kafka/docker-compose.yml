@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 # https://github.com/simplesteph/kafka-stack-docker-compose/blob/master/zk-single-kafka-single.yml
 ### https://github.com/spotify/docker-kafka

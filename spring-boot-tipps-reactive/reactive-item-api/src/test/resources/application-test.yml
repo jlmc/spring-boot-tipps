@@ -1,0 +1,8 @@
+
+spring:
+  application:
+    name: rx-items
+
+logging.level.org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+logging.level.org.springframework.data.mongodb.core.ReactiveMongoTemplate: DEBUG
+logging.level.org.springframework.data.mongodb.core: DEBUG

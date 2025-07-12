@@ -12,11 +12,11 @@
     </properties>
 
     <modules>
-        <module>web</module>
+        <!--<module>web</module>-->
         <module>qualifiers</module>
         <module>aop</module>
         <module>jackson</module>
-        <module>kafka</module>
+        <module>kafka-basics</module>
         <module>security</module>
         <module>spring-data</module>
         <module>spring-boot-tipps-reactive</module>

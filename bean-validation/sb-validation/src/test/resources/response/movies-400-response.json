@@ -1,18 +1,16 @@
 {
-  "x": "X",
-  "timestamp": "2023-01-01T21:30:01Z",
   "path": "/movies",
   "status": 400,
   "error": "Bad request",
   "message": "Request cannot be processed due to validation errors",
   "fields": [
     {
-      "field": "page",
-      "message": "QUERY_PARAMETER page must be greater than or equal to 0"
-    },
-    {
       "field": "page_size",
       "message": "QUERY_PARAMETER page_size must be less than or equal to 50"
+    },
+    {
+      "field": "page",
+      "message": "QUERY_PARAMETER page must be greater than or equal to 0"
     }
   ]
 }

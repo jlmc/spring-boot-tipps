@@ -13,9 +13,7 @@ public class FlexAndMonoTest {
                 Flux.just("java", "kotlin", "reactive")
                     .concatWith(Flux.error(new IllegalStateException("Invalid for some reason")))
                     .concatWith(Flux.just("-- no more data after the error --"))
-                .log()
-                ;
-
+                .log();
 
         flux.subscribe(System.out::println, this::onError, this::onCompleted);
     }
@@ -83,6 +81,4 @@ public class FlexAndMonoTest {
         StepVerifier.create(mono.log())
                 .verifyError(IllegalArgumentException.class);
     }
-
-
 }

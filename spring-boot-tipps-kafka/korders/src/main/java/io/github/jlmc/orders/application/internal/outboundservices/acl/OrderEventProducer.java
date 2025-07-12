@@ -56,7 +56,7 @@ public class OrderEventProducer {
     private void sendEventToDefaultTopicSync(String key, String value) {
         CompletableFuture<SendResult<String, String>> listenableFuture =
                 kafkaTemplate.sendDefault(key, value)
-                             .orTimeout(1L, TimeUnit.SECONDS);
+                             .orTimeout(5L, TimeUnit.SECONDS);
 
         SendResult<String, String> sendResult;
         try {
