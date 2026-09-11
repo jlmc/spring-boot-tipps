@@ -1,3 +1,34 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: mayday-hls-provider
+  # The demo docker-compose.yaml lives at the repository root (one level above this module),
+  # not inside it, so Spring Boot's docker-compose lifecycle manager cannot find it and would
+  # otherwise fail application startup outright. WireMock is started manually instead:
+  # `docker compose up -d` from the repository root.
+  docker:
+    compose:
+      enabled: false
+
+mayday:
+  provider:
+    base-url: http://localhost:9090
+    search:
+      window-size: 1d
+    http:
+      connect-timeout: 2s
+      response-timeout: 5s
+    retry:
+      max-attempts: 4
+      backoff:
+        min-backoff: 200ms
+        max-backoff: 5s
+        jitter-factor: 0.5
+  accounts:
+    concurrency:
+      default: 5
+      account-123: 3
+      account-A: 4
+      account-B: 2
