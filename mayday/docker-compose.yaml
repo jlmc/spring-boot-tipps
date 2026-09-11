@@ -1,0 +1,11 @@
+services:
+  provider-wiremock:
+    image: wiremock/wiremock:3.13.2
+    ports:
+      - "9090:8080"
+    command:
+      - "--global-response-templating"
+      - "--verbose"
+    volumes:
+      - ./docker/wiremock/mappings:/home/wiremock/mappings
+      - ./docker/wiremock/__files:/home/wiremock/__files

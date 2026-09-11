@@ -1,0 +1,16 @@
+{
+  "scenarioName": "account-B-rate-limit",
+  "requiredScenarioState": "Started",
+  "newScenarioState": "B_REQ_1",
+  "priority": 2,
+  "request": {
+    "method": "GET",
+    "urlPath": "/provider/encounters",
+    "headers": { "X-Account-Id": { "equalTo": "account-B" } }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": { "encounters": [] }
+  }
+}

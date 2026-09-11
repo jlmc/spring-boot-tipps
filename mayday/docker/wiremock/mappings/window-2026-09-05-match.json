@@ -1,0 +1,29 @@
+{
+  "priority": 1,
+  "request": {
+    "method": "GET",
+    "urlPath": "/provider/encounters",
+    "queryParameters": {
+      "startDate": { "equalTo": "2026-09-05T00:00:00Z" },
+      "endDate": { "equalTo": "2026-09-06T00:00:00Z" },
+      "visitType": { "equalTo": "FOLLOW_UP" }
+    },
+    "headers": {
+      "X-Account-Id": { "equalTo": "account-123" }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": {
+      "encounters": [
+        {
+          "id": "encounter-123",
+          "visitType": "FOLLOW_UP",
+          "date": "2026-09-05T10:00:00Z",
+          "durationSeconds": 1800
+        }
+      ]
+    }
+  }
+}
