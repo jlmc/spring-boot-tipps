@@ -345,7 +345,30 @@ Regras de ouro: um sobrevivente é um teste por escrever **ou** um mutante equiv
 - Score inflacionado por exclusões a mais: rever a lista de exclusões a cada trimestre.
 - Plugin Gradle de terceiros atrás do PIT core em versões de JDK novas.
 
-## 11. Fontes
+## 11. Leituras recomendadas
+
+Artigos encontrados na pesquisa. **Cada um tem uma ficha de resumo em [readings/](readings/README.md)**, com o grau de leitura real (alguns papers só foram lidos em parte, e a página do BrowserStack já não existe).
+
+### Introdução ao conceito
+- [Introduction to Mutation Testing (Mull)](https://mull.readthedocs.io/en/0.19.0/MutationTestingIntro.html): curto e técnico, bom ponto de partida · [ficha](readings/01-mull-introduction.md)
+- [An Introduction to Mutation Testing (Cornell)](https://www.cs.cornell.edu/~dgeisler/mutation/testing/2021/11/01/mutation-testing1.html): teoria e limites da técnica · [ficha](readings/02-cornell-introduction.md)
+- [What is mutation testing? (TechTarget)](https://www.techtarget.com/it-infrastructure/definition/mutation-testing): definição geral · [ficha](readings/03-techtarget-definition.md)
+- ~~BrowserStack~~: removido, a página devolve HTTP 410 · [nota](readings/04-browserstack-guide.md)
+
+### Mutation testing em escala (papers e podcast)
+- [State of Mutation Testing at Google](https://research.google/pubs/state-of-mutation-testing-at-google/) (ICSE-SEIP 2018): mutantes só para o código alterado, durante o code review. É a base da estratégia "incremental em PR" do roadmap (§10). · [ficha (só resumo lido)](readings/05-google-state-of-mutation-testing-2018.md)
+- [Practical Mutation Testing at Scale (IEEE TSE 2021)](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf): follow-up do Google, com cerca de 17 milhões de mutantes. · [ficha (leitura parcial)](readings/06-google-practical-mutation-testing-at-scale-2021.md)
+- [What It Would Take to Use Mutation Testing in Industry: A Study at Facebook](https://arxiv.org/pdf/2010.13464): a mesma abordagem do lado do Facebook. · [ficha (leitura parcial)](readings/07-facebook-industry-study.md)
+- [SE Radio 632: Goran Petrović sobre mutation testing no Google](https://se-radio.net/2024/09/se-radio-632-goran-petrovic-on-mutation-testing-at-google/): podcast. · [ficha (leitura parcial)](readings/08-se-radio-632-petrovic.md)
+
+### Java, PIT, Spring e Kotlin
+- [Test your tests: mutation testing in Java with PIT (JAVAPRO, 2026)](https://javapro.io/2026/01/21/test-your-tests-mutation-testing-in-java-with-pit/) · [ficha](readings/09-javapro-pit-2026.md)
+- [Mutation testing em Spring Boot 3 (Paradigma)](https://en.paradigmadigital.com/dev/mutation-testing-spring-boot-3-projects-beat-slowness-supercharge-tests/) · [ficha](readings/10-paradigma-spring-boot-3.md)
+- [Experimental: Kotlin and mutation testing (Frankel, 2016, desactualizado)](https://blog.frankel.ch/experimental-kotlin-mutation-testing/) · [ficha](readings/11-frankel-kotlin-2016.md)
+
+Pesquisa descartada: as páginas de educative.io e appsierra.com sobre o tema continham erros (misturam mutações genéticas com mutation testing de software).
+
+## 12. Fontes
 - [PIT — Maven quickstart](https://pitest.org/quickstart/maven/) · [Test Aggregation Across Modules](https://pitest.org/aggregating_tests_across_modules/) · [Downloads](https://pitest.org/downloads)
 - [gradle-pitest-plugin (README, CHANGELOG)](https://github.com/szpak/gradle-pitest-plugin) · [Plugin Portal](https://plugins.gradle.org/plugin/info.solidsoft.pitest)
 - [PIT + Kotlin: issue #579](https://github.com/hcoles/pitest/issues/579) · [Experimental: Kotlin and mutation testing](https://blog.frankel.ch/experimental-kotlin-mutation-testing/)
