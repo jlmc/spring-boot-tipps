@@ -151,7 +151,8 @@ public final class WebClientProviderEncounterSearchAdapter implements ProviderEn
         };
     }
 
-    private static Duration jitteredBackoff(long attemptsMade, ProviderProperties.RetryProperties.Backoff backoff) {
+    // package-private for direct unit testing (see JitteredBackoffTest)
+    static Duration jitteredBackoff(long attemptsMade, ProviderProperties.RetryProperties.Backoff backoff) {
         double base = backoff.minBackoff().toMillis() * Math.pow(2, attemptsMade - 1);
         double capped = Math.min(base, backoff.maxBackoff().toMillis());
         double jitterRange = capped * backoff.jitterFactor();
