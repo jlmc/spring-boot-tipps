@@ -312,6 +312,16 @@ cd mayday-hls-provider
 | `EncounterControllerTest` | 401/400/200 (`found=true`/`found=false`)/502 |
 | `EncountersEndToEndTest` | fluxo completo, contexto Spring real + WireMock |
 
+### Mutation testing (PIT)
+
+Mede a qualidade das asserções, não só a cobertura. Fora do build por omissão:
+
+```bash
+./mvnw -Pmutation verify    # relatório em target/pit-reports/index.html; threshold em pitest.mutation-threshold
+```
+
+Configuração Maven, Gradle (Kotlin DSL) e multi-módulo: [docs/mutation-testing.md](docs/mutation-testing.md).
+
 ## Decisões e trade-offs assumidos
 
 - **API nunca devolve 404 nem corpo vazio** para "sem match" — devolve sempre `200` com
