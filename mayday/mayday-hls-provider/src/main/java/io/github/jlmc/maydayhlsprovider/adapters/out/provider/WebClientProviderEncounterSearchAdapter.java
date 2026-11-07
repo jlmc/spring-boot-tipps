@@ -73,12 +73,18 @@ public final class WebClientProviderEncounterSearchAdapter implements ProviderEn
     }
 
     private Mono<ProviderCallOutcome.Success> toOutcomeOrError(AccountId accountId, TimeWindow window, ClientResponse response) {
-        return toOutcome(accountId, window, response).flatMap(outcome -> switch (outcome) {
+        return toOutcome(accountId, window, response).flatMap(WebClientProviderEncounterSearchAdapter::successOrError);
+    }
+
+    // Explicit return type on purpose: a switch expression directly inside flatMap(...) makes
+    // IntelliJ infer Mono<Object> for the Mono.error(...) arms (javac accepts it, the IDE does not).
+    private static Mono<ProviderCallOutcome.Success> successOrError(ProviderCallOutcome outcome) {
+        return switch (outcome) {
             case ProviderCallOutcome.Success success -> Mono.just(success);
             case ProviderCallOutcome.RateLimited rateLimited -> Mono.error(new ProviderRateLimitedException(rateLimited.retryAfter()));
             case ProviderCallOutcome.ServerError serverError -> Mono.error(new ProviderServerErrorException(serverError.status()));
             case ProviderCallOutcome.ClientError clientError -> Mono.error(new ProviderClientErrorException(clientError.status()));
-        });
+        };
     }
 
     private Mono<ProviderCallOutcome> toOutcome(AccountId accountId, TimeWindow window, ClientResponse response) {
@@ -107,30 +113,42 @@ public final class WebClientProviderEncounterSearchAdapter implements ProviderEn
         int maxAttempts = retryProperties.maxAttempts();
         ProviderProperties.RetryProperties.Backoff backoff = retryProperties.backoff();
 
-        return Retry.from(companion -> companion.flatMap(signal -> {
-            // attemptsMade counts HTTP calls already made, including the one that just failed.
-            // max-attempts is the total attempt budget (initial call + retries), so we retry
-            // only while attemptsMade < maxAttempts -- never infinitely.
-            long attemptsMade = signal.totalRetries() + 1;
-            return switch (signal.failure()) {
-                case ProviderRateLimitedException e when attemptsMade < maxAttempts -> {
-                    Duration delay = e.retryAfter() != null ? e.retryAfter() : jitteredBackoff(attemptsMade, backoff);
-                    log.info("Retrying after rate limit accountId={} start={} end={} attemptsMade={} delay={}",
-                            accountId.value(), window.start(), window.end(), attemptsMade, delay);
-                    yield Mono.delay(delay, delayScheduler);
-                }
-                case ProviderServerErrorException e when attemptsMade < maxAttempts -> {
-                    Duration delay = jitteredBackoff(attemptsMade, backoff);
-                    log.info("Retrying after server error accountId={} start={} end={} attemptsMade={} delay={}",
-                            accountId.value(), window.start(), window.end(), attemptsMade, delay);
-                    yield Mono.delay(delay, delayScheduler);
-                }
-                case ProviderRateLimitedException e -> Mono.error(new ProviderRetriesExhaustedException(e));
-                case ProviderServerErrorException e -> Mono.error(new ProviderRetriesExhaustedException(e));
-                // ProviderClientErrorException and anything else: no retry, propagate as-is.
-                default -> Mono.error(signal.failure());
-            };
-        }));
+        // attemptsMade counts HTTP calls already made, including the one that just failed.
+        // max-attempts is the total attempt budget (initial call + retries), so we retry
+        // only while attemptsMade < maxAttempts -- never infinitely.
+        return Retry.from(companion -> companion.flatMap(signal ->
+                nextRetry(accountId, window, signal.failure(), signal.totalRetries() + 1, maxAttempts, backoff)));
+    }
+
+    /**
+     * Emits (after a delay) to trigger another attempt, or errors to stop retrying. Explicit
+     * {@code Mono<Long>} return type keeps IntelliJ from inferring {@code Mono<Object>} for the
+     * {@code Mono.error(...)} arms of the switch.
+     */
+    private Mono<Long> nextRetry(AccountId accountId,
+                                 TimeWindow window,
+                                 Throwable failure,
+                                 long attemptsMade,
+                                 int maxAttempts,
+                                 ProviderProperties.RetryProperties.Backoff backoff) {
+        return switch (failure) {
+            case ProviderRateLimitedException e when attemptsMade < maxAttempts -> {
+                Duration delay = e.retryAfter() != null ? e.retryAfter() : jitteredBackoff(attemptsMade, backoff);
+                log.info("Retrying after rate limit accountId={} start={} end={} attemptsMade={} delay={}",
+                        accountId.value(), window.start(), window.end(), attemptsMade, delay);
+                yield Mono.delay(delay, delayScheduler);
+            }
+            case ProviderServerErrorException e when attemptsMade < maxAttempts -> {
+                Duration delay = jitteredBackoff(attemptsMade, backoff);
+                log.info("Retrying after server error accountId={} start={} end={} attemptsMade={} delay={}",
+                        accountId.value(), window.start(), window.end(), attemptsMade, delay);
+                yield Mono.delay(delay, delayScheduler);
+            }
+            case ProviderRateLimitedException e -> Mono.error(new ProviderRetriesExhaustedException(e));
+            case ProviderServerErrorException e -> Mono.error(new ProviderRetriesExhaustedException(e));
+            // ProviderClientErrorException and anything else: no retry, propagate as-is.
+            default -> Mono.error(failure);
+        };
     }
 
     private static Duration jitteredBackoff(long attemptsMade, ProviderProperties.RetryProperties.Backoff backoff) {
