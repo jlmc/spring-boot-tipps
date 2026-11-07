@@ -41,7 +41,7 @@ Aplicado em [`pom.xml`](../pom.xml), profile `mutation`:
 <properties>
     <pitest.version>1.30.2</pitest.version>
     <pitest-junit5.version>1.2.3</pitest-junit5.version>
-    <pitest.mutation-threshold>60</pitest.mutation-threshold>
+    <pitest.mutation-threshold>75</pitest.mutation-threshold>
 </properties>
 
 <profiles>
@@ -104,7 +104,9 @@ Correr:
 
 Nota: o threshold é uma *property* porque um valor fixo no `<configuration>` **não** é sobreposto por `-DmutationThreshold=…`.
 
-**Baseline medida (nov 2026):** 99 mutantes, 63 mortos (**64%**), line coverage das classes mutadas 89%, test strength 69%, ~30 s. Com threshold 70 o build falha (`Mutation score of 64 is below threshold of 70`); com 60 passa. ✅
+**Baseline inicial (nov 2026):** 99 mutantes, 63 mortos (**64%**), line coverage das classes mutadas 89%, test strength 69%, ~30 s. Com threshold 70 o build falhava (`Mutation score of 64 is below threshold of 70`). ✅
+
+**Depois de reforçar `RetryAfterHeaderParser` e `jitteredBackoff` com testes dedicados:** 79/99 mortos (**80%**), line coverage 94%, test strength 83%. Threshold subido para 75. O sobrevivente que resta no parser é equivalente (sem o `isBlank`, `"   "` falha no parse e devolve `Optional.empty()` na mesma).
 
 ## 4. Projecto simples — Gradle Kotlin DSL ✅
 
@@ -312,7 +314,38 @@ Armadilhas encontradas na validação ✅:
 | `Mutation score of X is below threshold of Y` | build a funcionar como previsto: reforçar testes ou rever threshold |
 | Agregado Gradle vazio/erro | `exportLineCoverage` + XML nos módulos; `repositories` no raiz |
 
-## 10. Fontes
+## 10. Caminho a seguir (roadmap)
+
+Estado actual deste projecto: score **80%** (79/99), threshold **75**, 1 sobrevivente equivalente no parser.
+
+> Exemplo do raciocínio usado para chegar aos 80%: [mutation-testing-worked-example.md](mutation-testing-worked-example.md).
+
+### 10.1 Neste projecto (`mayday-hls-provider`)
+| # | Passo | Critério de conclusão |
+|---|---|---|
+| 1 | Matar os sobreviventes restantes com valor: `FixedSizeTimeWindowSplitter` (limites das janelas, 3), `SearchEncountersService` (2), `ProviderRateLimitedException` (3), `TimeWindow`/`AccountId` (1 cada) | score ≥ 85% |
+| 2 | Cobrir os `NO_COVERAGE` triviais (`ProviderClientErrorException`, `ProviderServerErrorException`, ramo em `GlobalExceptionHandler`) | 0 `NO_COVERAGE` em lógica |
+| 3 | Subir o threshold por degraus (75 → 80 → 85), sempre ~5 pontos abaixo do score medido; nunca 100% | `./mvnw -Pmutation verify` verde |
+| 4 | Ligar a um job CI nightly (e manual em PR) que publique `target/pit-reports` como artefacto | relatório acessível por run |
+| 5 | Regra de equipa: PR que mexe em `domain`/`application`/`adapters` não pode baixar o score | threshold no CI |
+
+Regras de ouro: um sobrevivente é um teste por escrever **ou** um mutante equivalente (documentar e ignorar); nunca baixar o threshold para fazer o build passar sem registar porquê.
+
+### 10.2 Replicação no `hls-providers` (Gradle Kotlin, multi-módulo) ⚠️ não executado
+1. **Spike (½ dia)**: adicionar `hls-providers.mutation-conventions` (§7.2) e correr `:libs:hls-providers-model:pitest`; confirmar resolução do plugin/`org.pitest:*` no Nexus, Java 21, MockK e o ruído Kotlin (§7.3).
+2. **Piloto 1–2 módulos** (`libs/model`, `integrations/appointment-service`): baseline, `mutationThreshold` = baseline − 5, partilhar `coverageExclusions` entre JaCoCo e PIT.
+3. **Agregação** no raiz (`pitestReportAggregate`) e job nightly no CI (Jenkins/GitHub Actions); em PR só o módulo alterado.
+4. **Alargar** módulo a módulo (`common-*`, restantes `*-service`); `*-app`, `smoke-tests`, `flink-jobs` e `middleware` (deprecated) ficam de fora.
+5. **Gate** gradual: primeiro informativo (sem falhar o build), depois com threshold por módulo.
+6. Decidir mais tarde, com dados do piloto, se o ruído Kotlin justifica avaliar o plugin comercial Arcmutate ou o `pitest-kotlin`.
+
+### 10.3 Riscos a vigiar
+- Tempo de execução em módulos grandes (usar `threads`, histórico incremental, só módulos alterados).
+- Testes `@SpringBootTest`/Testcontainers a entrar sem querer no PIT (rever `excludedTestClasses`).
+- Score inflacionado por exclusões a mais: rever a lista de exclusões a cada trimestre.
+- Plugin Gradle de terceiros atrás do PIT core em versões de JDK novas.
+
+## 11. Fontes
 - [PIT — Maven quickstart](https://pitest.org/quickstart/maven/) · [Test Aggregation Across Modules](https://pitest.org/aggregating_tests_across_modules/) · [Downloads](https://pitest.org/downloads)
 - [gradle-pitest-plugin (README, CHANGELOG)](https://github.com/szpak/gradle-pitest-plugin) · [Plugin Portal](https://plugins.gradle.org/plugin/info.solidsoft.pitest)
 - [PIT + Kotlin: issue #579](https://github.com/hcoles/pitest/issues/579) · [Experimental: Kotlin and mutation testing](https://blog.frankel.ch/experimental-kotlin-mutation-testing/)
