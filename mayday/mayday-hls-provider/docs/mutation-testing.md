@@ -347,7 +347,7 @@ Regras de ouro: um sobrevivente é um teste por escrever **ou** um mutante equiv
 
 ## 11. Leituras recomendadas
 
-Artigos encontrados na pesquisa. **Cada um tem uma ficha de resumo em [readings/](readings/README.md)**, com o grau de leitura real (alguns papers só foram lidos em parte, e a página do BrowserStack já não existe).
+Artigos encontrados na pesquisa. **Cada um tem uma ficha de resumo em [readings/](readings/README.md)**, com o grau de leitura real (o paper do Google 2018 só foi lido no resumo, e a página do BrowserStack já não existe).
 
 ### Introdução ao conceito
 - [Introduction to Mutation Testing (Mull)](https://mull.readthedocs.io/en/0.19.0/MutationTestingIntro.html): curto e técnico, bom ponto de partida · [ficha](readings/01-mull-introduction.md)
@@ -357,9 +357,9 @@ Artigos encontrados na pesquisa. **Cada um tem uma ficha de resumo em [readings/
 
 ### Mutation testing em escala (papers e podcast)
 - [State of Mutation Testing at Google](https://research.google/pubs/state-of-mutation-testing-at-google/) (ICSE-SEIP 2018): mutantes só para o código alterado, durante o code review. É a base da estratégia "incremental em PR" do roadmap (§10). · [ficha (só resumo lido)](readings/05-google-state-of-mutation-testing-2018.md)
-- [Practical Mutation Testing at Scale (IEEE TSE 2021)](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf): follow-up do Google, com cerca de 17 milhões de mutantes. · [ficha (leitura parcial)](readings/06-google-practical-mutation-testing-at-scale-2021.md)
-- [What It Would Take to Use Mutation Testing in Industry: A Study at Facebook](https://arxiv.org/pdf/2010.13464): a mesma abordagem do lado do Facebook. · [ficha (leitura parcial)](readings/07-facebook-industry-study.md)
-- [SE Radio 632: Goran Petrović sobre mutation testing no Google](https://se-radio.net/2024/09/se-radio-632-goran-petrovic-on-mutation-testing-at-google/): podcast. · [ficha (leitura parcial)](readings/08-se-radio-632-petrovic.md)
+- [Practical Mutation Testing at Scale (IEEE TSE 2021)](https://homes.cs.washington.edu/~rjust/publ/practical_mutation_testing_tse_2021.pdf): follow-up do Google, com cerca de 17 milhões de mutantes. · [ficha (leitura quase completa)](readings/06-google-practical-mutation-testing-at-scale-2021.md)
+- [What It Would Take to Use Mutation Testing in Industry: A Study at Facebook](https://arxiv.org/pdf/2010.13464): a mesma abordagem do lado do Facebook. · [ficha (leitura completa)](readings/07-facebook-industry-study.md)
+- [SE Radio 632: Goran Petrović sobre mutation testing no Google](https://se-radio.net/2024/09/se-radio-632-goran-petrovic-on-mutation-testing-at-google/): podcast. · [ficha (transcrição lida até ao fim)](readings/08-se-radio-632-petrovic.md)
 
 ### Java, PIT, Spring e Kotlin
 - [Test your tests: mutation testing in Java with PIT (JAVAPRO, 2026)](https://javapro.io/2026/01/21/test-your-tests-mutation-testing-in-java-with-pit/) · [ficha](readings/09-javapro-pit-2026.md)

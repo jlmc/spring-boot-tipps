@@ -4,6 +4,12 @@
 - **Tipo:** paper industrial
 - **Leitura: SÓ O RESUMO (abstract).** O PDF não foi lido (extracção devolveu binário). Nada abaixo vem do corpo do paper; para operadores, supressão de mutantes, ciclo de feedback e limitações, ver a ficha do follow-up de 2021, que cobre a mesma abordagem: [06](06-google-practical-mutation-testing-at-scale-2021.md).
 
+## Em resumo
+**Tópico:** mutação por diff no code review (só o resumo foi lido).
+- Muta só as linhas alteradas e cobertas, e ignora linhas "áridas".
+- Mostra o resultado durante a revisão de código.
+- Cerca de 6000 engenheiros usam-no.
+
 ## Tese (do resumo)
 Mutation testing é um dos critérios de teste mais fortes mas é computacionalmente proibitivo à escala industrial. A solução do Google é uma abordagem **probabilística baseada em diffs**, mostrada no code review.
 
@@ -22,3 +28,18 @@ Não lidos (o resumo não os indica).
 
 ## Para a nossa equipa (sugestões nossas)
 A ideia útil e verificável a partir do resumo: **mutar só o código alterado do PR** e excluir linhas sem cobertura. Confirmar na documentação do PIT o suporte (o histórico incremental e o `scmMutationCoverage` são os candidatos, não verificados aqui).
+
+## Aprofundamento (tentativa falhada)
+
+Foram tentadas quatro fontes de texto para o corpo do paper, sem sucesso:
+
+| Fonte | Resultado |
+|---|---|
+| Página research.google | HTTP 200, só o resumo |
+| PDF no storage da Google | HTTP 200, bytes comprimidos, sem texto extraível |
+| Cópia na Michigan (EECS) | mesmo ficheiro (mesmo tamanho), mesmo problema |
+| Cópia na Vanderbilt | HTTP 404 |
+
+Por isso **não há aprofundamento do paper de 2018**, e não se preencheu nada de memória. Para o método (nós áridos, operadores, selecção, feedback) usar a ficha do follow-up de 2021, que descreve o mesmo sistema com muito mais detalhe: [06](06-google-practical-mutation-testing-at-scale-2021.md).
+
+Para ler o corpo: extrair o texto do PDF localmente (por exemplo com `pdftotext`, do Poppler) e dar o texto por secções.

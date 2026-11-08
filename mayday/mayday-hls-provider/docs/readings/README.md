@@ -11,21 +11,21 @@ Uma ficha por artigo, em português, com os pontos mais importantes e uma secç�
 | 03 | [TechTarget: definição](03-techtarget-definition.md) | glossário | completa |
 | 04 | [BrowserStack](04-browserstack-guide.md) | guia | **não lido** (página removida, HTTP 410) |
 | 05 | [Google 2018](05-google-state-of-mutation-testing-2018.md) | paper | **só o resumo** |
-| 06 | [Google 2021](06-google-practical-mutation-testing-at-scale-2021.md) | paper | **parcial** (~30%) |
-| 07 | [Facebook](07-facebook-industry-study.md) | paper | **parcial** (~57%) |
-| 08 | [SE Radio 632](08-se-radio-632-petrovic.md) | podcast | **parcial** (~52% do texto) |
+| 06 | [Google 2021](06-google-practical-mutation-testing-at-scale-2021.md) | paper | **quase completa** (~90%) |
+| 07 | [Facebook](07-facebook-industry-study.md) | paper | **completa** (corpo inteiro) |
+| 08 | [SE Radio 632](08-se-radio-632-petrovic.md) | podcast | **quase completa** (transcrição até ao fim) |
 | 09 | [JAVAPRO: PIT (2026)](09-javapro-pit-2026.md) | artigo prático | completa |
 | 10 | [Paradigma: Spring Boot 3](10-paradigma-spring-boot-3.md) | caso prático | completa |
 | 11 | [Fränkel: Kotlin (2016)](11-frankel-kotlin-2016.md) | blog | completa (**antigo**) |
 
-Nas fichas parciais, o que veio de resumos de modelo está marcado **[resumo]** ou **(resumo)**. Os PDFs dos papers não puderam ser lidos directamente.
+Depois da segunda ronda (secção "Aprofundamento" de cada ficha), só o paper do Google 2018 continua limitado ao resumo e o BrowserStack não foi lido. Os PDFs dos papers não puderam ser lidos directamente; a leitura foi feita a partir de versões HTML/texto.
 
 ## Conclusões transversais
 
 1. **Cobertura mede execução, mutation testing mede verificação.** Todas as fontes concordam. (01, 02, 03, 09)
 2. **Os sobreviventes são o produto útil**; o score é só indicador. Perseguir 100% é desperdício por causa dos equivalentes. (02, 03, 08, 09)
 3. **O custo é o obstáculo principal**, e as soluções convergem: só testes unitários rápidos, só código alterado, excluir código gerado, execução fora do pipeline principal. (02, 06, 09, 10)
-4. **Ruído mata a adopção.** O Google só teve sucesso quando filtrou mutantes inúteis (logging, timeouts, flags) e limitou o que mostra por revisão: a "utilidade" passou de ~15% para ~89%. (05, 06, 08)
+4. **Ruído mata a adopção.** O Google só teve sucesso quando filtrou mutantes inúteis (logging, timeouts, flags) e limitou o que mostra por revisão: a produtividade dos mutantes apresentados passou de ~80% para ~89%. (05, 06, 08)
 5. **Mostrar poucos mutantes no momento certo (no PR) funciona melhor do que um relatório global.** (05, 06, 07, 08)
 6. **Asserções concretas matam mais mutantes do que mais testes.** O caso Paradigma (validar o corpo e não só o status) e o nosso `jitteredBackoff` são o mesmo fenómeno. (02, 09, 10)
 7. **Kotlin traz ruído de bytecode**, mas a fonte é de 2016; a nossa validação com PIT 1.30.2 não o reproduziu. (11)
